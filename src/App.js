@@ -1,23 +1,56 @@
-import logo from './logo.svg';
-import './App.css';
+import logo from "./logo.svg";
+import "./index.css";
+import Footer from "./component/Footer";
+import SignIn from "./component/SignIn";
+import LandingPage from "./component/LandingPage";
+import { GiHamburgerMenu } from "react-icons/gi";
+import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
 
 function App() {
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <BrowserRouter className="nav">
+        <div className="navbar">
+          <div className="heading">
+            <h2>
+              {" "}
+              <span style={{ color: "#5ec576" }}>Jeeva</span>ndan
+            </h2>
+          </div>
+          <div className="links">
+            <ul>
+              <li>
+                <a className="my_links" href="/">
+                  Home
+                </a>
+              </li>
+              <hr className="horizontal" />
+              <li>
+                <a className="my_links" href="/">
+                  Connect
+                </a>
+              </li>
+              <hr className="horizontal" />
+              <li>
+                <a className="my_links" href="/signin">
+                  Sign In
+                </a>
+              </li>
+              <hr className="horizontal" />
+              <li>
+                <a className="my_links" href="/">
+                  Logout
+                </a>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <Routes>
+          <Route path="/" element={<LandingPage />}></Route>
+          <Route path="/signin" element={<SignIn />}></Route>
+        </Routes>
+      </BrowserRouter>
     </div>
   );
 }
