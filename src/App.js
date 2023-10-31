@@ -1,12 +1,28 @@
 import logo from "./logo.svg";
 import "./index.css";
+import { useState } from "react";
 import Footer from "./component/Footer";
 import SignIn from "./component/SignIn";
 import LandingPage from "./component/LandingPage";
 import { GiHamburgerMenu } from "react-icons/gi";
 import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
+import Web3 from "web3";
 
 function App() {
+  
+  const [state , setState] = new useState(false);
+
+  function btnhandler(){ 
+    if (window.ethereum) { 
+      console.log("hello");
+      window.ethereum 
+        .request({ method: "eth_requestAccounts" })
+        .then((res) => console.log(res[0]));
+    } else { 
+      alert("install metamask extension!!"); 
+    } 
+  }; 
+
   return (
     <div className="App">
       <BrowserRouter className="nav">
@@ -26,9 +42,9 @@ function App() {
               </li>
               <hr className="horizontal" />
               <li>
-                <a className="my_links" href="/">
+                <button onClick={() => btnhandler()} className="connectbtn" >
                   Connect
-                </a>
+                </button>
               </li>
               <hr className="horizontal" />
               <li>
