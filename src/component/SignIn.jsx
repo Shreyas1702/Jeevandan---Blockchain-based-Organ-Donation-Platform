@@ -16,10 +16,12 @@ const SignIn = () => {
 
     function showPosition(position) {
     console.log(position)
-    console.log(position.coords.latitude)
-    console.log(position.coords.longitude)
-    setLatitude(position.coords.latitude)
-    setLongitude(position.coords.longitude)
+    var lat = (position.coords.latitude)
+    var long = (position.coords.longitude)
+
+   
+    setLatitude(position.coords.latitude.toFixed(6))
+    setLongitude(position.coords.longitude.toFixed(6))
 }
   
     return (
