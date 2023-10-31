@@ -345,7 +345,7 @@ h4 {
 }
 
 .links li a:hover {
-  color: black;
+  color: white;
   text-decoration: none;
   padding: 0.9rem 1.5rem;
   background-color: var(--color-primary-darker);
