@@ -1,14 +1,49 @@
 import "./index.css";
-import { useState } from "react";
-import Footer from "./component/Footer";
+import abi from "./contracts/enterDetails.json";
+import { useState, useEffect } from "react";
 import SignIn from "./component/SignIn";
 import LandingPage from "./component/LandingPage";
-import { GiHamburgerMenu } from "react-icons/gi";
-import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Web3 from "web3";
+import { ethers } from "ethers";
 
 function App() {
-  const [state, setState] = new useState(false);
+  const [state, setState] = useState({
+    provider: null,
+    signer: null,
+    contract: null,
+  });
+
+  useEffect(() => {
+    const connectWallet = async () => {
+      const contractAddress = "0x5FbDB2315678afecb367f032d93F642f64180aa3";
+      const contractABI = abi.abi;
+
+      try {
+        const { ethereum } = window;
+
+        if (ethereum) {
+          const accounts = await ethereum.request({
+            method: "eth_requestAccounts",
+          });
+        }
+
+        const provider = new ethers.BrowserProvider(ethereum);
+        const signer = provider.getSigner();
+        const contract = new ethers.Contract(
+          contractAddress,
+          contractABI,
+          signer
+        );
+        setState({ provider, signer, contract });
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    connectWallet();
+  }, []);
+
+  console.log(state);
 
   function btnhandler() {
     if (window.ethereum) {
