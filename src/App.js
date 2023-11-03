@@ -14,6 +14,8 @@ function App() {
     contract: null,
   });
 
+  const [account, setAccount] = useState("");
+
   useEffect(() => {
     const connectWallet = async () => {
       const contractAddress = "0x5FbDB2315678afecb367f032d93F642f64180aa3";
@@ -35,6 +37,7 @@ function App() {
           contractABI,
           signer
         );
+        console.log(signer.address);
         setState({ provider, signer, contract });
       } catch (error) {
         console.log(error);
@@ -50,7 +53,7 @@ function App() {
       console.log("hello");
       window.ethereum
         .request({ method: "eth_requestAccounts" })
-        .then((res) => console.log(res[0]));
+        .then((res) => setAccount(res[0]));
     } else {
       alert("install metamask extension!!");
     }
@@ -74,9 +77,15 @@ function App() {
                 </a>
               </li>
               <li>
-                <button onClick={() => btnhandler()} className="connectbtn">
-                  Connect
-                </button>
+                {account ? (
+                  <button type="button" className="connectbtn">
+                    {account.slice(0, 4) + "...." + account.slice(38, 42)}
+                  </button>
+                ) : (
+                  <button onClick={() => btnhandler()} className="connectbtn">
+                    Connect
+                  </button>
+                )}
               </li>
               <li>
                 <a className="my_links" href="/signin">
