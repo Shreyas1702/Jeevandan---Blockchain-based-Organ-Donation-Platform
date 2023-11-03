@@ -1,4 +1,3 @@
-import logo from "./logo.svg";
 import "./index.css";
 import { useState } from "react";
 import Footer from "./component/Footer";
@@ -39,19 +38,16 @@ function App() {
                   Home
                 </a>
               </li>
-              <hr className="horizontal" />
               <li>
                 <button onClick={() => btnhandler()} className="connectbtn">
                   Connect
                 </button>
               </li>
-              <hr className="horizontal" />
               <li>
                 <a className="my_links" href="/signin">
-                  Sign In
+                  Register
                 </a>
               </li>
-              <hr className="horizontal" />
               <li>
                 <a className="my_links" href="/">
                   Logout
