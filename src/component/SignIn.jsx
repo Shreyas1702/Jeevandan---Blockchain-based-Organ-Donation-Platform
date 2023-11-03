@@ -15,19 +15,14 @@ const SignIn = () => {
 }
 
     function showPosition(position) {
-    console.log(position)
-    var lat = (position.coords.latitude)
-    var long = (position.coords.longitude)
-
-   
-    setLatitude(position.coords.latitude.toFixed(6))
-    setLongitude(position.coords.longitude.toFixed(6))
-}
+        setLatitude(position.coords.latitude.toFixed(6) * 1000000)
+        setLongitude(position.coords.longitude.toFixed(6) * 1000000)
+    }
   
     return (
     <div className="hosp-reg-form">
         <div className='hosp-register'>
-            <form class="row g-3 needs-validation" noValidate>
+            <form class="row g-3 needs-validation" novalidate>
                 <div className="col-md-12">
                     <label for="validationCustom01" className="form-label" style={{fontSize : "20px", color : "#5ec576"}}>Hospital Name</label>
                     <input type="text" className="form-control" style={{height: "35px" , fontSize : "18px"}} id="validationCustom01" required/>
