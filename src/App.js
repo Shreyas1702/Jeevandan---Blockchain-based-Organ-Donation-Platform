@@ -6,6 +6,7 @@ import LandingPage from "./component/LandingPage";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Web3 from "web3";
 import { ethers } from "ethers";
+import HospitalPage from "./component/HospitalPage";
 
 function App() {
   const [state, setState] = useState({
@@ -42,10 +43,11 @@ function App() {
         console.log(await signer.getAddress());
         console.log(contract);
         const transaction = await contract.check(account);
-        if (transaction) {
-        }
-
         setState({ provider, signer, contract });
+
+        if (transaction) {
+          window.location.href = "http://localhost:3000/hospitalPage";
+        }
       } catch (error) {
         console.log(error);
       }

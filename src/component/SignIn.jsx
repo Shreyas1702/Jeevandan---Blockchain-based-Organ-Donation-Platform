@@ -2,6 +2,9 @@ import React from 'react'
 import {ethers} from "ethers"
 import abi from "./../contracts/enterDetails.json";
 import { useState , useEffect } from 'react';
+import HospitalPage from "./HospitalPage";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+
 const SignIn = ({ account, setAccount , state ,setState}) => {
     
     const [longitudes  , setLongitude] = React.useState();
@@ -78,7 +81,9 @@ const SignIn = ({ account, setAccount , state ,setState}) => {
     const transaction = await contract.registerHospital(data.name , data.hospital_id , data.email , data.longitude , data.latitude , data.address);
     await transaction.wait();
     console.log("Transaction Done");
-    
+
+    window.location.href = "http://localhost:3000/hospitalPage";
+        
   }
 
   function handleChange(e){
