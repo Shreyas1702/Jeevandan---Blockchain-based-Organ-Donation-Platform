@@ -15,10 +15,11 @@ function App() {
   });
 
   const [account, setAccount] = useState("");
+  const [func, setFunc] = useState("");
 
   useEffect(() => {
     const connectWallet = async () => {
-      const contractAddress = "0x5FbDB2315678afecb367f032d93F642f64180aa3";
+      const contractAddress = "0xcdeb021ae6EF488eA41a71C8B25CCb1a14986B4C";
       const contractABI = abi.abi;
 
       try {
@@ -28,32 +29,39 @@ function App() {
           const accounts = await ethereum.request({
             method: "eth_requestAccounts",
           });
+          setAccount(accounts[0]);
         }
 
         const provider = new ethers.BrowserProvider(ethereum);
-        const signer = provider.getSigner();
-        const contract = new ethers.Contract(
+        const signer = await provider.getSigner();
+        const contract = await new ethers.Contract(
           contractAddress,
           contractABI,
           signer
         );
-        console.log(signer.address);
+        console.log(await signer.getAddress());
+        console.log(contract);
+        const transaction = await contract.check(account);
+        if (transaction) {
+        }
+
         setState({ provider, signer, contract });
       } catch (error) {
         console.log(error);
       }
+      setFunc(false);
     };
-    connectWallet();
-  }, []);
 
-  console.log(state);
+    connectWallet();
+  }, [func]);
 
   function btnhandler() {
     if (window.ethereum) {
       console.log("hello");
-      window.ethereum
-        .request({ method: "eth_requestAccounts" })
-        .then((res) => setAccount(res[0]));
+      window.ethereum.request({ method: "eth_requestAccounts" }).then((res) => {
+        setAccount(res[0]);
+        setFunc(true);
+      });
     } else {
       alert("install metamask extension!!");
     }
@@ -78,7 +86,11 @@ function App() {
               </li>
               <li>
                 {account ? (
-                  <button type="button" className="connectbtn">
+                  <button
+                    type="button"
+                    className="connectbtn"
+                    style={{ backgroundColor: "#5ec576", color: "white" }}
+                  >
                     {account.slice(0, 4) + "...." + account.slice(38, 42)}
                   </button>
                 ) : (
@@ -103,7 +115,17 @@ function App() {
 
         <Routes>
           <Route path="/" element={<LandingPage />}></Route>
-          <Route path="/signin" element={<SignIn />}></Route>
+          <Route
+            path="/signin"
+            element={
+              <SignIn
+                account={account}
+                setAccount={setAccount}
+                state={state}
+                setState={setState}
+              />
+            }
+          ></Route>
         </Routes>
       </BrowserRouter>
     </div>

@@ -1,23 +1,98 @@
 import React from 'react'
-
-const SignIn = () => {
+import {ethers} from "ethers"
+import abi from "./../contracts/enterDetails.json";
+import { useState , useEffect } from 'react';
+const SignIn = ({ account, setAccount , state ,setState}) => {
     
-    const [longitude  , setLongitude] = React.useState();
-    const [latitude  , setLatitude] = React.useState();
+    const [longitudes  , setLongitude] = React.useState();
+    const [latitudes  , setLatitude] = React.useState();
+    const [data , setData] = useState({
+        name : "",
+        hospital_id : 0,
+        email : "",
+        longitude : 0,
+        latitude : 0,
+        timestamp : 0,
+        address : "",
+    })
+
+    const [func , setFunc] = useState(false);
 
     function getLoc(e) {
-    e.preventDefault();
-    if (navigator.geolocation) {
-       navigator.geolocation.getCurrentPosition(showPosition);
-    } else {
-        alert("Geolocation is not supported by this browser.");
+        e.preventDefault();
+        if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(showPosition);
+        } else {
+            alert("Geolocation is not supported by this browser.");
+        }
     }
-}
 
     function showPosition(position) {
         setLatitude(position.coords.latitude.toFixed(6) * 1000000)
         setLongitude(position.coords.longitude.toFixed(6) * 1000000)
     }
+
+    useEffect(() => {
+    const connectWallet = async () => {
+      const contractAddress = "0xcdeb021ae6EF488eA41a71C8B25CCb1a14986B4C";
+      const contractABI = abi.abi;
+
+      try {
+        const { ethereum } = window;
+
+        if (ethereum) {
+          const accounts = await ethereum.request({
+            method: "eth_requestAccounts",
+          });
+          setAccount(accounts[0]);
+        }
+        console.log(ethereum)
+        const provider = new ethers.BrowserProvider(ethereum);
+        const signer = await provider.getSigner();
+        const contract = new ethers.Contract(
+          contractAddress,
+          contractABI,
+          signer
+        );
+        console.log(await signer.getAddress());
+        setState({ provider, signer, contract });
+      } catch (error) {
+        console.log(error);
+      }
+
+      setFunc(false);
+    };
+
+    connectWallet()
+
+} , [account , func]);
+
+  const SubmitForm = async (e) => {
+    e.preventDefault();
+    await setFunc(true);
+    data.latitude = latitudes;
+    data.longitude = longitudes;
+    console.log(data);
+    const {contract}  = state;
+    console.log(contract)
+    const transaction = await contract.registerHospital(data.name , data.hospital_id , data.email , data.longitude , data.latitude , data.address);
+    await transaction.wait();
+    console.log("Transaction Done");
+    
+  }
+
+  function handleChange(e){
+    e.preventDefault();
+    const {name  , value} = e.target;
+
+    setData((prevData) => ({
+        ...prevData,
+        [name] : value
+    }))
+
+    console.log(name);
+    console.log(value);
+  }
   
     return (
     <div className="hosp-reg-form">
@@ -25,14 +100,14 @@ const SignIn = () => {
             <form class="row g-3 needs-validation" novalidate>
                 <div className="col-md-12">
                     <label for="validationCustom01" className="form-label" style={{fontSize : "20px", color : "#5ec576"}}>Hospital Name</label>
-                    <input type="text" className="form-control" style={{height: "35px" , fontSize : "18px"}} id="validationCustom01" required/>
+                    <input name='name' type="text" className="form-control" onChange={(event) => handleChange(event)} style={{height: "35px" , fontSize : "18px"}} id="validationCustom01" required/>
                     <div className="valid-feedback">
                     Looks good!
                     </div>
                 </div>
                 <div className="col-md-12">
                     <label for="validationCustom02" className="form-label" style={{fontSize : "20px" , marginTop : "8px", color : "#5ec576"}} >Hospital Id</label>
-                    <input type="text" className="form-control" id="validationCustom02" style={{height: "35px" , fontSize : "18px"}} required/>
+                    <input name='hospital_id' type="text" className="form-control" id="validationCustom02" onChange={(event) => handleChange(event)} style={{height: "35px" , fontSize : "18px"}} required/>
                     <div className="valid-feedback">
                     Looks good!
                     </div>
@@ -40,38 +115,16 @@ const SignIn = () => {
                 <div className="col-md-12">
                     <label for="validationCustomUsername" style={{fontSize : "20px" , marginTop : "8px", color : "#5ec576"}} className="form-label">Email</label>
                     <div className="input-group has-validation">
-                    <input type="text" className="form-control" id="validationCustomUsername" style={{height: "35px" , fontSize : "18px"}} aria-describedby="inputGroupPrepend" required/>
+                    <input name='email' type="text" className="form-control" id="validationCustomUsername" onChange={(event) => handleChange(event)} style={{height: "35px" , fontSize : "18px"}} aria-describedby="inputGroupPrepend" required/>
                     <div className="invalid-feedback">
                         Please choose a username.
                     </div>
-                    </div>
-                </div>
-                <div className="col-md-6">
-                    <label for="validationCustom03" className="form-label" style={{fontSize : "20px" , marginTop : "8px", color : "#5ec576"}}>City</label>
-                    <input type="text" className="form-control" id="validationCustom03" style={{height: "35px", fontSize : "18px"}} required/>
-                    <div className="invalid-feedback">
-                    Please provide a valid city.
-                    </div>
-                </div>
-                <div className="col-md-6">
-                    <label for="validationCustom04" className="form-label" style={{fontSize : "20px" , marginTop : "8px", color : "#5ec576"}}>State</label>
-                    <select  className="form-select" id="validationCustom04" style={{height: "35px", fontSize : "18px"}} required>
-                    <option selected disabled value="">Choose...</option>
-                    <option>Maharastra</option>
-                    <option>Gujarat</option>
-                    <option>Rajasthan</option>
-                    <option>Kerala</option>
-                    <option>Karnataka</option>
-                    <option>Uttar Pradesh</option>
-                    </select>
-                    <div className="invalid-feedback">
-                    Please select a valid state.
                     </div>
                 </div>                    
                     <div className="col-md-4" style={{marginTop : "30px"}}>
                         <div className="input-group has-validation">
                             <span className="input-group-text" id="inputGroupPrepend" style={{fontSize : "18px" , color : "#5ec576"}}>Longitutde</span>
-                            <input type="number" className="form-control" style={{ fontSize:"15px" , height: "50px" }} id="validationCustomUsername" aria-describedby="inputGroupPrepend" value={longitude} required/>
+                            <input name='longitude' type="number" onChange={(event) => handleChange(event)} className="form-control" style={{ fontSize:"15px" , height: "50px" }} id="validationCustomUsername" aria-describedby="inputGroupPrepend" value={longitudes} required/>
                             <div className="invalid-feedback">
                                 Please choose a username.
                             </div>
@@ -82,7 +135,7 @@ const SignIn = () => {
                     <div className="col-md-4" style={{marginTop : "30px"}}>
                         <div className="input-group has-validation">
                             <span className="input-group-text" id="inputGroupPrepend" style={{fontSize : "18px" , color : "#5ec576"}}>Latitude</span>
-                            <input type="number" className="form-control" style={{ fontSize:"15px" , height: "50px" }} id="validationCustomUsername" aria-describedby="inputGroupPrepend" value={latitude} required/>
+                            <input name='latitude' type="number" onChange={(event) => handleChange(event)} className="form-control" style={{ fontSize:"15px" , height: "50px" }} id="validationCustomUsername" aria-describedby="inputGroupPrepend" value={latitudes} required/>
                             <div className="invalid-feedback">
                                 Please choose a username.
                             </div>
@@ -95,7 +148,7 @@ const SignIn = () => {
 
                 <div className="col-md-12">
                     <label for="validationCustom05" className="form-label" style={{fontSize : "20px",marginTop : "8px", color : "#5ec576"}}>Wallet Address</label>
-                    <input type="text" className="form-control" id="validationCustom05" style={{height: "35px", fontSize : "18px"}} required/>
+                    <input name='address' onChange={(event) => handleChange(event)} type="text" className="form-control" id="validationCustom05" style={{height: "35px", fontSize : "18px"}} required/>
                     <div className="invalid-feedback">
                     Please provide wallet Address.
                     </div>
@@ -113,7 +166,7 @@ const SignIn = () => {
                     </div>
                 </div>
                 <div className="col-12">
-                    <button className="btns btn-primary" style={{width : "100%" , fontSize : "22px"}} type="submit">Submit</button>
+                    <button className="btns btn-primary" style={{width : "100%" , fontSize : "22px"}} type="submit" onClick={(event) => SubmitForm(event)}>Submit</button>
                 </div>
             </form>
         </div>
