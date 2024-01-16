@@ -5,7 +5,7 @@ import { useState , useEffect } from 'react';
 import HospitalPage from "./HospitalPage";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
-const SignIn = ({ account, setAccount , state ,setState}) => {
+const SignIn = ({ account, setAccount , state ,setState , loggedIn ,  setLoggedIn}) => {
     
     const [longitudes  , setLongitude] = React.useState();
     const [latitudes  , setLatitude] = React.useState();
@@ -82,8 +82,8 @@ const SignIn = ({ account, setAccount , state ,setState}) => {
     await transaction.wait();
     console.log("Transaction Done");
 
-    window.location.href = "http://localhost:3000/hospitalPage";
-        
+    setLoggedIn(true)
+
   }
 
   function handleChange(e){
