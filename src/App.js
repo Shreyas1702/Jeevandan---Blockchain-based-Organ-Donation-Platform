@@ -17,7 +17,6 @@ function App() {
 
   const [account, setAccount] = useState("");
   const [func, setFunc] = useState("");
-  const [loggedIn, setLoggedIn] = useState(false);
 
   useEffect(() => {
     const connectWallet = async () => {
@@ -42,17 +41,17 @@ function App() {
           signer
         );
         console.log(await signer.getAddress());
-        console.log(contract);
         const transaction = await contract.check(account);
         setState({ provider, signer, contract });
         console.log(transaction);
+        setFunc(false);
+
         if (transaction) {
-          setLoggedIn(true);
+          window.location.href = "http://localhost:3000/hospitalPage";
         }
       } catch (error) {
         console.log(error);
       }
-      setFunc(false);
     };
 
     connectWallet();
@@ -112,13 +111,6 @@ function App() {
                   Logout
                 </a>
               </li>
-              {loggedIn && (
-                <li>
-                  <a className="my_links" href="/hospitalPage">
-                    DashBoard
-                  </a>
-                </li>
-              )}
             </ul>
           </div>
         </div>
@@ -133,24 +125,9 @@ function App() {
                 setAccount={setAccount}
                 state={state}
                 setState={setState}
-                loggedIn={loggedIn}
-                setLoggedIn={setLoggedIn}
               />
             }
           ></Route>
-          {loggedIn && (
-            <Route
-              path="/hospitalPage"
-              element={
-                <HospitalPage
-                  account={account}
-                  setAccount={setAccount}
-                  state={state}
-                  setState={setState}
-                />
-              }
-            ></Route>
-          )}
         </Routes>
       </BrowserRouter>
     </div>
