@@ -1,0 +1,40 @@
+{
+  "_format": "hh-sol-cache-2",
+  "files": {
+    "/Users/ameymanagute/Desktop/Jeevandan---Blockchain-based-Organ-Donation-Platform/contracts/Signin.sol": {
+      "lastModificationDate": 1699009469127,
+      "contentHash": "f47b1ccd363e98063c52c3c73cbba7ff",
+      "sourceName": "contracts/Signin.sol",
+      "solcConfig": {
+        "version": "0.8.17",
+        "settings": {
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        ">=0.5.0 <0.9.0"
+      ],
+      "artifacts": [
+        "enterDetails"
+      ]
+    }
+  }
+}
