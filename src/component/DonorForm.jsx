@@ -1,7 +1,15 @@
 import React from 'react'
 import { useState } from 'react';
 import axios from 'axios'
+import Select from "react-select";
+
 const DonorForm = () => {
+
+    const options = [
+        { value: "kidney", label: "Kidney" },
+        { value: "pancreas", label: "pancreas" },
+        { value: "liver", label: "Liver" },
+    ];
 
     const [data , setData] = useState({
         name : "",
@@ -10,30 +18,40 @@ const DonorForm = () => {
         hla : "",
         link:"",
         bloodgroup:"",
-        organs:"",
+        organs:[],
         age:0,
         kincontact : 0,
+        flag : false
     })
 
-    const [pic , setPic] = useState(null);
+    const [skills, setSkills] = useState([]);
+
+    const handleChanges = (skills) => {
+        setSkills(skills || []);
+    };
+
 
     const [status , setStatus] = useState(false);
 
     const SubmitForm = async (e) => {
         e.preventDefault()
-        console.log(data)
+        for(let i = 0 ; i < skills.length ; i++){
+            data.organs.push(skills[i].value);
+            console.log(skills[i].value)
+        }
+
+        data.flag = status;
+
+        console.log(data);
   }
 
     const check = async (e) => {
-        setStatus(!status)
-        console.log(status)
+        setStatus(current => !current);
     }
 
     const handleFile = async (e) => {
         const { files } = e.target
         console.log(files[0])
-        setPic(files[0])
-        console.log(pic)
         await uploadToPinata(files[0])
     }
 
@@ -160,15 +178,13 @@ const DonorForm = () => {
                         </select>
                     </div>
 
-                    <div class="input-group mb-1" style={{height : "30px" , width : "330px" , marginLeft : "10px" , marginTop : "50px"}}>
-                        <label class="input-group-text" style={{ fontSize : "18px" , backgroundColor : "#5ec576" , color : "white"}} for="inputGroupSelect01">Select Organs</label>
-                        <select class="form-select" onChange={(event) => handleChange(event)} name="organs" id="inputGroupSelect01" style={{ fontSize : "18px"}}>
-                            <option selected>Select</option>
-                            <option value="kidney">Kidney</option>
-                            <option value="liver">Liver</option>
-                            <option value="pancreas">Pancreas</option>
-                        </select>
-                    </div>
+                    <Select
+                    options={options}
+                    onChange= {handleChanges}
+                    value={skills}
+                    style={{ fontSize : "18px" , backgroundColor : "#5ec576" , color : "white"}}
+                    isMulti
+                    />
 
                     <div className="col-md-4" style={{marginTop : "50px",marginLeft:"200px"}}>
                         <div className="input-group has-validation">
