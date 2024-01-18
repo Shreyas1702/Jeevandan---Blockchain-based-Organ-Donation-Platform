@@ -7,6 +7,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Web3 from "web3";
 import { ethers } from "ethers";
 import HospitalPage from "./component/HospitalPage";
+import DonorForm from "./component/DonorForm";
 
 function App() {
   const [state, setState] = useState({
@@ -148,6 +149,7 @@ function App() {
               }
             ></Route>
           )}
+          <Route path="/hospitalPage/DonorForm" element={<DonorForm />}></Route>
         </Routes>
       </BrowserRouter>
     </div>
