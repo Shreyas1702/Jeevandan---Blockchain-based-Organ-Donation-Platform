@@ -1,5 +1,6 @@
 import React from 'react'
 import { useState } from 'react';
+import axios from 'axios'
 const DonorForm = () => {
 
     const [data , setData] = useState({
@@ -30,8 +31,43 @@ const DonorForm = () => {
 
     const handleFile = async (e) => {
         const { files } = e.target
+        console.log(files[0])
         setPic(files[0])
+        console.log(pic)
+        await uploadToPinata(files[0])
     }
+
+    const uploadToPinata = async (file) => {
+        console.log("hello");
+        console.log(file)
+        if(file){
+            let ImgHash;
+            try {
+                const formData = new FormData();
+                formData.append("file" , file);
+
+                console.log(file)
+
+                const response = await axios({
+                    method: "post",
+                    url: "https://api.pinata.cloud/pinning/pinFileToIPFS",
+                    data : formData,
+                    headers : {
+                        pinata_api_key : `831e98523da1cfada3cc`,
+                        pinata_secret_api_key : `24681b79b48dd632cd6640931655a35d88fd3fac52edcfb5080187d340851dff`,
+                        "Content-Type" : "multipart/form-data",
+                    },
+                });
+
+                ImgHash = `https://gateway.pinata.cloud/ipfs/${response.data.IpfsHash}`;
+            }
+            catch(error){
+                console.log("Unable to Upload the Image")
+            }
+
+            console.log(ImgHash)
+        }
+    };
 
     function handleChange(e){
         e.preventDefault();
