@@ -53,8 +53,8 @@ const DonorForm = () => {
                     url: "https://api.pinata.cloud/pinning/pinFileToIPFS",
                     data : formData,
                     headers : {
-                        pinata_api_key : `831e98523da1cfada3cc`,
-                        pinata_secret_api_key : `24681b79b48dd632cd6640931655a35d88fd3fac52edcfb5080187d340851dff`,
+                        pinata_api_key : `403a4001d5cc63b3ce0f`,
+                        pinata_secret_api_key : `cd44bc63c6fdbabc149ce19412cc7c049d2ee4e5477ce8e9f824ef323a8a0c30`,
                         "Content-Type" : "multipart/form-data",
                     },
                 });
@@ -62,10 +62,14 @@ const DonorForm = () => {
                 ImgHash = `https://gateway.pinata.cloud/ipfs/${response.data.IpfsHash}`;
             }
             catch(error){
+                console.log(error)
                 console.log("Unable to Upload the Image")
             }
 
-            console.log(ImgHash)
+            data.link = ImgHash;
+
+            console.log(data)
+            
         }
     };
 
@@ -121,7 +125,7 @@ const DonorForm = () => {
                     <div className="col-md-3" style={{marginTop : "50px",marginLeft:"90px"}}>
                         <div className="input-group has-validation">
                             <span className="input-group-text" id="inputGroupPrepend" style={{fontSize : "18px" , color : "#5ec576" , backgroundColor : "#5ec576" , color : "white"}}>Age</span>
-                            <input name='weight' type="number" min="1" onChange={(event) => handleChange(event)} className="form-control" style={{ fontSize:"15px" , height: "43px" }} id="validationCustomUsername" aria-describedby="inputGroupPrepend"  required/>
+                            <input name='age' type="number" min="1" onChange={(event) => handleChange(event)} className="form-control" style={{ fontSize:"15px" , height: "43px" }} id="validationCustomUsername" aria-describedby="inputGroupPrepend"  required/>
                             <div className="invalid-feedback">
                                 Please choose a username.
                             </div>
