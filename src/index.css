@@ -381,6 +381,24 @@ h4 {
   align-self: center;
 }
 
+/* Donor Registration Form */
+
+.donor-reg-form {
+  margin-top: 40px;
+  display: flex;
+  justify-content: center;
+}
+
+.donor-register {
+  width: 50%;
+  align-self: center;
+}
+
+.form-check-input:checked {
+  background-color: #5ec576;
+  border-color: #5ec576;
+}
+
 /* Hospital Cards Page */
 
 .hospPage {

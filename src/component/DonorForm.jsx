@@ -12,13 +12,30 @@ const DonorForm = () => {
         organs:"",
         age:0,
         kincontact : 0,
-        a : "",
     })
+
+    const [pic , setPic] = useState(null);
+
+    const [status , setStatus] = useState(false);
+
+    const SubmitForm = async (e) => {
+        e.preventDefault()
+        console.log(data)
+  }
+
+    const check = async (e) => {
+        setStatus(!status)
+        console.log(status)
+    }
+
+    const handleFile = async (e) => {
+        const { files } = e.target
+        setPic(files[0])
+    }
 
     function handleChange(e){
         e.preventDefault();
         const {name  , value} = e.target;
-    
         setData((prevData) => ({
             ...prevData,
             [name] : value
@@ -30,8 +47,8 @@ const DonorForm = () => {
     return (
         <div className="donor-reg-form">
             <div className='donor-register'>
-                <form class="row g-3 needs-validation" novalidate>
-                    <div className="col-md-12" style={{marginTop : "50px",marginLeft : "20%",width:"60%"}}>
+                <form class="row g-3 needs-validation" enctype="multipart/form-data" novalidate>
+                    <div className="col-md-12" style={{marginTop : "10px",marginLeft : "10px"}}>
                         <label for="validationCustom01" className="form-label" style={{fontSize : "20px", color : "#5ec576"}}>Name</label>
                         <input name='name' type="text" className="form-control" onChange={(event) => handleChange(event)} style={{height: "35px" , fontSize : "18px"}} id="validationCustom01" required/>
                         <div className="valid-feedback">
@@ -39,53 +56,46 @@ const DonorForm = () => {
                         </div>
                     </div>
 
-                   
+                    <div className="col-md-12" style={{marginTop : "30px" , marginLeft : "10px"}}>
+                        <label for="formFileLg" class="form-label" style={{fontSize : "20px", color : "#5ec576"}}>Report </label>
+                            <input type="file"  name="link" class="form-control form-control-lg" onChange={(event) => handleFile(event)} id="formFileLg" />             
+                    </div>
 
-                    <div className="col-md-12" style={{marginTop : "50px",marginLeft : "20%",width:"60%"}}>
-                        <label for="validationCustomUsername" style={{fontSize : "20px" , marginTop : "8px", color : "#5ec576"}} className="form-label">Email</label>
+                    <div className="col-md-3" style={{marginTop : "50px" , marginLeft : "10px"}}>
                         <div className="input-group has-validation">
-                        <input name='email' type="text" className="form-control" id="validationCustomUsername" onChange={(event) => handleChange(event)} style={{height: "35px" , fontSize : "18px"}} aria-describedby="inputGroupPrepend" required/>
-                        <div className="invalid-feedback">
-                            Please choose a username.
-                        </div>
-                        </div>
-                    </div>                    
-                        <div className="col-md-2" style={{marginTop : "50px",marginLeft : "20%"}}>
-                            <div className="input-group has-validation">
-                                <span className="input-group-text" id="inputGroupPrepend" style={{fontSize : "18px" , color : "#5ec576"}}>Weight(kg)</span>
-                                <input name='weight' type="number" min="1" onChange={(event) => handleChange(event)} className="form-control" style={{ fontSize:"15px" , height: "50px" }} id="validationCustomUsername" aria-describedby="inputGroupPrepend"  required/>
-                                <div className="invalid-feedback">
-                                    Please choose a username.
-                                </div>
+                            <span className="input-group-text" id="inputGroupPrepend" style={{fontSize : "18px" , backgroundColor : "#5ec576" , color : "white"}}>Weight (kg)</span>
+                            <input name='weight' type="number" min="1" onChange={(event) => handleChange(event)} className="form-control" style={{ fontSize:"15px" , height: "45px" }} id="validationCustomUsername" aria-describedby="inputGroupPrepend"  required/>
+                            <div className="invalid-feedback">
+                                Please choose a username.
                             </div>
                         </div>
-    
-    
-                        <div className="col-md-2" style={{marginTop : "50px",marginLeft:"5%"}}>
-                            <div className="input-group has-validation">
-                                <span className="input-group-text" id="inputGroupPrepend" style={{fontSize : "18px" , color : "#5ec576"}}>Height(cm)</span>
-                                <input name='height' type="number" min="1" onChange={(event) => handleChange(event)} className="form-control" style={{ fontSize:"15px" , height: "50px" }} id="validationCustomUsername" aria-describedby="inputGroupPrepend"  required/>
-                                <div className="invalid-feedback">
-                                    Please choose a username.
-                                </div>
+                    </div>
+
+
+                    <div className="col-md-3" style={{marginTop : "50px",marginLeft:"96px"}}>
+                        <div className="input-group has-validation">
+                            <span className="input-group-text" id="inputGroupPrepend" style={{fontSize : "18px" , color : "#5ec576" , backgroundColor : "#5ec576" , color : "white"}}>Height (cm)</span>
+                            <input name='height' type="number" min="1" onChange={(event) => handleChange(event)} className="form-control" style={{ fontSize:"15px" , height: "43px" }} id="validationCustomUsername" aria-describedby="inputGroupPrepend"  required/>
+                            <div className="invalid-feedback">
+                                Please choose a username.
                             </div>
                         </div>
+                    </div>
 
-                    <div className="col-md-2" style={{marginTop : "50px",marginLeft:"5%"}}>
-                            <div className="input-group has-validation">
-                                <span className="input-group-text" id="inputGroupPrepend" style={{fontSize : "18px" , color : "#5ec576"}}>AGE</span>
-                                <input name='weight' type="number" min="1" onChange={(event) => handleChange(event)} className="form-control" style={{ fontSize:"15px" , height: "50px" }} id="validationCustomUsername" aria-describedby="inputGroupPrepend"  required/>
-                                <div className="invalid-feedback">
-                                    Please choose a username.
-                                </div>
+                    <div className="col-md-3" style={{marginTop : "50px",marginLeft:"90px"}}>
+                        <div className="input-group has-validation">
+                            <span className="input-group-text" id="inputGroupPrepend" style={{fontSize : "18px" , color : "#5ec576" , backgroundColor : "#5ec576" , color : "white"}}>Age</span>
+                            <input name='weight' type="number" min="1" onChange={(event) => handleChange(event)} className="form-control" style={{ fontSize:"15px" , height: "43px" }} id="validationCustomUsername" aria-describedby="inputGroupPrepend"  required/>
+                            <div className="invalid-feedback">
+                                Please choose a username.
                             </div>
                         </div>
+                    </div>
 
-
-                    <div className="col-md-2" style={{marginTop : "50px",marginLeft:"20%"}}>
-                    <label for="validationCustom02" className="form-label" style={{fontSize : "20px" , marginTop : "8px", color : "#5ec576"}}>BloodGroup</label>
-						<select name="bloodgroup" class="hla" onchange={(event) => handleChange(event)} style={{height: "35px" , fontSize : "18px"}}>
-							<option selected>SELECT</option>
+                    <div class="input-group mb-1" style={{height : "30px" , width : "330px" , marginLeft : "10px" , marginTop : "50px"}}>
+                        <label class="input-group-text" style={{ fontSize : "18px" , backgroundColor : "#5ec576" , color : "white"}} for="inputGroupSelect01">Blood Group</label>
+                        <select class="form-select" name="bloodgroup" id="inputGroupSelect01" onChange={(event) => handleChange(event)} style={{ fontSize : "18px"}}>
+                            <option selected>Select</option>
 							<option value="O+">O+</option>
 							<option value="O-">O-</option>
 							<option value="A+">A+</option>
@@ -94,66 +104,50 @@ const DonorForm = () => {
                             <option value="B-">B-</option>
                             <option value="AB+">AB+</option>
                             <option value="AB-">AB-</option>
-						</select>
-                        <div className="valid-feedback">
-                        Looks good!
-                        </div>
-                        </div>
+                        </select>
+                    </div>
 
-
-
-                        <div className="col-md-2" style={{marginTop : "50px",marginLeft:"8%"}}>
-                    <label for="validationCustom02" className="form-label" style={{fontSize : "20px" , marginTop : "8px", color : "#5ec576"}} >Hla</label>
-						<select name="hla" class="hla" onchange={(event) => handleChange(event)} style={{height: "35px" , fontSize : "18px"}}>
-							<option selected>SELECT</option>
+                    <div class="input-group mb-1" style={{height : "30px" , width : "330px" , marginLeft : "140px" , marginTop : "50px"}}>
+                        <label class="input-group-text" style={{ fontSize : "18px" , backgroundColor : "#5ec576" , color : "white"}} for="inputGroupSelect01">HLA-Type</label>
+                        <select class="form-select" onChange={(event) => handleChange(event)} name="hla" id="inputGroupSelect01" style={{ fontSize : "18px"}}>
+                            <option selected>Select</option>
 							<option value="hla-a">HLA-A</option>
 							<option value="hla-b">HLA-B</option>
 							<option value="hla-c">HLA-C</option>
 							<option value="hla-dp">HLA-DP</option>
 							<option value="hla-dq">HLA-DQ</option>
                             <option value="hla-dr">HLA-DR</option>
-						</select>
-                        <div className="valid-feedback">
-                        Looks good!
-                        </div>
+                        </select>
                     </div>
 
-
-
-                    <div className="col-md-2" style={{marginTop : "50px",marginLeft:"3.5%"}}>
-                    <label for="validationCustom02" className="form-label" style={{fontSize : "20px" , marginTop : "8px", color : "#5ec576"}} >Select Organ</label>
-						<select name="hla" class="hla" onchange={(event) => handleChange(event)} style={{height: "35px" , fontSize : "18px"}}>
-							<option selected>SELECT</option>
-							<option value="kidney">Kidney</option>
-							<option value="liver">Liver</option>
+                    <div class="input-group mb-1" style={{height : "30px" , width : "330px" , marginLeft : "10px" , marginTop : "50px"}}>
+                        <label class="input-group-text" style={{ fontSize : "18px" , backgroundColor : "#5ec576" , color : "white"}} for="inputGroupSelect01">Select Organs</label>
+                        <select class="form-select" onChange={(event) => handleChange(event)} name="organs" id="inputGroupSelect01" style={{ fontSize : "18px"}}>
+                            <option selected>Select</option>
+                            <option value="kidney">Kidney</option>
+                            <option value="liver">Liver</option>
                             <option value="pancreas">Pancreas</option>
+                        </select>
+                    </div>
 
-						</select>
-                        <div className="valid-feedback">
-                        Looks good!
+                    <div className="col-md-4" style={{marginTop : "50px",marginLeft:"200px"}}>
+                        <div className="input-group has-validation">
+                            <span className="input-group-text" id="inputGroupPrepend" style={{fontSize : "18px" , color : "#5ec576" , backgroundColor : "#5ec576" , color : "white"}}>Kin Contact</span>
+                            <input name='kincontact' type="number" min="1" onChange={(event) => handleChange(event)} className="form-control" style={{ fontSize:"15px" , height: "43px" }} id="validationCustomUsername" aria-describedby="inputGroupPrepend"  required/>
+                            <div className="invalid-feedback">
+                                Please choose a username.
+                            </div>
                         </div>
                     </div>
 
-                    <div className="col-md-4" style={{marginTop : "50px" , marginLeft : "20%"}}>
-                        <label for="formFileLg" class="form-label">CHOOSE YOUR DONOR CETIFICATE </label>
-                            <input type="file" name="link" class="form-control form-control-lg" id="formFileLg" />             
-                        </div>
-
-
-                    <div className="col-12">
-                        <div className="form-check" style={{marginTop : "8px",marginLeft:"20%"}}>
-                        <input className="form-check-input" type="checkbox" style={{width: "20px" ,
-        height: "20px" }} value="" id="invalidCheck" required/>
-                        <label className="form-check-label" for="invalidCheck" style={{fontSize : "17px"}}>
-                            &nbsp;&nbsp;&nbsp;Agree to terms and conditions
-                        </label>
-                        <div className="invalid-feedback">
-                            You must agree before submitting.
-                        </div>
+                    <div className="col-12" style={{marginLeft : "10px" , marginTop : "30px"}}>
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" id="flexSwitchCheckChecked" onClick={(event) => check(event)} style={{border : "1px solid #5ec576" , color : "#5ec576" , width : '35px' , height : "17px"}}/>
+                            <label class="form-check-label" for="flexSwitchCheckChecked" style={{fontSize : "15px" , marginLeft : "15px"}}>Accepted</label>
                         </div>
                     </div>
-                    <div className="col-12">
-                        <button className="btns btn-primary" style={{width : "60%" , fontSize : "22px",marginLeft:"20%"}} type="submit" onClick="">Submit</button>
+                    <div className="col-12" style={{marginTop : "20px"}}>
+                        <button className="btns btn-primary" style={{fontSize : "22px" , width : "100%"}} type="submit" onClick={(event) => SubmitForm(event)}>Submit</button>
                     </div>
                 </form>
             </div>
