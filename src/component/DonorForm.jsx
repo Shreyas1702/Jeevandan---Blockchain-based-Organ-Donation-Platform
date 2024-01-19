@@ -2,9 +2,11 @@ import React from 'react'
 import { useState } from 'react';
 import axios from 'axios'
 import Select from "react-select";
+import { ethers } from "ethers";
+const Web3 = require('web3')
 
-const DonorForm = () => {
-
+const DonorForm = ({ account, setAccount , state ,setState}) => {
+    
     const options = [
         { value: "kidney", label: "Kidney" },
         { value: "pancreas", label: "pancreas" },
@@ -12,13 +14,14 @@ const DonorForm = () => {
     ];
 
     const [data , setData] = useState({
+        address : "",
         name : "",
         weight : 0,
         height : 0,
         hla : "",
         link:"",
         bloodgroup:"",
-        organs:[],
+        organs: "",
         age:0,
         kincontact : 0,
         flag : false
@@ -33,16 +36,28 @@ const DonorForm = () => {
 
     const [status , setStatus] = useState(false);
 
+    const [pic , setPic] = useState(false)
+
     const SubmitForm = async (e) => {
         e.preventDefault()
         for(let i = 0 ; i < skills.length ; i++){
-            data.organs.push(skills[i].value);
+            data.organs = (skills[i].value);
             console.log(skills[i].value)
         }
-
         data.flag = status;
-
+        
+        try{
+        const {contract}  = state;
+        console.log(contract)
         console.log(data);
+        data.address = account
+        const transaction = await contract.registerDonor(data.address , data.name , data.weight , data.height ,  data.link , data.hla  , data.bloddgroup  , data.organs , data.age , data.kincontact , data.flag);
+        await transaction.wait();
+        console.log("Transaction Done");
+        }
+         catch (error) {
+        console.error("Error during transaction:", error);
+    }
   }
 
     const check = async (e) => {
@@ -78,6 +93,8 @@ const DonorForm = () => {
                 });
 
                 ImgHash = `https://gateway.pinata.cloud/ipfs/${response.data.IpfsHash}`;
+
+                setPic(true)
             }
             catch(error){
                 console.log(error)
@@ -117,6 +134,7 @@ const DonorForm = () => {
                     <div className="col-md-12" style={{marginTop : "30px" , marginLeft : "10px"}}>
                         <label for="formFileLg" class="form-label" style={{fontSize : "20px", color : "#5ec576"}}>Report </label>
                             <input type="file"  name="link" class="form-control form-control-lg" onChange={(event) => handleFile(event)} id="formFileLg" />             
+                            {pic && <p style={{fontSize : "15px" , color : "#5ec576" , margin : "0px" , padding : "0px"}}>{data.link}</p>}
                     </div>
 
                     <div className="col-md-3" style={{marginTop : "50px" , marginLeft : "10px"}}>

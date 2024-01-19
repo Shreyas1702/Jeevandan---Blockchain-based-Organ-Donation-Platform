@@ -22,7 +22,7 @@ function App() {
 
   useEffect(() => {
     const connectWallet = async () => {
-      const contractAddress = "0xcdeb021ae6EF488eA41a71C8B25CCb1a14986B4C";
+      const contractAddress = "0xfB2A27f167b8C048ead4eB60E9C35A5109e0d129";
       const contractABI = abi.abi;
 
       try {
@@ -105,10 +105,10 @@ function App() {
               </li>
               {!loggedIn && (
                 <li>
-                <a className="my_links" href="/signin">
-                  Register
-                </a>
-              </li>
+                  <a className="my_links" href="/signin">
+                    Register
+                  </a>
+                </li>
               )}
               {loggedIn && (
                 <li>
@@ -149,7 +149,17 @@ function App() {
               }
             ></Route>
           )}
-          <Route path="/hospitalPage/DonorForm" element={<DonorForm />}></Route>
+          <Route
+            path="/hospitalPage/DonorForm"
+            element={
+              <DonorForm
+                account={account}
+                setAccount={setAccount}
+                state={state}
+                setState={setState}
+              />
+            }
+          ></Route>
         </Routes>
       </BrowserRouter>
     </div>

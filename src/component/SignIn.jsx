@@ -80,6 +80,7 @@ const SignIn = ({ account, setAccount , state ,setState , loggedIn ,  setLoggedI
     console.log(contract)
     const transaction = await contract.registerHospital(data.name , data.hospital_id , data.email , data.longitude , data.latitude , data.address);
     await transaction.wait();
+    console.log(transaction)
     console.log("Transaction Done");
 
     setLoggedIn(true)
