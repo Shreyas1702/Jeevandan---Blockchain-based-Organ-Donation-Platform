@@ -21,7 +21,7 @@ const DonorForm = ({ account, setAccount , state ,setState}) => {
         hla : "",
         link:"",
         bloodgroup:"",
-        organs: "",
+        organs: [],
         age:0,
         kincontact : 0,
         flag : false
@@ -41,7 +41,7 @@ const DonorForm = ({ account, setAccount , state ,setState}) => {
     const SubmitForm = async (e) => {
         e.preventDefault()
         for(let i = 0 ; i < skills.length ; i++){
-            data.organs = (skills[i].value);
+            data.organs.push(skills[i].value);
             console.log(skills[i].value)
         }
         data.flag = status;
@@ -51,9 +51,19 @@ const DonorForm = ({ account, setAccount , state ,setState}) => {
         console.log(contract)
         console.log(data);
         data.address = account
-        const transaction = await contract.registerDonor(data.address , data.name , data.weight , data.height ,  data.link , data.hla  , data.bloddgroup  , data.organs , data.age , data.kincontact , data.flag);
-        await transaction.wait();
+        const transaction = await contract.registerDonor(data.address , data.name , data.weight , data.height ,  data.link , data.hla  , data.bloodgroup  , data.organs , data.age , data.kincontact , data.flag);
+        const rc = await transaction.wait();
+        // const event = rc.events.find(event => event.event === 'returnId');
+        console.log(rc)
+        console.log(rc.hash);
         console.log("Transaction Done");
+
+        // const registrationEvent = contract.returnId();
+
+        // registrationEvent.on('data', (event) => {
+        //     const id = event.returnValues.id;
+        //     console.log('Registered with ID:', id);
+        // });
         }
          catch (error) {
         console.error("Error during transaction:", error);

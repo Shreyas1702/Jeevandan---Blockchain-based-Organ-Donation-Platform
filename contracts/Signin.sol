@@ -51,7 +51,7 @@ contract enterDetails {
         string link;
         string hla;
         string bloodgrp;
-        string organs;
+        string[] organs;
         int age;
         int kincontact;
         bool flag;
@@ -72,7 +72,7 @@ contract enterDetails {
         string link;
         string hla;
         string bloodgrp;
-        string organs;
+        string[] organs;
         int contact;
         int age;
         bool flag;
@@ -85,6 +85,8 @@ contract enterDetails {
 
     uint randNonce = 0;
 
+    event returnId(uint256 id);
+
     function registerDonor(
         address metamask_address,
         string memory name,
@@ -93,11 +95,11 @@ contract enterDetails {
         string memory link,
         string memory hla,
         string memory bloodgrp,
-        string memory organs,
+        string[] memory organs,
         int age,
         int kincontact,
         bool flag
-    ) public payable returns (uint) {
+    ) public returns (uint256) {
         RegDonor memory regDonor = RegDonor(
             metamask_address,
             name,
@@ -131,6 +133,8 @@ contract enterDetails {
         if (flag == true) isDonor[id] = regDonor;
         else RejectDonor[id] = regDonor;
 
+        emit returnId(id);
+
         return id;
     }
 
@@ -150,7 +154,7 @@ contract enterDetails {
         string memory link,
         string memory hla,
         string memory bloodgrp,
-        string memory organs,
+        string[] memory organs,
         int contact,
         int age,
         bool flag
