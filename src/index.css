@@ -3,6 +3,16 @@ html {
   font-style: "Montesrat";
 }
 
+.css-b62m3t-container {
+  width: 35%;
+}
+
+.css-13cymwt-control {
+  margin-left: 10px;
+  width: 100%;
+  margin-top: 40px;
+}
+
 :root {
   --color-primary: #5ec576;
   --color-secondary: #ffcb03;
@@ -474,4 +484,30 @@ h4 {
   border-radius: 4px;
   margin-top: 16px;
   color: #fff;
+}
+
+/***********************Registration Form css Media Queries ************************/
+
+@media screen and (max-width: 1540px) {
+  .donor-register {
+    width: 60%;
+  }
+}
+
+@media screen and (max-width: 1287px) {
+  .donor-register {
+    width: 70%;
+  }
+}
+
+@media screen and (max-width: 1105px) {
+  .donor-register {
+    width: 75%;
+  }
+}
+
+@media screen and (max-width: 1047px) {
+  .donor-register {
+    width: 75%;
+  }
 }

@@ -22,17 +22,23 @@ function App() {
 
   useEffect(() => {
     const connectWallet = async () => {
-      const contractAddress = "0x1Df5439Baaf1C1A1b5f985D845B2A43aA2EC7051";
+      const contractAddress = "0x5F32809528a87Fa5B76D66DdD623eC707fC33D5a";
       const contractABI = abi.abi;
 
       try {
         const { ethereum } = window;
 
+        console.group(ethereum);
+
+        var accounts;
         if (ethereum) {
-          const accounts = await ethereum.request({
+          accounts = await ethereum.request({
             method: "eth_requestAccounts",
           });
-          setAccount(accounts[0]);
+
+          console.log(accounts[0]);
+          await setAccount(accounts[0]);
+          console.log(account);
         }
 
         const provider = new ethers.BrowserProvider(ethereum);
@@ -43,19 +49,22 @@ function App() {
           signer
         );
         console.log(await signer.getAddress());
-        console.log(contract);
-        const transaction = await contract.check(account);
+        console.log("contract");
         setState({ provider, signer, contract });
+
+        console.log(accounts[0]);
+
+        const transaction = await contract.check(accounts[0]);
         console.log(transaction);
         if (transaction) {
           setLoggedIn(true);
+          console.log(loggedIn);
         }
       } catch (error) {
         console.log(error);
       }
       setFunc(false);
     };
-
     connectWallet();
   }, [func]);
 
@@ -64,8 +73,8 @@ function App() {
       console.log("hello");
       window.ethereum.request({ method: "eth_requestAccounts" }).then((res) => {
         setAccount(res[0]);
-        setFunc(true);
       });
+      setFunc(true);
     } else {
       alert("install metamask extension!!");
     }
@@ -103,6 +112,7 @@ function App() {
                   </button>
                 )}
               </li>
+              {console.log(loggedIn)}
               {!loggedIn && (
                 <li>
                   <a className="my_links" href="/signin">

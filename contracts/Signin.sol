@@ -85,7 +85,7 @@ contract enterDetails {
 
     uint randNonce = 0;
 
-    event returnId(uint256 id);
+    uint256[] uniqueIdArray = [0];
 
     function registerDonor(
         address metamask_address,
@@ -99,7 +99,7 @@ contract enterDetails {
         int age,
         int kincontact,
         bool flag
-    ) public returns (uint256) {
+    ) public {
         RegDonor memory regDonor = RegDonor(
             metamask_address,
             name,
@@ -133,13 +133,15 @@ contract enterDetails {
         if (flag == true) isDonor[id] = regDonor;
         else RejectDonor[id] = regDonor;
 
-        emit returnId(id);
-
-        return id;
+        uniqueIdArray.push(id);
     }
 
     function getRegDonor(uint256 id) public view returns (RegDonor memory) {
         return isDonor[id];
+    }
+
+    function getDonorId() public view returns (uint256) {
+        return uniqueIdArray[uniqueIdArray.length - 1];
     }
 
     function checkDonor(uint256 id) public view returns (bool) {

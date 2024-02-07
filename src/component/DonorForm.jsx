@@ -58,12 +58,9 @@ const DonorForm = ({ account, setAccount , state ,setState}) => {
         console.log(rc.hash);
         console.log("Transaction Done");
 
-        // const registrationEvent = contract.returnId();
-
-        // registrationEvent.on('data', (event) => {
-        //     const id = event.returnValues.id;
-        //     console.log('Registered with ID:', id);
-        // });
+        var Id = await contract.getDonorId();
+        Id = parseInt(Id.toString())
+        console.log(Id)
         }
          catch (error) {
         console.error("Error during transaction:", error);
@@ -178,7 +175,7 @@ const DonorForm = ({ account, setAccount , state ,setState}) => {
                         </div>
                     </div>
 
-                    <div class="input-group mb-1" style={{height : "30px" , width : "330px" , marginLeft : "10px" , marginTop : "50px"}}>
+                    <div class="input-group mb-1" style={{height : "30px" , width : "40%" , marginLeft : "10px" , marginTop : "50px"}}>
                         <label class="input-group-text" style={{ fontSize : "18px" , backgroundColor : "#5ec576" , color : "white"}} for="inputGroupSelect01">Blood Group</label>
                         <select class="form-select" name="bloodgroup" id="inputGroupSelect01" onChange={(event) => handleChange(event)} style={{ fontSize : "18px"}}>
                             <option selected>Select</option>
@@ -193,7 +190,7 @@ const DonorForm = ({ account, setAccount , state ,setState}) => {
                         </select>
                     </div>
 
-                    <div class="input-group mb-1" style={{height : "30px" , width : "330px" , marginLeft : "140px" , marginTop : "50px"}}>
+                    <div class="input-group mb-1" style={{height : "30px" , width : "40%" , marginLeft : "140px" , marginTop : "50px"}}>
                         <label class="input-group-text" style={{ fontSize : "18px" , backgroundColor : "#5ec576" , color : "white"}} for="inputGroupSelect01">HLA-Type</label>
                         <select class="form-select" onChange={(event) => handleChange(event)} name="hla" id="inputGroupSelect01" style={{ fontSize : "18px"}}>
                             <option selected>Select</option>
@@ -210,14 +207,14 @@ const DonorForm = ({ account, setAccount , state ,setState}) => {
                     options={options}
                     onChange= {handleChanges}
                     value={skills}
-                    style={{ fontSize : "18px" , backgroundColor : "#5ec576" , color : "white"}}
+                    style={{ fontSize : "18px" , backgroundColor : "#5ec576" , color : "white" , height : "30px"}}
                     isMulti
                     />
 
-                    <div className="col-md-4" style={{marginTop : "50px",marginLeft:"200px"}}>
+                    <div className="col-md-5" style={{marginTop : "50px",marginLeft:"150px"}}>
                         <div className="input-group has-validation">
                             <span className="input-group-text" id="inputGroupPrepend" style={{fontSize : "18px" , color : "#5ec576" , backgroundColor : "#5ec576" , color : "white"}}>Kin Contact</span>
-                            <input name='kincontact' type="number" min="1" onChange={(event) => handleChange(event)} className="form-control" style={{ fontSize:"15px" , height: "43px" }} id="validationCustomUsername" aria-describedby="inputGroupPrepend"  required/>
+                            <input name='kincontact' type="number" min="1" onChange={(event) => handleChange(event)} className="form-control" style={{ fontSize:"15px" , height: "43px" , width: "60px" }} id="validationCustomUsername" aria-describedby="inputGroupPrepend"  required/>
                             <div className="invalid-feedback">
                                 Please choose a username.
                             </div>
