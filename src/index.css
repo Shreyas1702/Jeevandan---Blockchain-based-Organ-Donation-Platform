@@ -112,7 +112,7 @@ html {
 
 .section__title {
   max-width: 80rem;
-  margin: 0 auto 2rem auto;
+  margin: 0 0 1rem 20rem;
 }
 
 .section__description {

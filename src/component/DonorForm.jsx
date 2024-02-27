@@ -9,7 +9,7 @@ const DonorForm = ({ account, setAccount , state ,setState}) => {
     
     const options = [
         { value: "kidney", label: "Kidney" },
-        { value: "pancreas", label: "pancreas" },
+        { value: "pancreas", label: "Pancreas" },
         { value: "liver", label: "Liver" },
     ];
 
@@ -23,6 +23,7 @@ const DonorForm = ({ account, setAccount , state ,setState}) => {
         bloodgroup:"",
         organs: [],
         age:0,
+        meta_address: "",
         kincontact : 0,
         flag : false
     })
@@ -40,32 +41,73 @@ const DonorForm = ({ account, setAccount , state ,setState}) => {
 
     const SubmitForm = async (e) => {
         e.preventDefault()
+        const humanData = {
+            "name" : data.name,
+            "weight" : data.weight,
+            "height" : data.height,
+            "hla" : data.hla,
+            "link" : data.link,
+            "organ" : "",
+            "image" : "",
+            "age" : data.age,
+            "kincontact" : data.kincontact,
+            "bloodgroup" : data.bloodgroup,
+            "address" : account,
+        }
         for(let i = 0 ; i < skills.length ; i++){
             data.organs.push(skills[i].value);
+
+            if(skills[i].value == "kidney" && status){
+                humanData.organ = "kidney"
+                humanData.image = "https://gateway.pinata.cloud/ipfs/QmPQvvpRgEYDfkB1xe7gJYTaD1iNgJczEjbCRbtTt6S5Au"
+                const d = await uploadToPinataJson(humanData);
+                const resp = `https://gateway.pinata.cloud/ipfs/${d.data.IpfsHash}`
+                contractCall(resp)
+            }
+            else if(skills[i].value == "pancreas" && status){
+                humanData.organ = "pancreas"
+                const d = await uploadToPinataJson(humanData)
+                const resp = `https://gateway.pinata.cloud/ipfs/${d.data.IpfsHash}`
+                contractCall(resp)
+            }
+            else if(skills[i].value == "liver" && status){
+                humanData.organ = "liver"
+                const d = await uploadToPinataJson(humanData)
+                const resp = `https://gateway.pinata.cloud/ipfs/${d.data.IpfsHash}`
+                contractCall(resp)
+            }
+            else{
+                continue
+            }
             console.log(skills[i].value)
         }
         data.flag = status;
         
-        try{
-        const {contract}  = state;
-        console.log(contract)
-        console.log(data);
-        data.address = account
-        const transaction = await contract.registerDonor(data.address , data.name , data.weight , data.height ,  data.link , data.hla  , data.bloodgroup  , data.organs , data.age , data.kincontact , data.flag);
-        const rc = await transaction.wait();
-        // const event = rc.events.find(event => event.event === 'returnId');
-        console.log(rc)
-        console.log(rc.hash);
-        console.log("Transaction Done");
+    //     try{
+    //     const {contract}  = state;
+    //     console.log(contract)
+    //     console.log(data);
+    //     data.address = account
+    //     const transaction = await contract.registerDonor(data.address , data.name , data.weight , data.height ,  data.link , data.hla  , data.bloodgroup  , data.organs , data.age , data.kincontact , data.flag);
+    //     const rc = await transaction.wait();
+    //     console.log("Transaction Done");
 
-        var Id = await contract.getDonorId();
-        Id = parseInt(Id.toString())
-        console.log(Id)
-        }
-         catch (error) {
-        console.error("Error during transaction:", error);
-    }
+    //     var Id = await contract.getDonorId();
+    //     Id = parseInt(Id.toString())
+    //     console.log(Id)
+    //     }
+    //      catch (error) {
+    //     console.error("Error during transaction:", error);
+    // }
   }
+
+    const contractCall = async (resp) => {
+        const {contract}  = state;
+        console.log(resp)
+        const transaction = await contract.awardItem(data.meta_address , resp);
+        const rc = await transaction.wait();
+        console.log(rc)
+    }
 
     const check = async (e) => {
         setStatus(current => !current);
@@ -115,6 +157,24 @@ const DonorForm = ({ account, setAccount , state ,setState}) => {
         }
     };
 
+    const uploadToPinataJson = async (humanData) => {
+      
+      const data = humanData;
+
+      const response = await axios({
+        method: "post",
+        url: "https://api.pinata.cloud/pinning/pinJSONToIPFS",
+        data,
+        headers: {
+          pinata_api_key: `403a4001d5cc63b3ce0f`,
+          pinata_secret_api_key: `cd44bc63c6fdbabc149ce19412cc7c049d2ee4e5477ce8e9f824ef323a8a0c30`,
+          "Content-Type": "application/json",
+        },
+      });
+
+      return response;
+    }
+
     function handleChange(e){
         e.preventDefault();
         const {name  , value} = e.target;
@@ -142,6 +202,11 @@ const DonorForm = ({ account, setAccount , state ,setState}) => {
                         <label for="formFileLg" class="form-label" style={{fontSize : "20px", color : "#5ec576"}}>Report </label>
                             <input type="file"  name="link" class="form-control form-control-lg" onChange={(event) => handleFile(event)} id="formFileLg" />             
                             {pic && <p style={{fontSize : "15px" , color : "#5ec576" , margin : "0px" , padding : "0px"}}>{data.link}</p>}
+                    </div>
+
+                    <div className="col-md-12" style={{marginTop : "30px" , marginLeft : "10px"}}>
+                        <label for="formFileLg" class="form-label" style={{fontSize : "20px", color : "#5ec576"}}>User Address </label>
+                            <input type="text"  name="meta_address" class="form-control form-control-lg" onChange={(event) => handleChange(event)} />             
                     </div>
 
                     <div className="col-md-3" style={{marginTop : "50px" , marginLeft : "10px"}}>

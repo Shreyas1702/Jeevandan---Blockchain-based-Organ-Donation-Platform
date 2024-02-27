@@ -1,5 +1,5 @@
 import "./index.css";
-import abi from "./contracts/enterDetails.json";
+import abi from "./contracts/register.json";
 import { useState, useEffect } from "react";
 import SignIn from "./component/SignIn";
 import LandingPage from "./component/LandingPage";
@@ -8,6 +8,7 @@ import Web3 from "web3";
 import { ethers } from "ethers";
 import HospitalPage from "./component/HospitalPage";
 import DonorForm from "./component/DonorForm";
+import Matching from "./component/Matching";
 
 function App() {
   const [state, setState] = useState({
@@ -22,7 +23,7 @@ function App() {
 
   useEffect(() => {
     const connectWallet = async () => {
-      const contractAddress = "0x5F32809528a87Fa5B76D66DdD623eC707fC33D5a";
+      const contractAddress = "0xf88d2a8d2aA06Fea9a1d7583dDf6b72871e7463e";
       const contractABI = abi.abi;
 
       try {
@@ -51,7 +52,7 @@ function App() {
         console.log(await signer.getAddress());
         console.log("contract");
         setState({ provider, signer, contract });
-
+        console.log(contract);
         console.log(accounts[0]);
 
         const transaction = await contract.check(accounts[0]);
@@ -163,6 +164,17 @@ function App() {
             path="/hospitalPage/DonorForm"
             element={
               <DonorForm
+                account={account}
+                setAccount={setAccount}
+                state={state}
+                setState={setState}
+              />
+            }
+          ></Route>
+          <Route
+            path="/hospitalPage/MatchingPage"
+            element={
+              <Matching
                 account={account}
                 setAccount={setAccount}
                 state={state}

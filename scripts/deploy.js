@@ -7,11 +7,10 @@
 const hre = require("hardhat");
 
 async function main() {
-
-  const signin = await hre.ethers.getContractFactory('enterDetails');
-  const contract = await signin.deploy(); 
+  const signin = await hre.ethers.getContractFactory("register");
+  const contract = await signin.deploy();
   await contract.waitForDeployment();
-  console.log("Address:",contract.target);
+  console.log("Address:", contract.target);
   //instance of contract
 }
 

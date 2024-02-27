@@ -1,42 +1,37 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.5.0 <0.9.0;
+import "hardhat/console.sol";
+import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
+import "@openzeppelin/contracts/utils/Counters.sol";
 
-contract enterDetails {
+contract register is ERC721URIStorage {
+    using Counters for Counters.Counter;
+    Counters.Counter private _tokenIds;
+
+    constructor() ERC721("GameItem", "ITM") {}
+
+    uint[] donor;
+    uint[] receiver;
+    uint[] matched_receiver;
     struct Memo {
-        string name;
-        uint hospital_id;
-        string email;
-        int longitude;
-        int latitude;
+        string username;
+        uint id;
         uint timestamp;
         bool flag;
     }
+
     mapping(address => Memo) map;
+
     Memo[] memos;
 
     function registerHospital(
         string memory name,
         uint hospital_id,
-        string memory email,
-        int longitude,
-        int latitude,
         address metamask_address
     ) public payable {
-        Memo memory newMemo = Memo(
-            name,
-            hospital_id,
-            email,
-            longitude,
-            latitude,
-            block.timestamp,
-            true
-        );
+        Memo memory newMemo = Memo(name, hospital_id, block.timestamp, true);
         map[metamask_address] = newMemo;
         memos.push(newMemo);
-    }
-
-    function getMemos() public view returns (Memo[] memory) {
-        return memos;
     }
 
     function check(address id) public view returns (bool) {
@@ -45,73 +40,61 @@ contract enterDetails {
 
     struct RegDonor {
         address metamask_address;
-        string name;
-        int weight;
-        int height;
-        string link;
         string hla;
         string bloodgrp;
         string[] organs;
-        int age;
-        int kincontact;
         bool flag;
-        bool check;
+    }
+
+    struct RegRecieve {
+        address metamask_address;
+        string hla;
+        string bloodgrp;
+        string[] organs;
+        bool flag;
     }
 
     mapping(uint256 => RegDonor) isDonor;
 
     mapping(uint256 => RegDonor) RejectDonor;
 
-    mapping(uint256 => bool) isRandom;
-
-    struct RegRecieve {
-        address metamask_address;
-        string name;
-        int weight;
-        int height;
-        string link;
-        string hla;
-        string bloodgrp;
-        string[] organs;
-        int contact;
-        int age;
-        bool flag;
-        bool check;
-    }
-
     mapping(uint256 => RegRecieve) isReceiver;
 
     mapping(uint256 => RegRecieve) RejectReceiver;
 
+    mapping(uint256 => bool) isRandom;
+
+    RegRecieve[] matcharray;
+
     uint randNonce = 0;
 
-    uint256[] uniqueIdArray = [0];
+    //NFT--Minting
+    function awardItem(
+        address player,
+        string memory tokenURI
+    ) public returns (uint256) {
+        uint256 newItemId = _tokenIds.current();
+        _mint(player, newItemId);
+        _setTokenURI(newItemId, tokenURI);
+
+        _tokenIds.increment();
+        return newItemId;
+    }
+
+    //Registering Donor
 
     function registerDonor(
         address metamask_address,
-        string memory name,
-        int weight,
-        int height,
-        string memory link,
         string memory hla,
         string memory bloodgrp,
         string[] memory organs,
-        int age,
-        int kincontact,
-        bool flag
+        bool status
     ) public {
         RegDonor memory regDonor = RegDonor(
             metamask_address,
-            name,
-            weight,
-            height,
-            link,
             hla,
             bloodgrp,
             organs,
-            age,
-            kincontact,
-            flag,
             true
         );
 
@@ -130,49 +113,39 @@ contract enterDetails {
 
         isRandom[id] = true;
 
-        if (flag == true) isDonor[id] = regDonor;
-        else RejectDonor[id] = regDonor;
+        if (status == true) {
+            isDonor[id] = regDonor;
+            donor.push(id);
+        } else {
+            RejectDonor[id] = regDonor;
+            donor.push(id);
+        }
+    }
 
-        uniqueIdArray.push(id);
+    function getDonorId() public view returns (uint256) {
+        return donor[donor.length - 1];
     }
 
     function getRegDonor(uint256 id) public view returns (RegDonor memory) {
         return isDonor[id];
     }
 
-    function getDonorId() public view returns (uint256) {
-        return uniqueIdArray[uniqueIdArray.length - 1];
-    }
-
     function checkDonor(uint256 id) public view returns (bool) {
-        return isDonor[id].check;
+        return isDonor[id].flag;
     }
 
     function registerReceive(
         address metamask_address,
-        string memory name,
-        int weight,
-        int height,
-        string memory link,
         string memory hla,
         string memory bloodgrp,
         string[] memory organs,
-        int contact,
-        int age,
-        bool flag
-    ) public payable returns (uint) {
+        bool status
+    ) public {
         RegRecieve memory regRecieve = RegRecieve(
             metamask_address,
-            name,
-            weight,
-            height,
-            link,
             hla,
             bloodgrp,
             organs,
-            contact,
-            age,
-            flag,
             true
         );
 
@@ -191,10 +164,17 @@ contract enterDetails {
 
         isRandom[id] = true;
 
-        if (flag == true) isReceiver[id] = regRecieve;
-        else RejectReceiver[id] = regRecieve;
+        if (status == true) {
+            isReceiver[id] = regRecieve;
+            receiver.push(id);
+        } else {
+            RejectReceiver[id] = regRecieve;
+            receiver.push(id);
+        }
+    }
 
-        return id;
+    function getRecieverId() public view returns (uint256) {
+        return donor[donor.length - 1];
     }
 
     function getRegReceive(uint256 id) public view returns (RegRecieve memory) {
@@ -202,6 +182,33 @@ contract enterDetails {
     }
 
     function checkReceive(uint256 id) public view returns (bool) {
-        return isReceiver[id].check;
+        return isReceiver[id].flag;
+    }
+
+    function printArraydonor() public view returns (uint[] memory) {
+        return donor;
+    }
+
+    function printArrayreceiver() public view returns (uint[] memory) {
+        return receiver;
+    }
+
+    function matchDonorwReceiver(uint id) public returns (RegRecieve[] memory) {
+        for (uint j = 0; j < receiver.length; j++) {
+            if (
+                keccak256(abi.encode(isDonor[id].bloodgrp)) ==
+                keccak256(abi.encode(isReceiver[receiver[j]].bloodgrp)) &&
+                keccak256(abi.encode(isDonor[id].hla)) ==
+                keccak256(abi.encode(isReceiver[receiver[j]].hla))
+            ) {
+                matcharray.push(isReceiver[receiver[j]]);
+                matched_receiver.push(receiver[j]);
+            }
+        }
+        return matcharray;
+    }
+
+    function receiverMatched() public view returns (uint[] memory) {
+        return matched_receiver;
     }
 }

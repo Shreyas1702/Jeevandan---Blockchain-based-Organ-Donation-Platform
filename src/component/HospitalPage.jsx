@@ -8,6 +8,11 @@ const HospitalPage = () => {
     window.location.href ='http://localhost:3000/hospitalPage/DonorForm'
   }
 
+  function MatchingForm(e){
+    e.preventDefault();
+    window.location.href ='http://localhost:3000/hospitalPage/MatchingPage'
+  }
+
   return (
     <div className="hospPage">
       <div className="grp1">
@@ -31,7 +36,7 @@ const HospitalPage = () => {
     <div className="grp2">
       <div className="card">
           <img src="./IMG_8366.PNG" alt="" />
-          <div className="card-content">
+          <div className="card-content" onClick={(e) => MatchingForm(e)}>
             <h3>Reciever Card</h3>
             <p>Click Over here to create Reciever Cards</p>
           </div>
