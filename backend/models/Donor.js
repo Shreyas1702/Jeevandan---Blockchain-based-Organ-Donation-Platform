@@ -41,6 +41,20 @@ const DonorSchema = new Schema({
     type: Number,
     required: true,
   },
+  nftId: {
+    kidney: {
+      type: Number,
+      default: -1,
+    },
+    pancreas: {
+      type: Number,
+      default: -1,
+    },
+    liver: {
+      type: Number,
+      default: -1,
+    },
+  },
   kincontact: {
     type: Number,
     required: true,

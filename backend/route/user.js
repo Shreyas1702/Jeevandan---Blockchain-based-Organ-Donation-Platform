@@ -4,6 +4,6 @@ const users = require("./../controller/user");
 const passport = require("passport");
 router.route("/register").post(users.register);
 
-router.route("/donor_reg").post(users.donor_reg);
+router.route("/donor_reg/:id").post(users.donor_reg);
 
 module.exports = router;

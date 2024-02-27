@@ -8,7 +8,7 @@ contract register is ERC721URIStorage {
     using Counters for Counters.Counter;
     Counters.Counter private _tokenIds;
 
-    constructor() ERC721("GameItem", "ITM") {}
+    constructor() ERC721("Oragan Donation", "OD") {}
 
     uint[] donor;
     uint[] receiver;

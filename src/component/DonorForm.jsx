@@ -22,6 +22,11 @@ const DonorForm = ({ account, setAccount , state ,setState}) => {
         link:"",
         bloodgroup:"",
         organs: [],
+        nftId: {
+            kidney : -1,
+            pancreas : -1,
+            liver : -1,
+        },
         age:0,
         meta_address: "",
         kincontact : 0,
@@ -62,19 +67,24 @@ const DonorForm = ({ account, setAccount , state ,setState}) => {
                 humanData.image = "https://gateway.pinata.cloud/ipfs/QmPQvvpRgEYDfkB1xe7gJYTaD1iNgJczEjbCRbtTt6S5Au"
                 const d = await uploadToPinataJson(humanData);
                 const resp = `https://gateway.pinata.cloud/ipfs/${d.data.IpfsHash}`
-                contractCall(resp)
+                var num = await contractCall(resp)
+                data.nftId.kidney = num;
             }
             else if(skills[i].value == "pancreas" && status){
                 humanData.organ = "pancreas"
                 const d = await uploadToPinataJson(humanData)
+                humanData.image = "https://gateway.pinata.cloud/ipfs/Qmbgzp9DgWCba4BAwoCwVLAD7w53nDkT3gPDz3vU3e2xyE"
                 const resp = `https://gateway.pinata.cloud/ipfs/${d.data.IpfsHash}`
-                contractCall(resp)
+                var num = await contractCall(resp)
+                data.nftId.pancreas = num;
             }
             else if(skills[i].value == "liver" && status){
                 humanData.organ = "liver"
+                humanData.image = "https://gateway.pinata.cloud/ipfs/QmcWr1t9RxhbZauQ6MgvJm9sxQDyei6uWdik3SfX9HQtXF"
                 const d = await uploadToPinataJson(humanData)
                 const resp = `https://gateway.pinata.cloud/ipfs/${d.data.IpfsHash}`
-                contractCall(resp)
+                var num = await contractCall(resp)
+                data.nftId.liver = num;
             }
             else{
                 continue
@@ -83,22 +93,31 @@ const DonorForm = ({ account, setAccount , state ,setState}) => {
         }
         data.flag = status;
         
-    //     try{
-    //     const {contract}  = state;
-    //     console.log(contract)
-    //     console.log(data);
-    //     data.address = account
-    //     const transaction = await contract.registerDonor(data.address , data.name , data.weight , data.height ,  data.link , data.hla  , data.bloodgroup  , data.organs , data.age , data.kincontact , data.flag);
-    //     const rc = await transaction.wait();
-    //     console.log("Transaction Done");
+        try{
+        const {contract}  = state;
+        console.log(contract)
+        console.log(data);
+        data.address = account
+        const transaction = await contract.registerDonor(data.address ,  data.hla  , data.bloodgroup  , data.organs , data.flag);
+        const rc = await transaction.wait();
+        console.log("Transaction Done");
 
-    //     var Id = await contract.getDonorId();
-    //     Id = parseInt(Id.toString())
-    //     console.log(Id)
-    //     }
-    //      catch (error) {
-    //     console.error("Error during transaction:", error);
-    // }
+        var Id = await contract.getDonorId();
+        Id = parseInt(Id.toString())
+        console.log(Id)
+        console.log(data);
+
+        await axios.post(`http://localhost:8000/donor_reg/${Id}`, data)
+        .then(function (response) {
+            console.log(response);
+        })
+        .catch(function (error) {
+            console.log(error);
+        });
+        }
+         catch (error) {
+        console.error("Error during transaction:", error);
+    }
   }
 
     const contractCall = async (resp) => {
@@ -106,7 +125,8 @@ const DonorForm = ({ account, setAccount , state ,setState}) => {
         console.log(resp)
         const transaction = await contract.awardItem(data.meta_address , resp);
         const rc = await transaction.wait();
-        console.log(rc)
+        var num = parseInt(rc.logs[1].data.toString())
+        return num
     }
 
     const check = async (e) => {
@@ -189,7 +209,7 @@ const DonorForm = ({ account, setAccount , state ,setState}) => {
     return (
         <div className="donor-reg-form">
             <div className='donor-register'>
-                <form class="row g-3 needs-validation" enctype="multipart/form-data" novalidate>
+                <form class="row g-3 needs-validation" encType="multipart/form-data" novalidate>
                     <div className="col-md-12" style={{marginTop : "10px",marginLeft : "10px"}}>
                         <label for="validationCustom01" className="form-label" style={{fontSize : "20px", color : "#5ec576"}}>Name</label>
                         <input name='name' type="text" className="form-control" onChange={(event) => handleChange(event)} style={{height: "35px" , fontSize : "18px"}} id="validationCustom01" required/>
