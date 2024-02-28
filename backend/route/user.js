@@ -6,4 +6,6 @@ router.route("/register").post(users.register);
 
 router.route("/donor_reg/:id").post(users.donor_reg);
 
+router.route("/reciever_reg/:id").post(users.reciever_reg);
+
 module.exports = router;

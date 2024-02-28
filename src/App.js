@@ -9,7 +9,7 @@ import { ethers } from "ethers";
 import HospitalPage from "./component/HospitalPage";
 import DonorForm from "./component/DonorForm";
 import Matching from "./component/Matching";
-
+import ReceiverForm from "./component/ReceiverForm";
 function App() {
   const [state, setState] = useState({
     provider: null,
@@ -164,6 +164,17 @@ function App() {
             path="/hospitalPage/DonorForm"
             element={
               <DonorForm
+                account={account}
+                setAccount={setAccount}
+                state={state}
+                setState={setState}
+              />
+            }
+          ></Route>
+          <Route
+            path="/hospitalPage/ReceiverForm"
+            element={
+              <ReceiverForm
                 account={account}
                 setAccount={setAccount}
                 state={state}

@@ -7,6 +7,7 @@ const app = express();
 
 const User = require("../models/user");
 const Donor = require("../models/Donor");
+const Reciever = require("../models/Reciever");
 
 module.exports.register = async (req, res, next) => {
   try {
@@ -54,6 +55,47 @@ module.exports.donor_reg = async (req, res, next) => {
       address,
     });
     donor.save();
+  } catch (e) {
+    console.log(e);
+  }
+};
+
+module.exports.reciever_reg = async (req, res, next) => {
+  try {
+    console.log(req.body);
+    const { id } = req.params;
+    const {
+      name,
+      weight,
+      height,
+      hla,
+      bloodgroup,
+      meta_address,
+      address,
+      seriouness,
+      link,
+      nftId,
+      contact,
+      age,
+      organs,
+    } = req.body;
+    const reciever = new Reciever({
+      id,
+      name,
+      weight,
+      height,
+      hla,
+      link,
+      bloodgroup,
+      organs,
+      age,
+      nftId,
+      contact,
+      seriouness,
+      meta_address,
+      address,
+    });
+    reciever.save();
   } catch (e) {
     console.log(e);
   }
