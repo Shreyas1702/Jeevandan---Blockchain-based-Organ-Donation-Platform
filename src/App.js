@@ -23,7 +23,7 @@ function App() {
 
   useEffect(() => {
     const connectWallet = async () => {
-      const contractAddress = "0x4605Bce646d9bB34F180730E7858908Fd6932852";
+      const contractAddress = "0x470d527B83E08B20Ea46f92Af30e71489b1e968f";
       const contractABI = abi.abi;
 
       try {

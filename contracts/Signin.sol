@@ -115,15 +115,15 @@ contract register is ERC721URIStorage {
 
         if (status == true) {
             isDonor[id] = regDonor;
-            donor.push(id);
+            receiver.push(id);
         } else {
             RejectDonor[id] = regDonor;
-            donor.push(id);
+            receiver.push(id);
         }
     }
 
     function getDonorId() public view returns (uint256) {
-        return donor[donor.length - 1];
+        return receiver[receiver.length - 1];
     }
 
     function getRegDonor(uint256 id) public view returns (RegDonor memory) {
@@ -166,10 +166,10 @@ contract register is ERC721URIStorage {
 
         if (status == true) {
             isReceiver[id] = regRecieve;
-            receiver.push(id);
+            donor.push(id);
         } else {
             RejectReceiver[id] = regRecieve;
-            receiver.push(id);
+            donor.push(id);
         }
     }
 

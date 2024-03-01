@@ -39,7 +39,7 @@ module.exports.donor_reg = async (req, res, next) => {
       age,
       organs,
     } = req.body;
-    const donor = new Donor({
+    await Donor.create({
       id,
       name,
       weight,
@@ -54,7 +54,6 @@ module.exports.donor_reg = async (req, res, next) => {
       meta_address,
       address,
     });
-    donor.save();
   } catch (e) {
     console.log(e);
   }
