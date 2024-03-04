@@ -515,3 +515,8 @@ h4 {
     width: 75%;
   }
 }
+.MatchingPage {
+  margin-top: 40px;
+  display: flex;
+  justify-content: center;
+}

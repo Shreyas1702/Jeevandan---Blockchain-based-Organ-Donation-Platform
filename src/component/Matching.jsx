@@ -16,7 +16,10 @@ const SubmitForm = async (e) => {
     const transaction = await contract.matchDonorwReceiver(id);
     const rc = await transaction.wait();
     console.log("Transaction Done");
+<<<<<<< HEAD
     
+=======
+>>>>>>> 8d1909bdd316b740e905806cf5d6db4e8ddf4dae
     // await axios.post(`http://localhost:8000/hospitalPage/MatchingPage${Id}`, data)
     // .then(function (response) {
     //     console.log(response);
