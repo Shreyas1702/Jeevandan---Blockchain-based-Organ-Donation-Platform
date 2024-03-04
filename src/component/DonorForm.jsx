@@ -101,6 +101,7 @@ const DonorForm = ({ account, setAccount , state ,setState}) => {
         const transaction = await contract.registerDonor(data.address ,  data.hla  , data.bloodgroup  , data.organs , data.flag);
         const rc = await transaction.wait();
         console.log("Transaction Done");
+        console.log(rc)
 
         var Id = await contract.getDonorId();
         Id = parseInt(Id.toString())

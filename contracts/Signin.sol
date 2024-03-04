@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity >=0.5.0 <0.9.0;
+pragma solidity ^0.8.2;
 import "hardhat/console.sol";
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
@@ -11,8 +11,16 @@ contract register is ERC721URIStorage {
     constructor() ERC721("Oragan Donation", "OD") {}
 
     uint[] donor;
+    uint[] isRop;
+    uint[] isRon;
+    uint[] isRap;
+    uint[] isRan;
+    uint[] isRbp;
+    uint[] isRbn;
+    uint[] isRabn;
+    uint[] isRabp;
+
     uint[] receiver;
-    uint[] matched_receiver;
     struct Memo {
         string username;
         uint id;
@@ -64,8 +72,6 @@ contract register is ERC721URIStorage {
 
     mapping(uint256 => bool) isRandom;
 
-    RegRecieve[] matcharray;
-
     uint randNonce = 0;
 
     //NFT--Minting
@@ -89,7 +95,7 @@ contract register is ERC721URIStorage {
         string memory bloodgrp,
         string[] memory organs,
         bool status
-    ) public {
+    ) public returns (uint256) {
         RegDonor memory regDonor = RegDonor(
             metamask_address,
             hla,
@@ -115,15 +121,17 @@ contract register is ERC721URIStorage {
 
         if (status == true) {
             isDonor[id] = regDonor;
-            receiver.push(id);
+            donor.push(id);
         } else {
             RejectDonor[id] = regDonor;
-            receiver.push(id);
+            donor.push(id);
         }
+
+        return id;
     }
 
     function getDonorId() public view returns (uint256) {
-        return receiver[receiver.length - 1];
+        return donor[donor.length - 1];
     }
 
     function getRegDonor(uint256 id) public view returns (RegDonor memory) {
@@ -140,7 +148,7 @@ contract register is ERC721URIStorage {
         string memory bloodgrp,
         string[] memory organs,
         bool status
-    ) public {
+    ) public returns (uint256) {
         RegRecieve memory regRecieve = RegRecieve(
             metamask_address,
             hla,
@@ -164,17 +172,61 @@ contract register is ERC721URIStorage {
 
         isRandom[id] = true;
 
+        if (
+            keccak256(abi.encode(bloodgrp)) == keccak256(abi.encode("O+")) &&
+            status == true
+        ) {
+            isRop.push(id);
+        } else if (
+            keccak256(abi.encode(bloodgrp)) == keccak256(abi.encode("O-")) &&
+            status == true
+        ) {
+            isRon.push(id);
+        } else if (
+            keccak256(abi.encode(bloodgrp)) == keccak256(abi.encode("A+")) &&
+            status == true
+        ) {
+            isRap.push(id);
+        } else if (
+            keccak256(abi.encode(bloodgrp)) == keccak256(abi.encode("A-")) &&
+            status == true
+        ) {
+            isRan.push(id);
+        } else if (
+            keccak256(abi.encode(bloodgrp)) == keccak256(abi.encode("B+")) &&
+            status == true
+        ) {
+            isRbp.push(id);
+        } else if (
+            keccak256(abi.encode(bloodgrp)) == keccak256(abi.encode("B-")) &&
+            status == true
+        ) {
+            isRbn.push(id);
+        } else if (
+            keccak256(abi.encode(bloodgrp)) == keccak256(abi.encode("AB+")) &&
+            status == true
+        ) {
+            isRabp.push(id);
+        } else if (
+            keccak256(abi.encode(bloodgrp)) == keccak256(abi.encode("AB-")) &&
+            status == true
+        ) {
+            isRabn.push(id);
+        }
+
         if (status == true) {
             isReceiver[id] = regRecieve;
-            donor.push(id);
+            receiver.push(id);
         } else {
             RejectReceiver[id] = regRecieve;
-            donor.push(id);
+            receiver.push(id);
         }
+
+        return id;
     }
 
     function getRecieverId() public view returns (uint256) {
-        return donor[donor.length - 1];
+        return receiver[receiver.length - 1];
     }
 
     function getRegReceive(uint256 id) public view returns (RegRecieve memory) {
@@ -193,22 +245,80 @@ contract register is ERC721URIStorage {
         return receiver;
     }
 
-    function matchDonorwReceiver(uint id) public returns (RegRecieve[] memory) {
-        for (uint j = 0; j < receiver.length; j++) {
+    uint[] matched_receiver;
+
+    function matchDonorwReceiver(
+        uint[] memory receivers,
+        uint id,
+        string memory org
+    ) public returns (uint[] memory) {
+        delete matched_receiver;
+
+        for (uint j = 0; j < receivers.length; j++) {
             if (
-                keccak256(abi.encode(isDonor[id].bloodgrp)) ==
-                keccak256(abi.encode(isReceiver[receiver[j]].bloodgrp)) &&
                 keccak256(abi.encode(isDonor[id].hla)) ==
                 keccak256(abi.encode(isReceiver[receiver[j]].hla))
             ) {
-                matcharray.push(isReceiver[receiver[j]]);
-                matched_receiver.push(receiver[j]);
+                for (
+                    uint i = 0;
+                    i < isReceiver[receiver[j]].organs.length;
+                    i++
+                ) {
+                    if (
+                        keccak256(abi.encode(org)) ==
+                        keccak256(abi.encode(isReceiver[receiver[j]].organs[i]))
+                    ) {
+                        matched_receiver.push(receivers[j]);
+                    }
+                }
             }
         }
-        return matcharray;
+        return matched_receiver;
     }
 
-    function receiverMatched() public view returns (uint[] memory) {
+    function getMatchedArray() public view returns (uint[] memory) {
         return matched_receiver;
+    }
+
+    uint[] ans;
+
+    function passbloodgrpid(
+        string memory bloodgrp,
+        uint id,
+        string memory organ
+    ) public returns (uint[] memory) {
+        delete ans;
+
+        if (keccak256(abi.encode(bloodgrp)) == keccak256(abi.encode("O+"))) {
+            ans = matchDonorwReceiver(isRop, id, organ);
+        } else if (
+            keccak256(abi.encode(bloodgrp)) == keccak256(abi.encode("O-"))
+        ) {
+            ans = matchDonorwReceiver(isRon, id, organ);
+        } else if (
+            keccak256(abi.encode(bloodgrp)) == keccak256(abi.encode("A+"))
+        ) {
+            ans = matchDonorwReceiver(isRap, id, organ);
+        } else if (
+            keccak256(abi.encode(bloodgrp)) == keccak256(abi.encode("A-"))
+        ) {
+            ans = matchDonorwReceiver(isRan, id, organ);
+        } else if (
+            keccak256(abi.encode(bloodgrp)) == keccak256(abi.encode("B+"))
+        ) {
+            ans = matchDonorwReceiver(isRbp, id, organ);
+        } else if (
+            keccak256(abi.encode(bloodgrp)) == keccak256(abi.encode("B-"))
+        ) {
+            ans = matchDonorwReceiver(isRbn, id, organ);
+        } else if (
+            keccak256(abi.encode(bloodgrp)) == keccak256(abi.encode("AB+"))
+        ) {
+            ans = matchDonorwReceiver(isRabp, id, organ);
+        } else {
+            ans = matchDonorwReceiver(isRabn, id, organ);
+        }
+
+        return ans;
     }
 }
