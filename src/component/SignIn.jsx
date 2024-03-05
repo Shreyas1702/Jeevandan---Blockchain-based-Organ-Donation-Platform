@@ -38,7 +38,7 @@ const SignIn = ({ account, setAccount , state ,setState , loggedIn ,  setLoggedI
 
     useEffect(() => {
     const connectWallet = async () => {
-      const contractAddress = "0xAAEaF189A6c3c3E2087F3F3d4a34666188e5Fb0d";
+      const contractAddress = "0x19d31d971e1c4ab9C296ffdaa1785C1ED46fb1fD";
       const contractABI = abi.abi;
 
       try {
@@ -74,11 +74,15 @@ const SignIn = ({ account, setAccount , state ,setState , loggedIn ,  setLoggedI
   const SubmitForm = async (e) => {
     e.preventDefault();
     await setFunc(true);
-    data.ltd = latitudes;
-    data.lngt = longitudes;
+    if(latitudes != undefined)
+      data.ltd = latitudes;
+    if(longitudes != undefined)
+      data.lngt = longitudes;
     console.log(data);
     const {contract}  = state;
     console.log(contract)
+
+    console.log(data);
     const transaction = await contract.registerHospital(data.username , data.id , data.meta_address);
     await transaction.wait();
 

@@ -65,8 +65,8 @@ const DonorSchema = new Schema({
     unique: true,
   },
   address: {
-    type: String,
-    required: true,
+    type: Schema.Types.ObjectId,
+    ref: "User",
   },
 });
 

@@ -1,32 +1,47 @@
 import React from 'react'
 import { useState } from 'react';
+import axios from 'axios';
 const Matching = ({ account, setAccount , state ,setState}) => {
-
-
-
-const [id  , setid] = React.useState();
+const [data  , setData] = React.useState({
+  id : 0,
+  bloodgrp : "",
+  organ : "",
+});
 
 const SubmitForm = async (e) => {
   e.preventDefault();
 
-  console.log("id",id);
+  console.log("id",data.id);
   try{
     const {contract}  = state;
     console.log(contract)
-    const transaction = await contract.matchDonorwReceiver(id);
+    const transaction = await contract.passbloodgrpid(data.bloodgrp , data.id , data.organ);
     const rc = await transaction.wait();
     console.log("Transaction Done");
-<<<<<<< HEAD
+    console.log(transaction);
+
+    var datas = await contract.getMatchedArray();
+    // const d = await datas.wait();
+    // console.log("Transaction Done");
+    console.log(datas);
+
+    var list = [];
+
+    for(var i = 0 ; i < datas.length ; i++){
+      var num = (parseInt(datas[i].toString()));
+      list.push(num);
+      console.log(num);
+    }
+
+    console.log(list)
     
-=======
->>>>>>> 8d1909bdd316b740e905806cf5d6db4e8ddf4dae
-    // await axios.post(`http://localhost:8000/hospitalPage/MatchingPage${Id}`, data)
-    // .then(function (response) {
-    //     console.log(response);
-    // })
-    // .catch(function (error) {
-    //     console.log(error);
-    // });
+    await axios.post(`http://localhost:8000/MatchingPage/${data.id}`, list)
+    .then(function (response) {
+        console.log(response);
+    })
+    .catch(function (error) {
+        console.log(error);
+    });
     }
      catch (error) {
     console.error("Error during transaction:", error);
@@ -38,7 +53,7 @@ function handleChange(e){
   e.preventDefault();
   const {name  , value} = e.target;
 
-  setid((prevData) => ({
+  setData((prevData) => ({
       ...prevData,
       [name] : value
   }))
@@ -60,6 +75,29 @@ function handleChange(e){
                     <div className="valid-feedback">
                     Looks good!
                     </div>
+                </div>
+                <div class="input-group mb-1" style={{height : "30px" , width : "40%"  , marginTop : "50px"}}>
+                  <label class="input-group-text" style={{ fontSize : "18px" , backgroundColor : "#5ec576" , color : "white"}} for="inputGroupSelect01">Blood Group</label>
+                  <select class="form-select" name="bloodgrp" id="inputGroupSelect01" onChange={(event) => handleChange(event)} style={{ fontSize : "18px"}}>
+                      <option selected>Select</option>
+                      <option value="O+">O+</option>
+                      <option value="O-">O-</option>
+                      <option value="A+">A+</option>
+                      <option value="A-">A-</option>
+                      <option value="B+">B+</option>
+                      <option value="B-">B-</option>
+                      <option value="AB+">AB+</option>
+                      <option value="AB-">AB-</option>
+                  </select>
+                </div>
+                <div class="input-group mb-1" style={{height : "30px" , width : "40%" , marginLeft : "215px" , marginTop : "50px"}}>
+                  <label class="input-group-text" style={{ fontSize : "18px" , backgroundColor : "#5ec576" , color : "white"}} for="inputGroupSelect01">Organ</label>
+                  <select class="form-select" name="organ" id="inputGroupSelect01" onChange={(event) => handleChange(event)} style={{ fontSize : "18px"}}>
+                      <option selected>Select</option>
+                      <option value="kidney">Kidney</option>
+                      <option value="pancreas">Pancreas</option>
+                      <option value="liver">Liver</option>
+                  </select>
                 </div>
                 <div className="col-12">
                     <button className="btns btn-primary" style={{width : "100%" , fontSize : "22px", marginTop: "100px"}} onClick={(event) => SubmitForm(event)} type="submit">Start Organ Matching</button>

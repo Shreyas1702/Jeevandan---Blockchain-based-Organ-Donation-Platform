@@ -8,4 +8,6 @@ router.route("/donor_reg/:id").post(users.donor_reg);
 
 router.route("/reciever_reg/:id").post(users.reciever_reg);
 
+router.route("/MatchingPage").get(users.matching);
+
 module.exports = router;

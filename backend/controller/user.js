@@ -39,6 +39,14 @@ module.exports.donor_reg = async (req, res, next) => {
       age,
       organs,
     } = req.body;
+
+    console.log(address);
+    const hosp = await User.find({
+      meta_address: address,
+    });
+    const hosp_user = hosp[0]._id;
+    console.log(hosp_user);
+
     await Donor.create({
       id,
       name,
@@ -52,7 +60,7 @@ module.exports.donor_reg = async (req, res, next) => {
       nftId,
       kincontact,
       meta_address,
-      address,
+      address: hosp_user,
     });
   } catch (e) {
     console.log(e);
@@ -78,6 +86,13 @@ module.exports.reciever_reg = async (req, res, next) => {
       age,
       organs,
     } = req.body;
+
+    console.log(address);
+    const hosp = await User.find({
+      meta_address: address,
+    });
+    const hosp_user = hosp[0]._id;
+    console.log(hosp_user);
     const reciever = new Reciever({
       id,
       name,
@@ -92,10 +107,81 @@ module.exports.reciever_reg = async (req, res, next) => {
       contact,
       seriouness,
       meta_address,
-      address,
+      address: hosp_user,
     });
     reciever.save();
   } catch (e) {
     console.log(e);
   }
 };
+
+module.exports.matching = async (req, res, next) => {
+  try {
+    // console.log(req.body);
+    // const { id } = req.params;
+    var list = [311124, 426962, 719566, 714778];
+    var id = 586091;
+
+    var d = await Donor.find({ id: id }).populate("address").exec();
+
+    // console.log(d);
+
+    var donor = d[0];
+
+    var reciever_list = [];
+
+    for (var i = 0; i < list.length; i++) {
+      const person = await Reciever.find({ id: list[i] })
+        .populate("address")
+        .exec();
+      // console.log(person[0]);
+      reciever_list.push(person[0]);
+    }
+
+    var arrObject = reciever_list;
+
+    for (let i = 0; i < reciever_list.length; i++) {
+      let distance = getDistanceFromLatLonInKm(
+        parseInt(donor.address.ltd),
+        parseInt(donor.address.lngt),
+        reciever_list[i].address.ltd,
+        reciever_list[i].address.lngt
+      );
+      //Attaching returned distance from function to array elements
+      arrObject[i].distance = distance;
+    }
+
+    arrObject.sort(function (a, b) {
+      return a.distance - b.distance;
+    });
+
+    console.log("Distance is being maintained : -");
+
+    for (var i = 0; i < arrObject.length; i++) {
+      console.log(arrObject[i].name);
+    }
+
+    // console.log(reciever_list);
+  } catch (e) {
+    console.log(e);
+  }
+};
+
+function getDistanceFromLatLonInKm(lat1, lon1, lat2, lon2) {
+  var R = 6371; // Radius of the earth in km
+  var dLat = deg2rad(lat2 - lat1); // deg2rad below
+  var dLon = deg2rad(lon2 - lon1);
+  var a =
+    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+    Math.cos(deg2rad(lat1)) *
+      Math.cos(deg2rad(lat2)) *
+      Math.sin(dLon / 2) *
+      Math.sin(dLon / 2);
+  var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+  var d = R * c; // Distance in km
+  return d; // distance returned
+}
+
+function deg2rad(deg) {
+  return deg * (Math.PI / 180);
+}
