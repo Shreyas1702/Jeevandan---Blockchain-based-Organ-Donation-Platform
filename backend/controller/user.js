@@ -4,15 +4,16 @@ const express = require("express");
 const router = express.Router();
 const passport = require("passport");
 const app = express();
-
+const haversine = require('haversine-distance')
 const User = require("../models/user");
 const Donor = require("../models/Donor");
 const Reciever = require("../models/Reciever");
 
 module.exports.register = async (req, res, next) => {
   try {
-    const { id, email, username, lngt, ltd, meta_address } = req.body;
+    var { id, email, username, lngt, ltd, meta_address } = req.body;
     console.log(req.body);
+    meta_address = meta_address.toLowerCase();
     const user = new User({ id, email, username, lngt, ltd, meta_address });
     user.save();
   } catch (e) {
@@ -119,14 +120,17 @@ module.exports.matching = async (req, res, next) => {
   try {
     // console.log(req.body);
     // const { id } = req.params;
-    var list = [311124, 426962, 719566, 714778];
-    var id = 586091;
+    var list = [426962, 719566, 714778, 311124, 915996]
+    ;
+    var id = 20324;
 
     var d = await Donor.find({ id: id }).populate("address").exec();
 
     // console.log(d);
 
     var donor = d[0];
+
+    console.log(donor);
 
     var reciever_list = [];
 
@@ -141,14 +145,15 @@ module.exports.matching = async (req, res, next) => {
     var arrObject = reciever_list;
 
     for (let i = 0; i < reciever_list.length; i++) {
-      let distance = getDistanceFromLatLonInKm(
-        parseInt(donor.address.ltd),
-        parseInt(donor.address.lngt),
-        reciever_list[i].address.ltd,
-        reciever_list[i].address.lngt
-      );
+      console.log(donor.address.ltd + "    " + donor.address.lngt + "   " + reciever_list[i].address.ltd + "   " + reciever_list[i].address.lngt)
+
+      const a = {latitude : donor.address.ltd , longitude : donor.address.lngt}
+      const b = { latitude: reciever_list[i].address.ltd, longitude: reciever_list[i].address.lngt }
+      console.log(haversine(a, b)) 
+
+      const distance = haversine(a, b);
       //Attaching returned distance from function to array elements
-      arrObject[i].distance = distance;
+      arrObject[i].distance = distance/1000;
     }
 
     arrObject.sort(function (a, b) {
@@ -158,6 +163,7 @@ module.exports.matching = async (req, res, next) => {
     console.log("Distance is being maintained : -");
 
     for (var i = 0; i < arrObject.length; i++) {
+      console.log(arrObject[i].distance);
       console.log(arrObject[i].name);
     }
 
