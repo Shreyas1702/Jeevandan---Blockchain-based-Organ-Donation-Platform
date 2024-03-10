@@ -104,11 +104,52 @@ const tbody = () => {
 
 
   return (
+    <div style={{display : "flex"}}>
+            <aside style={{marginTop : "20px" , marginLeft : "50px" , width : "12%"}}>
+                <div class="top">
+                <div class="logo">
+                    <h2 style={{fontSize : "2rem" , marginTop : "1rem"}}>
+                    <span style={{ color: "#5ec576" }}>Jeeva</span>ndan
+                    </h2>
+                </div>
+                <div class="close" id="close-btn">
+                    <span class="material-icons-sharp">close</span>
+                </div>
+                </div>
+                <div class="sidebar">
+                <a href="/dashboard">
+                    <span class="material-icons-sharp"> grid_view </span>
+                    <h3>Dashboard</h3>
+                </a>
+                <a href="/dashboard/DonorForm">
+                    <span class="material-icons-sharp"> person_outline </span>
+                    <h3>Donor Entry</h3>
+                </a>
+                <a href="/dashboard/ReceiverForm" class="active">
+                    <span class="material-icons-sharp"> receipt_long </span>
+                    <h3>Reciever Entry</h3>
+                </a>
+                <a href="/dashboard/MatchingPage">
+                    <span class="material-icons-sharp"> insights </span>
+                    <h3>Organ Matching</h3>
+                </a>
+
+                <a href="/dashboard/DonorForm">
+                    <span class="material-icons-sharp"> add </span>
+                    <h3>Living Donation</h3>
+                </a>
+                <a href="#">
+                    <span class="material-icons-sharp"> logout </span>
+                    <h3>Logout</h3>
+                </a>
+                </div>
+            </aside>
     <div className="MatchingPage">
+      <h1 style={{textAlign : "center" , color : "#5ec567" , marginTop : "60px"}}>Organ Matching Process</h1>
        <div className='hosp-register'>
             <form class="row g-3 needs-validation" novalidate>
                 <div className="col-md-12">
-                    <label for="validationCustom01" className="form-label" style={ptlist.length == 0 ? {fontSize : "20px", color : "#5ec576", marginTop:"80px"} : {fontSize : "20px", color : "#5ec576", marginTop:"40px"}}>Donor ID</label>
+                    <label for="validationCustom01" className="form-label" style={ptlist.length == 0 ? {fontSize : "20px", color : "#5ec576", marginTop:"40px"} : {fontSize : "20px", color : "#5ec576", marginTop:"40px"}}>Donor ID</label>
                     <input name='id' type="text" className="form-control" style={{height: "40px" , fontSize : "18px"}} id="validationCustom01" onChange={(event) => handleChange(event)}required/>
                     <div className="valid-feedback">
                     Looks good!
@@ -128,7 +169,7 @@ const tbody = () => {
                       <option value="AB-">AB-</option>
                   </select>
                 </div>
-                <div class="input-group mb-1" style={ptlist.length == 0 ? {height : "30px" , width : "40%" , marginLeft : "215px" , marginTop : "60px"} : {height : "30px" , width : "37%" , marginLeft : "275px" , marginTop : "30px"}}>
+                <div class="input-group mb-1" style={ptlist.length == 0 ? {height : "30px" , width : "40%" , marginLeft : "140px" , marginTop : "60px"} : {height : "30px" , width : "37%" , marginLeft : "190px" , marginTop : "30px"}}>
                   <label class="input-group-text" style={{ fontSize : "18px" , backgroundColor : "#5ec576" , color : "white"}} for="inputGroupSelect01">Organ</label>
                   <select class="form-select" name="organ" id="inputGroupSelect01" onChange={(event) => handleChange(event)} style={{ fontSize : "18px"}}>
                       <option selected>Select</option>
@@ -156,6 +197,7 @@ const tbody = () => {
             {tbody()}
           </table>
         </div>
+    </div>
     </div>
   )
 }

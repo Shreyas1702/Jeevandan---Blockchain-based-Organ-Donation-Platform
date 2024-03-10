@@ -12,6 +12,7 @@ import Matching from "./component/Matching";
 import ReceiverForm from "./component/ReceiverForm";
 import Transplant from "./component/Transplant";
 import TimeLine from "./component/TimeLine";
+import Dashboard from "./component/Dashboard";
 
 function App() {
   const [state, setState] = useState({
@@ -87,56 +88,20 @@ function App() {
   return (
     <div className="App">
       <BrowserRouter className="nav">
-        <div className="navbar">
-          <div className="heading">
-            <h2>
-              {" "}
-              <span style={{ color: "#5ec576" }}>Jeeva</span>ndan
-            </h2>
-          </div>
-          <div className="links">
-            <ul>
-              <li>
-                <a className="my_links" href="/">
-                  Home
-                </a>
-              </li>
-              <li>
-                {account ? (
-                  <button
-                    type="button"
-                    className="connectbtn"
-                    style={{ backgroundColor: "#5ec576", color: "white" }}
-                  >
-                    {account.slice(0, 4) + "...." + account.slice(38, 42)}
-                  </button>
-                ) : (
-                  <button onClick={() => btnhandler()} className="connectbtn">
-                    Connect
-                  </button>
-                )}
-              </li>
-              {console.log(loggedIn)}
-              {!loggedIn && (
-                <li>
-                  <a className="my_links" href="/signin">
-                    Register
-                  </a>
-                </li>
-              )}
-              {loggedIn && (
-                <li>
-                  <a className="my_links" href="/hospitalPage">
-                    DashBoard
-                  </a>
-                </li>
-              )}
-            </ul>
-          </div>
-        </div>
-
         <Routes>
-          <Route path="/" element={<LandingPage />}></Route>
+          <Route
+            path="/"
+            element={
+              <LandingPage
+                account={account}
+                setAccount={setAccount}
+                state={state}
+                setState={setState}
+                loggedIn={loggedIn}
+                setLoggedIn={setLoggedIn}
+              />
+            }
+          ></Route>
           <Route
             path="/signin"
             element={
@@ -164,7 +129,7 @@ function App() {
             ></Route>
           )}
           <Route
-            path="/hospitalPage/DonorForm"
+            path="/dashboard/DonorForm"
             element={
               <DonorForm
                 account={account}
@@ -175,7 +140,7 @@ function App() {
             }
           ></Route>
           <Route
-            path="/hospitalPage/ReceiverForm"
+            path="/dashboard/ReceiverForm"
             element={
               <ReceiverForm
                 account={account}
@@ -186,7 +151,7 @@ function App() {
             }
           ></Route>
           <Route
-            path="/hospitalPage/MatchingPage"
+            path="/dashboard/MatchingPage"
             element={
               <Matching
                 account={account}
@@ -197,7 +162,7 @@ function App() {
             }
           ></Route>
           <Route
-            path="/hospitalPage/TransplantPage"
+            path="/dashboard/TransplantPage"
             element={
               <Transplant
                 account={account}
@@ -211,6 +176,17 @@ function App() {
             path="/hospitalPage/Timeline"
             element={
               <TimeLine
+                account={account}
+                setAccount={setAccount}
+                state={state}
+                setState={setState}
+              />
+            }
+          ></Route>
+          <Route
+            path="/dashboard"
+            element={
+              <Dashboard
                 account={account}
                 setAccount={setAccount}
                 state={state}

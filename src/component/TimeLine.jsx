@@ -180,6 +180,16 @@ const handleComplete = () => {
     });
   }
 
+  function sixthStage(){
+    if(tdata.stage == 5){
+    return (
+      <p style={{marginTop : "40px" , color : "#5ec567"}}>Please Complete the Previous Step</p>
+    )
+    }
+    else{
+    }
+  }
+
   return (
     <>
       <FormWizard
@@ -204,6 +214,7 @@ const handleComplete = () => {
         <FormWizard.TabContent title="Transplant Surgery Ended" icon="ti-check">
           {fiftStage()}
         </FormWizard.TabContent>
+          {sixthStage()}
       </FormWizard>
     </>
   )

@@ -1,8 +1,11 @@
 import React from 'react'
 import Footer from "./Footer";
+import Navbar from './Navbar';
 
 const LandingPage = () => {
   return (
+    <div>
+      <Navbar/>
       <div class="header">
         <div class="header__title">
           {/* <!-- <h1 onclick="alert('HTML alert')"> --> */}
@@ -97,6 +100,7 @@ const LandingPage = () => {
           </div>
         </section>
         <Footer />
+      </div>
       </div>
   )
 }
