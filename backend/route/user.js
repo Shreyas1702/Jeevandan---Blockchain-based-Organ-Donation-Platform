@@ -8,6 +8,20 @@ router.route("/donor_reg/:id").post(users.donor_reg);
 
 router.route("/reciever_reg/:id").post(users.reciever_reg);
 
-router.route("/MatchingPage").get(users.matching);
+router.route("/MatchingPage/:id").post(users.matching);
+
+router.route("/transplant").post(users.transplantIn);
+
+router.route("/ambdetail/:id").post(users.ambdetail);
+
+router.route("/airdetail/:id").post(users.airdetail);
+
+router.route("/org_rec/:id").post(users.org_rec);
+
+router.route("/trans_detail").post(users.getTransData);
+
+router.route("/trans_sur/:id").post(users.trans_sur);
+
+router.route("/sur_end/:id").post(users.sur_end);
 
 module.exports = router;

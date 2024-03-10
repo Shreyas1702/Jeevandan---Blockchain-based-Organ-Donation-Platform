@@ -1,8 +1,10 @@
 import React from 'react'
 import donorForm from './DonorForm'
 import { useState , useEffect } from 'react'
+import axios from 'axios';
+import { Link, NavLink } from 'react-router-dom';
 
-const HospitalPage = () => {
+const HospitalPage =  ({ account, setAccount , state ,setState}) => {
   function donorForm(e){
     e.preventDefault();
     window.location.href ='http://localhost:3000/hospitalPage/DonorForm'
@@ -18,10 +20,15 @@ const HospitalPage = () => {
     window.location.href ='http://localhost:3000/hospitalPage/MatchingPage'
   }
 
+  function TransplantPage(e){
+    e.preventDefault();
+    window.location.href ="http://localhost:3000/hospitalPage/TransplantPage"
+  }
+
   return (
     <div className="hospPage">
       <div className="grp1">
-        <div className="card">
+        <div className="cardss">
             <img src="./IMG_8367.PNG" alt="" />
             <div className="card-content" onClick={(e) => donorForm(e)}>
               <h3>Donor Card</h3>
@@ -29,7 +36,7 @@ const HospitalPage = () => {
             </div>
         </div>
 
-        <div className="card">
+        <div className="cardss">
             <img src="./IMG_8366.PNG" alt="" />
             <div className="card-content" onClick={(e) => ReceiverForm(e)}>
               <h3>Reciever Card</h3>
@@ -39,7 +46,7 @@ const HospitalPage = () => {
      </div>
     
     <div className="grp2">
-      <div className="card">
+      <div className="cardss">
           <img src="./IMG_8366.PNG" alt="" />
           <div className="card-content" onClick={(e) => MatchingForm(e)}>
             <h3>Reciever Card</h3>
@@ -47,12 +54,12 @@ const HospitalPage = () => {
           </div>
       </div>
 
-      <div className="card">
+      <div className="cardss">
           <img src="./IMG_8366.PNG" alt="" />
-          <div className="card-content">
+          <Link className="card-content" to="/hospitalPage/TransplantPage" state = {{ tId : "773195"}}>
             <h3>Reciever Card</h3>
             <p>Click Over here to create Reciever Cards</p>
-          </div>
+          </Link>
       </div>
 
      </div>

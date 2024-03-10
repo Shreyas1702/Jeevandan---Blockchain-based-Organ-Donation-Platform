@@ -10,6 +10,9 @@ import HospitalPage from "./component/HospitalPage";
 import DonorForm from "./component/DonorForm";
 import Matching from "./component/Matching";
 import ReceiverForm from "./component/ReceiverForm";
+import Transplant from "./component/Transplant";
+import TimeLine from "./component/TimeLine";
+
 function App() {
   const [state, setState] = useState({
     provider: null,
@@ -186,6 +189,28 @@ function App() {
             path="/hospitalPage/MatchingPage"
             element={
               <Matching
+                account={account}
+                setAccount={setAccount}
+                state={state}
+                setState={setState}
+              />
+            }
+          ></Route>
+          <Route
+            path="/hospitalPage/TransplantPage"
+            element={
+              <Transplant
+                account={account}
+                setAccount={setAccount}
+                state={state}
+                setState={setState}
+              />
+            }
+          ></Route>
+          <Route
+            path="/hospitalPage/Timeline"
+            element={
+              <TimeLine
                 account={account}
                 setAccount={setAccount}
                 state={state}
