@@ -2,8 +2,70 @@ import React from 'react'
 import "./../style.css"
 import { CircularProgressbar , buildStyles } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
+import axios from 'axios';
+import { Link } from 'react-router-dom';
 
-const Dashboard = () => {
+const Dashboard = ({ account, setAccount , state ,setState}) => {
+
+  const [loading , setloading] = React.useState(true);
+  var [process , setProcess] = React.useState([]);
+  const [data , setData] = React.useState({
+    no_donor : Number,
+    no_reciever : Number,
+    total_pt: Number,
+    complete_trans : Number,
+    incomplete_trans: Number,
+  });
+
+  const [func , setFunc] = React.useState(true);
+
+  React.useEffect(() => {
+    setTimeout(async () => {
+      const ddata = await getEntireData();
+      console.log(ddata.ongoing_p.length)
+      setProcess(ddata.ongoing_p);
+      setData(ddata)
+      console.log(process);
+      console.log("Data :- " , data);
+      // setloading(false);
+    } , 1000)
+  },[account])
+
+  // if(loading){
+  //       return <div></div>;
+  //   }
+
+  async function getEntireData(){
+      const d = {account}
+      var dta; 
+      console.log("Account :- " , account)
+      const da = await axios.post("http://localhost:8000/getEntireData" , d).then((response) => {
+        console.log(response.data)
+        dta = response.data;
+      });
+      return dta;
+    }
+
+  function getTableData(){
+    console.log("getTableData")
+    console.log("Process :-" , process)
+    var num = 1;
+    return process.map((data) => {
+      const ids = data.transplant_id;  
+      return (
+          <tr style={{ fontSize : "1.5rem"}}>
+            <td style={{paddingBottom : "15px" , paddingTop : "1.5rem"}}>{num++}</td>
+            <td style={{paddingBottom : "15px" , paddingTop : "1.5rem" }}>{data.transplant_id}</td>
+            <td style={{paddingBottom : "15px" , paddingTop : "1.5rem" }}>{data.donor_id.name}</td>
+            <td style={{paddingBottom : "15px" , paddingTop : "1.5rem" }}>{data.reciever_id.name}</td>
+            <td style={{paddingBottom : "15px" , paddingTop : "1.5rem" }}>{data.stage}</td>
+            <td style={{paddingBottom : "15px" , paddingTop : "1.5rem" }}>{<Link style={{margin : "0"}} to="/dashboard/TransplantPage" state = {{ tId : ids}}>View </Link>}</td>
+          </tr>
+        )
+    })
+  }
+
+
   return (
     <div className='containerss'>
         <aside>
@@ -55,7 +117,7 @@ const Dashboard = () => {
                 <h1>88</h1>
               </div>
               <div className='progress'>
-                <CircularProgressbar width={50} strokeWidth={15} text={100} circleRatio={1} value={66} styles={buildStyles({
+                <CircularProgressbar width={50} strokeWidth={15} text={100} circleRatio={1} value={data.total_pt} styles={buildStyles({
                     textSize: '16px',
                     // Colors
                     
@@ -76,7 +138,7 @@ const Dashboard = () => {
                 <h1>56</h1>
               </div>
               <div className='progress'>
-                <CircularProgressbar width={50} strokeWidth={15} text={100} circleRatio={1} value={66} styles={buildStyles({
+                <CircularProgressbar width={50} strokeWidth={15} text={100} circleRatio={1} value={data.incomplete_trans} styles={buildStyles({
                     textSize: '16px',
                     // Colors
                     
@@ -97,7 +159,7 @@ const Dashboard = () => {
                 <h1>32</h1>
               </div>
               <div className='progress'>
-                <CircularProgressbar width={50} strokeWidth={15} text={100} circleRatio={1} value={66} styles={buildStyles({
+                <CircularProgressbar width={50} strokeWidth={15} text={100} circleRatio={1} value={data.complete_trans} styles={buildStyles({
                     textSize: '16px',
                     // Colors
                     
@@ -127,14 +189,7 @@ const Dashboard = () => {
               </tr>
             </thead>
           <tbody>
-            <tr style={{ fontSize : "1.5rem"}}>
-                <td style={{paddingBottom : "15px" }}>1</td>
-                <td style={{paddingBottom : "15px" }}>Shreyas Keni</td>
-                <td style={{paddingBottom : "15px" }}>9892124646</td>
-                <td style={{paddingBottom : "15px" }}>9:30</td>
-                <td style={{paddingBottom : "15px" }}>M</td>
-                <td style={{paddingBottom : "15px" }}>Accepted</td>
-            </tr>
+            {getTableData()}
           </tbody>
           </table>
           <a href="#" style={{fontSize : "18px"}}>Show All</a>
@@ -210,7 +265,7 @@ const Dashboard = () => {
                 <h3>Registered Donor</h3>
               </div>
               {/* <!-- <h5 class="success">+39%</h5> --> */}
-              <h3>3849</h3>
+              <h3>{data.no_donor}</h3>
             </div>
           </div>
           <div class="item offline">
@@ -222,7 +277,7 @@ const Dashboard = () => {
                 <h3>Registered Reciever</h3>
               </div>
               {/* <!-- <h5 class="success">-17%</h5> --> */}
-              <h3>1100</h3>
+              <h3>{data.no_reciever}</h3>
             </div>
           </div>
           {/* <!-- <div class="item customers">

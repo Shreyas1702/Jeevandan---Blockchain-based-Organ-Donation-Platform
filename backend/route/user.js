@@ -24,4 +24,6 @@ router.route("/trans_sur/:id").post(users.trans_sur);
 
 router.route("/sur_end/:id").post(users.sur_end);
 
+router.route("/getEntireData").post(users.getEntireData);
+
 module.exports = router;

@@ -6,6 +6,10 @@ const TransplantSchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: "Donor",
   },
+  hospital_id: {
+    type: Schema.Types.ObjectId,
+    ref: "User",
+  },
   organ: {
     type: String,
     required: true,

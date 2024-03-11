@@ -330,6 +330,7 @@ module.exports.sur_end = async (req, res, next) => {
 };
 
 module.exports.getTransData = async (req, res, next) => {
+  console.log(req.body);
   const tId = req.body.data;
 
   const Data = await Transplant.find({ transplant_id: tId })
@@ -357,4 +358,63 @@ module.exports.getTransData = async (req, res, next) => {
     },
     sucess: true,
   });
+};
+
+module.exports.getEntireData = async (req, res, next) => {
+  console.log(req.body);
+
+  const user = await User.find({ meta_address: req.body.account });
+  // console.log(user);
+
+  if (user.length != 0) {
+    const completed_trans = await Transplant.find({
+      hospital_id: user[0]._id,
+      success: true,
+    })
+      .populate("donor_id")
+      .populate("reciever_id");
+    // console.log("Completed :- ", completed_trans);
+
+    const incompleted_trans = await Transplant.find({
+      hospital_id: user[0]._id,
+      success: false,
+    })
+      .populate("donor_id")
+      .populate("reciever_id");
+    // console.log("InCompleted :- ", incompleted_trans.length);
+
+    const donor = await Donor.find({ address: user[0]._id }).populate(
+      "address"
+    );
+    // console.log(donor);
+
+    const reciever = await Reciever.find({ address: user[0]._id }).populate(
+      "address"
+    );
+    // console.log(reciever);
+
+    const no_donor = donor.length;
+    const no_reciever = reciever.length;
+    const total_pt = no_donor + no_reciever;
+    const complete_trans = completed_trans.length;
+    const incomplete_trans = incompleted_trans.length;
+    const ongoing_p = incompleted_trans;
+
+    for (var i = 0; i < ongoing_p.length; i++) {
+      // console.log(arrObject[i].distance);
+      console.log("Ongoing :- ", ongoing_p[i]);
+    }
+
+    const data = {
+      no_donor,
+      no_reciever,
+      total_pt,
+      complete_trans,
+      incomplete_trans,
+      ongoing_p,
+      success: true,
+    };
+
+    res.status(200).json(data);
+  }
 };
