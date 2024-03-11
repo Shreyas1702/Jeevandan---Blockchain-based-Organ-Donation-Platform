@@ -114,10 +114,10 @@ const Dashboard = ({ account, setAccount , state ,setState}) => {
             <div class="middle">
               <div class="left">
                 <h3>Total Patient Registered</h3>
-                <h1>88</h1>
+                <h1>{data.total_pt}</h1>
               </div>
               <div className='progress'>
-                <CircularProgressbar width={50} strokeWidth={15} text={100} circleRatio={1} value={data.total_pt} styles={buildStyles({
+                <CircularProgressbar width={50} strokeWidth={15} text={data.total_pt} circleRatio={1} value={data.total_pt} styles={buildStyles({
                     textSize: '16px',
                     // Colors
                     
@@ -135,10 +135,10 @@ const Dashboard = ({ account, setAccount , state ,setState}) => {
             <div class="middle">
               <div class="left">
                 <h3>Active Transplant Process</h3>
-                <h1>56</h1>
+                <h1>{data.incomplete_trans}</h1>
               </div>
               <div className='progress'>
-                <CircularProgressbar width={50} strokeWidth={15} text={100} circleRatio={1} value={data.incomplete_trans} styles={buildStyles({
+                <CircularProgressbar width={50} strokeWidth={15} text={data.incomplete_trans} circleRatio={1} value={data.incomplete_trans} styles={buildStyles({
                     textSize: '16px',
                     // Colors
                     
@@ -156,10 +156,10 @@ const Dashboard = ({ account, setAccount , state ,setState}) => {
             <div class="middle">
               <div class="left">
                 <h3>Completed Transplant process</h3>
-                <h1>32</h1>
+                <h1>{data.complete_trans}</h1>
               </div>
               <div className='progress'>
-                <CircularProgressbar width={50} strokeWidth={15} text={100} circleRatio={1} value={data.complete_trans} styles={buildStyles({
+                <CircularProgressbar width={50} strokeWidth={15} text={data.complete_trans} circleRatio={1} value={data.complete_trans} styles={buildStyles({
                     textSize: '16px',
                     // Colors
                     
