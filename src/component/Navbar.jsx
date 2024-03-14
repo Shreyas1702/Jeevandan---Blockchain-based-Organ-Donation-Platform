@@ -13,10 +13,10 @@ const Navbar = () => {
   const [account, setAccount] = useState("");
   const [func, setFunc] = useState("");
   const [loggedIn, setLoggedIn] = useState(false);
-
+  const [admin, setAdmin] = useState(false);
   useEffect(() => {
     const connectWallet = async () => {
-      const contractAddress = "0x19d31d971e1c4ab9C296ffdaa1785C1ED46fb1fD";
+      const contractAddress = "0x65e5Fc36c3D8906CD25c358cF892d8fE1389Fb7A";
       const contractABI = abi.abi;
 
       try {
@@ -54,6 +54,11 @@ const Navbar = () => {
           setLoggedIn(true);
           console.log(loggedIn);
         }
+        console.log(account)
+        if(account == "0x87804696f85bef5801fe3e0cabf2392a7a1e26dd"){
+          setAdmin(true);
+          setLoggedIn(false)
+        }
       } catch (error) {
         console.log(error);
       }
@@ -72,6 +77,7 @@ function btnhandler() {
       alert("install metamask extension!!");
     }
   }
+
   return (
     <div className="navbar">
           <div className="heading">
@@ -102,7 +108,7 @@ function btnhandler() {
                 )}
               </li>
               {console.log(loggedIn)}
-              {!loggedIn && (
+              {!loggedIn && !admin && (
                 <li>
                   <a className="my_links" href="/signin">
                     Register
@@ -112,6 +118,13 @@ function btnhandler() {
               {loggedIn && (
                 <li>
                   <a className="my_links" href="/dashboard">
+                    DashBoard
+                  </a>
+                </li>
+              )}
+              {admin && (
+                <li>
+                  <a className="my_links" href="/dashboard_admin">
                     DashBoard
                   </a>
                 </li>

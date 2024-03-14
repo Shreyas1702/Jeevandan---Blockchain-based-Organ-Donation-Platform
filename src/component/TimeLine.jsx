@@ -147,9 +147,12 @@ const handleComplete = () => {
 
   const stage = 0;
 
-  function orgrec(event){
+  async function orgrec(event){
     event.preventDefault();
-    axios.post(`http://localhost:8000/org_rec/${tdata.transplant_id}`).then((response) => {
+    const {contract_nft} = state;
+    const transaction = await contract_nft.end_transport(tdata.transplant_id);
+    console.log(transaction)
+    await axios.post(`http://localhost:8000/org_rec/${tdata.transplant_id}`).then((response) => {
     console.log(response)  
     if(response.data.success == true){
       console.log("thirdStage");
@@ -158,8 +161,11 @@ const handleComplete = () => {
     });
   }
 
-  function transsur(event){
+  async function transsur(event){
     event.preventDefault();
+    const {contract_nft} = state;
+    const transaction = await contract_nft.start_surgery(tdata.transplant_id);
+    console.log(transaction)
     axios.post(`http://localhost:8000/trans_sur/${tdata.transplant_id}`).then((response) => {
     console.log(response)  
     if(response.data.success == true){
@@ -169,8 +175,11 @@ const handleComplete = () => {
     });
   }
 
-    function surend(event){
+    async function surend(event){
     event.preventDefault();
+    const {contract_nft} = state;
+    const transaction = await contract_nft.end_surgery(tdata.transplant_id);
+    console.log(transaction)
     axios.post(`http://localhost:8000/sur_end/${tdata.transplant_id}`).then((response) => {
     console.log(response)  
     if(response.data.success == true){
@@ -183,7 +192,7 @@ const handleComplete = () => {
   function sixthStage(){
     if(tdata.stage == 5){
     return (
-      <p style={{marginTop : "40px" , color : "#5ec567"}}>Please Complete the Previous Step</p>
+      <p style={{marginTop : "40px" , color : "#5ec567"}}>The Transplantation Procees has been Successfully Completed</p>
     )
     }
     else{

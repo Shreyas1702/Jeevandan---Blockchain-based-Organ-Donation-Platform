@@ -1,4 +1,5 @@
 import React from 'react'
+import axios from 'axios'
 
 const MultiForm = ({dhosp , rhosp , account , state , tdata}) => {
 
@@ -75,6 +76,30 @@ const MultiForm = ({dhosp , rhosp , account , state , tdata}) => {
     )
     }
 
+    
+    const submitData = async (event) => {
+        const {contract_nft} = state;
+        console.log(tdata);
+        event.preventDefault();
+        const transaction = await contract_nft.start_transport(tdata.transplant_id , data.contact , data.name , data.plate_num);
+        console.log(transaction);
+        axios.post(`http://localhost:8000/airdetail/${tdata.transplant_id}` , data).then((response) => {
+            console.log(response);
+        });
+    }
+
+    const submitDatas = async (event) => {
+        const {contract_nft} = state;
+        console.log(tdata);
+        event.preventDefault();
+        const transaction = await contract_nft.start_transport(tdata.transplant_id , data.contact , data.name , data.plate_num);
+        console.log(transaction);
+        axios.post(`http://localhost:8000/ambdetail/${tdata.transplant_id}` , data).then((response) => {
+            console.log(response);
+            window.location.reload(true);
+        });
+    }
+
     function getTime(date){
         const dateTimeString = date;
         const dateTime = new Date(dateTimeString);
@@ -109,7 +134,7 @@ const MultiForm = ({dhosp , rhosp , account , state , tdata}) => {
 
             <div className="ambulance" style={amb == true ? {} : {display : "none"}}>
                 <h1>Ambulance Details</h1>
-                <form action={`http://localhost:8000/ambdetail/${tdata.transplant_id}`} method="post">
+                <form method="post">
                     <div className="col-md-12" style={{marginTop : "25px",marginLeft : "10px" , display : "flex" , flexDirection : "row"}}>
                         <label for="validationCustom01" className="form-label col-md-6" style={{fontSize : "23px", color : "#5ec576" , marginRight : "23px"}}>Driver Name</label>
                         <input name='name' type="text" value={data.name} className="form-control"onChange={(event) => handleChange(event)} style={{height: "35px" , fontSize : "18px"}} id="validationCustom01" required/>
@@ -135,15 +160,15 @@ const MultiForm = ({dhosp , rhosp , account , state , tdata}) => {
                     </div>
 
                     <div className="col-12" style={{marginTop : "20px" , marginLeft : "20px"}}>
-                        <button className="btns btn-primary" style={{fontSize : "22px" , width : "100%"}} type="submit">Submit</button>
+                        <button className="btns btn-primary" style={{fontSize : "22px" , width : "100%"}} onClick={(event) => submitDatas(event)} type="submit">Submit</button>
                     </div>
 
                 </form>
             </div>
 
             <div className="airlift" style={air == true ? {} : {display : "none"}} >
-                <h1>Ambulance Details</h1>
-                <form action={`http://localhost:8000/airdetail/${tdata.transplant_id}`} method="post">
+                <h1>Pilot Details</h1>
+                <form  method="post">
                     <div className="col-md-12" style={{marginTop : "25px",marginLeft : "10px" , display : "flex" , flexDirection : "row"}}>
                         <label for="validationCustom01" className="form-label col-md-6" style={{fontSize : "23px", color : "#5ec576" , marginRight : "23px"}}>Pilot Name</label>
                         <input name='name' type="text" value={data.name} className="form-control"onChange={(event) => handleChange(event)} style={{height: "35px" , fontSize : "18px"}} id="validationCustom01" required/>
@@ -169,7 +194,7 @@ const MultiForm = ({dhosp , rhosp , account , state , tdata}) => {
                     </div>
 
                     <div className="col-12" style={{marginTop : "20px" , marginLeft : "20px"}}>
-                        <button className="btns btn-primary" style={{fontSize : "22px" , width : "100%"}} type="submit">Submit</button>
+                        <button className="btns btn-primary" style={{fontSize : "22px" , width : "100%"}} onClick = {(event) => submitData(event)} type="submit">Submit</button>
                     </div>
 
                 </form>

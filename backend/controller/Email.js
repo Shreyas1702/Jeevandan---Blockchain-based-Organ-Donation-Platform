@@ -13,19 +13,6 @@ var transporter = nodemailer.createTransport({
   },
 });
 
-var dynamicData = {
-  id: 1,
-  message: "This is a dynamic message.",
-};
-
-var mailOptions = {
-  from: "crce.9380.aids@gmail.com",
-  to: "sskeni1702@gmail.com",
-  subject: "Sending Email using Node.js",
-  template: `index`,
-  context: dynamicData,
-};
-
 transporter.use(
   "compile",
   hbs({
@@ -44,14 +31,14 @@ transporter.use(
   })
 );
 
-// function sendMail(mailOpt) {
-transporter.sendMail(mailOptions, function (error, info) {
-  if (error) {
-    console.log(error);
-  } else {
-    console.log("Email sent: " + info.response);
-  }
-});
-// }
+function sendMail(mailOpt) {
+  transporter.sendMail(mailOpt, function (error, info) {
+    if (error) {
+      console.log(error);
+    } else {
+      console.log("Email sent: " + info.response);
+    }
+  });
+}
 
-// module.exports = sendMail;
+module.exports = sendMail;

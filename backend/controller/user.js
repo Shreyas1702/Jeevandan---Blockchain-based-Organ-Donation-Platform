@@ -46,15 +46,24 @@ module.exports.donor_reg = async (req, res, next) => {
       email,
     } = req.body;
 
+    var dynamicData = {
+      id: id,
+      address: meta_address,
+    };
+
     console.log(address);
     var mailOptions = {
       from: "crce.9380.aids@gmail.com",
-      to: `${email}`,
+      to: email,
       subject: "Sending Email using Node.js",
-      text: `Welcome aboard! Your recent registration as a donor fills us with gratitude. Your support will fuel our mission and impact countless lives. We're thrilled to have you join our community and will keep you updated on our initiatives and successes. Your generosity embodies the spirit of positive change, and we're excited to journey forward together. Should you have any questions or wish to delve deeper into our work, please don't hesitate to reach out. Thank you for your commitment to making a difference.Your Nft's have been transfered to your OpenSea account your can check it over there.\x1b[1mYour registered donor Id is :-${id}\x1b[0m`,
+      template: `index`,
+      context: dynamicData,
     };
 
     await sendMail(mailOptions);
+    // const hosp = await User.find({
+    //   meta_address: address,
+    // });
     const hosp = await User.find({
       meta_address: address,
     });
@@ -104,11 +113,17 @@ module.exports.reciever_reg = async (req, res, next) => {
     } = req.body;
 
     console.log(address);
+
+    var dynamicData = {
+      id: id,
+      address: meta_address,
+    };
     var mailOptions = {
       from: "crce.9380.aids@gmail.com",
-      to: `${email}`,
+      to: "crce.9380.aids@gmail.com",
       subject: "Sending Email using Node.js",
-      text: `Welcome aboard! Your recent registration as a donor fills us with gratitude. Your support will fuel our mission and impact countless lives. We're thrilled to have you join our community and will keep you updated on our initiatives and successes. Your generosity embodies the spirit of positive change, and we're excited to journey forward together. Should you have any questions or wish to delve deeper into our work, please don't hesitate to reach out. Thank you for your commitment to making a difference.Your Nft's have been transfered to your OpenSea account your can check it over there.\x1b[1mYour registered donor Id is :-${id}\x1b[0m`,
+      template: `reciever`,
+      context: dynamicData,
     };
 
     await sendMail(mailOptions);
@@ -159,6 +174,8 @@ module.exports.matching = async (req, res, next) => {
     }
     var arrObject = reciever_list;
     for (let i = 0; i < reciever_list.length; i++) {
+      console.log(donor);
+      console.log(reciever_list[i]);
       const a = { latitude: donor.address.ltd, longitude: donor.address.lngt };
       const b = {
         latitude: reciever_list[i].address.ltd,
@@ -346,6 +363,7 @@ module.exports.sur_end = async (req, res, next) => {
 
   const update = {
     stage: 5,
+    success: true,
     t_s_end: Date.now(),
   };
 
@@ -474,5 +492,16 @@ module.exports.getEntireData = async (req, res, next) => {
 };
 
 module.exports.approveNFT = async (req, res, next) => {
-  console.log(req.params.id);
+  const { id } = req.params;
+  const donor = await Donor.find({ id: id }).populate("address");
+
+  const hosp_address = donor[0].address.meta_address;
+
+  var list = [];
+
+  for (var i = 0; i < donor[0].organs.length; i++) {
+    const name = donor[0].organs[i];
+    list.push(donor[0].nftId[name]);
+  }
+  res.render("index.ejs", { id: req.params.id, hosp_address, list });
 };

@@ -17,27 +17,27 @@ const SubmitForm = async (e) => {
   try{
     const {contract}  = state;
     console.log(contract)
-    // const transaction = await contract.passbloodgrpid(data.bloodgrp , data.id , data.organ);
-    // const rc = await transaction.wait();
+    const transaction = await contract.passbloodgrpid(data.bloodgrp , data.id , data.organ);
+    const rc = await transaction.wait();
     console.log("Transaction Done");
-    // console.log(transaction);
+    console.log(transaction);
 
-    // var datas = await contract.getMatchedArray();
+    var datas = await contract.getMatchedArray();
     // const d = await datas.wait();
-    // console.log("Transaction Done");
-    // console.log(datas);
+    console.log("Transaction Done");
+    console.log(datas);
 
-    var list = [ 426962, 719566, 714778, 311124, 915996 ];
+    var list = [];
 
-    // for(var i = 0 ; i < datas.length ; i++){
-    //   var num = (parseInt(datas[i].toString()));
-    //   list.push(num);
-    //   console.log(num);
-    // }
+    for(var i = 0 ; i < datas.length ; i++){
+      var num = (parseInt(datas[i].toString()));
+      list.push(num);
+      console.log(num);
+    }
 
     console.log(list)
     
-    await axios.post(`http://localhost:8000/MatchingPage/${20324}`, list)
+    await axios.post(`http://localhost:8000/MatchingPage/${data.id}`, list)
     .then(function (response) {
         console.log(response);
         setptlist(response.data.data)

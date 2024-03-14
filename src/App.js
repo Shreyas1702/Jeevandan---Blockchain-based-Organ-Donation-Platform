@@ -1,5 +1,6 @@
 import "./index.css";
 import abi from "./contracts/register.json";
+import abis from "./contracts/NFT.json";
 import { useState, useEffect } from "react";
 import SignIn from "./component/SignIn";
 import LandingPage from "./component/LandingPage";
@@ -13,7 +14,10 @@ import ReceiverForm from "./component/ReceiverForm";
 import Transplant from "./component/Transplant";
 import TimeLine from "./component/TimeLine";
 import Dashboard from "./component/Dashboard";
-
+import DashAdmin from "./component/DashAdmin";
+import DonorCard from "./component/DonorCard";
+import RecieverCard from "./component/RecieverCard";
+import TransAdmin from "./component/TransAdmin";
 function App() {
   const [state, setState] = useState({
     provider: null,
@@ -27,8 +31,11 @@ function App() {
 
   useEffect(() => {
     const connectWallet = async () => {
-      const contractAddress = "0x19d31d971e1c4ab9C296ffdaa1785C1ED46fb1fD";
+      const contractAddress = "0x65e5Fc36c3D8906CD25c358cF892d8fE1389Fb7A";
       const contractABI = abi.abi;
+
+      const contractAddress_NFT = "0x5BbE9441E0b9DdF0197702a5Ab8bd55eB36670a0";
+      const contractABI_NFT = abis.abi;
 
       try {
         const { ethereum } = window;
@@ -53,9 +60,16 @@ function App() {
           contractABI,
           signer
         );
+
+        const contract_nft = await new ethers.Contract(
+          contractAddress_NFT,
+          contractABI_NFT,
+          signer
+        );
+
         console.log(await signer.getAddress());
         console.log("contract");
-        setState({ provider, signer, contract });
+        setState({ provider, signer, contract, contract_nft });
         console.log(contract);
         console.log(accounts[0]);
 
@@ -93,6 +107,58 @@ function App() {
             path="/"
             element={
               <LandingPage
+                account={account}
+                setAccount={setAccount}
+                state={state}
+                setState={setState}
+                loggedIn={loggedIn}
+                setLoggedIn={setLoggedIn}
+              />
+            }
+          ></Route>
+          <Route
+            path="/dashboard_admin"
+            element={
+              <DashAdmin
+                account={account}
+                setAccount={setAccount}
+                state={state}
+                setState={setState}
+                loggedIn={loggedIn}
+                setLoggedIn={setLoggedIn}
+              />
+            }
+          ></Route>
+          <Route
+            path="/dashboard_admin/donors"
+            element={
+              <DonorCard
+                account={account}
+                setAccount={setAccount}
+                state={state}
+                setState={setState}
+                loggedIn={loggedIn}
+                setLoggedIn={setLoggedIn}
+              />
+            }
+          ></Route>
+          <Route
+            path="/dashboard_admin/reciever"
+            element={
+              <RecieverCard
+                account={account}
+                setAccount={setAccount}
+                state={state}
+                setState={setState}
+                loggedIn={loggedIn}
+                setLoggedIn={setLoggedIn}
+              />
+            }
+          ></Route>
+          <Route
+            path="/dashboard_admin/transAdmin"
+            element={
+              <TransAdmin
                 account={account}
                 setAccount={setAccount}
                 state={state}

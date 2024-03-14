@@ -9,10 +9,12 @@ const cors = require("cors");
 const MongoStore = require("connect-mongo");
 const User = require("./models/user");
 const userRoutes = require("./route/user");
-const sendMail = require("./controller/Email");
 const path = require("path");
 const viewPath = path.resolve(__dirname, "./templates/views/");
+const engine = require("ejs-mate");
 
+app.engine("ejs", engine);
+app.set("views", path.join(__dirname, "views"));
 app.use(cors());
 
 app.use(express.json());
@@ -46,17 +48,6 @@ app.use((req, res, next) => {
   //   res.locals.success = req.flash("success");
 
   next();
-});
-
-app.get("/", (req, res) => {
-  var mailOptions = {
-    from: "crce.9380.aids@gmail.com",
-    to: "sskeni1702@gmail.com",
-    subject: "Sending Email using Node.js",
-    text: `Hello There Shreyas Over here Id :- ${7}`,
-  };
-
-  sendMail(mailOptions);
 });
 
 app.use("/", userRoutes);

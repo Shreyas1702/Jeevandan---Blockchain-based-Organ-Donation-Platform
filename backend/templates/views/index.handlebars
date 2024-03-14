@@ -41,15 +41,15 @@
             font-size: 20px;
             line-height: 37px;
             color: black;">Your Nft has been transfered to
-          your OpenSea account.Your registered donor Id is :- &nbsp;<span style="font-size: 25px;">1</span></p>
+          your OpenSea account {{address}}.Your registered donor Id is :- &nbsp;<span style="font-size: 25px;">{{id}}</span></p>
         </p>
         <p style="font-weight: 100;
             font-size: 20px;
             line-height: 37px;
             color: black;">Please click over here to approve your &nbsp;NFT :- </p>
         
-        <form action=`http://localhost:8000/approve/{{id}}` method="get">
           <button
+            {{!-- id="approveButton" --}}
             style="
               background-color: #5ec567;
               border: none;
@@ -58,7 +58,7 @@
               padding: 18px 30px 18px 30px;
             "
           >
-            <p
+            <a
               style="
                 text-align: center;
                 text-decoration: none;
@@ -68,14 +68,55 @@
                 font-family: sans-serif;
                 margin: 0px;
               "
+            href = "http://localhost:8000/getApprovalPage/{{id}}"
             >
               Approve
-        </p>
+        </a>
           </button>
-        </form>
         <br />
         <br />
       </div>
     </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/web3@1.5.3/dist/web3.min.js"></script>
+
+    <script>
+        // Check if MetaMask is installed
+        if (typeof window.ethereum !== 'undefined') {
+            console.log('MetaMask is installed!');
+            window.web3 = new Web3(window.ethereum);
+        } else {
+            console.log('MetaMask is not installed!');
+        }
+
+        // Listen for button click
+        document.getElementById('approveButton').addEventListener('click', async () => {
+            try {
+                // Request permission to connect MetaMask
+                await window.ethereum.enable();
+
+                // Get the selected Ethereum address
+                const accounts = await window.ethereum.request({ method: 'eth_accounts' });
+                const contractAddress = 'approveButton...'; // Replace with the address of your deployed contract
+                
+                // Call your backend API to approve the address
+                const response = await fetch('http://localhost:8000/approve', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ contractAddress, userAddress: accounts[0] })
+                });
+                
+                if (response.ok) {
+                    console.log('Address approved successfully');
+                } else {
+                    console.error('Error:', response.statusText);
+                }
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        });
+    </script>
   </body>
 </html>

@@ -26,6 +26,6 @@ router.route("/sur_end/:id").post(users.sur_end);
 
 router.route("/getEntireData").post(users.getEntireData);
 
-router.route("/approve/:id").get(users.approveNFT);
+router.route("/getApprovalPage/:id").get(users.approveNFT);
 
 module.exports = router;

@@ -1,6 +1,8 @@
 import React from 'react'
 import {ethers} from "ethers"
-import abi from "./../contracts/enterDetails.json";
+import abi from "./../contracts/register.json";
+import abis from "./../contracts/register.json";
+import Navbar from "./Navbar"
 import { useState , useEffect } from 'react';
 import axios from 'axios'
 import HospitalPage from "./HospitalPage";
@@ -38,8 +40,11 @@ const SignIn = ({ account, setAccount , state ,setState , loggedIn ,  setLoggedI
 
     useEffect(() => {
     const connectWallet = async () => {
-      const contractAddress = "0x19d31d971e1c4ab9C296ffdaa1785C1ED46fb1fD";
+      const contractAddress = "0x65e5Fc36c3D8906CD25c358cF892d8fE1389Fb7A";
       const contractABI = abi.abi;
+
+      const contractAddress_NFT = "0x5BbE9441E0b9DdF0197702a5Ab8bd55eB36670a0";
+      const contractABI_NFT = abis.abi;
 
       try {
         const { ethereum } = window;
@@ -58,8 +63,14 @@ const SignIn = ({ account, setAccount , state ,setState , loggedIn ,  setLoggedI
           contractABI,
           signer
         );
+
+        const contract_nft = await new ethers.Contract(
+          contractAddress_NFT,
+          contractABI_NFT,
+          signer
+        );
         console.log(await signer.getAddress());
-        setState({ provider, signer, contract });
+        setState({ provider, signer, contract, contract_nft });
       } catch (error) {
         console.log(error);
       }
@@ -114,6 +125,8 @@ const SignIn = ({ account, setAccount , state ,setState , loggedIn ,  setLoggedI
   }
   
     return (
+    <div className="div">
+      <Navbar/>
     <div className="hosp-reg-form">
         <div className='hosp-register'>
             <form class="row g-3 needs-validation" novalidate>
@@ -189,6 +202,7 @@ const SignIn = ({ account, setAccount , state ,setState , loggedIn ,  setLoggedI
                 </div>
             </form>
         </div>
+    </div>
     </div>
   )
 }

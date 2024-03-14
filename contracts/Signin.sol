@@ -1,50 +1,45 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.2;
 import "hardhat/console.sol";
-import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
-import "@openzeppelin/contracts/utils/Counters.sol";
 
-contract register is ERC721URIStorage {
-    using Counters for Counters.Counter;
-    Counters.Counter private _tokenIds;
+contract register {
+    uint256[] isRop;
+    uint256[] isRon;
+    uint256[] isRap;
+    uint256[] isRan;
+    uint256[] isRbp;
+    uint256[] isRbn;
+    uint256[] isRabn;
+    uint256[] isRabp;
+    uint256[] donor;
+    uint256[] receiver;
 
-    constructor() ERC721("Oragan Donation", "OD") {}
-
-    uint[] donor;
-    uint[] isRop;
-    uint[] isRon;
-    uint[] isRap;
-    uint[] isRan;
-    uint[] isRbp;
-    uint[] isRbn;
-    uint[] isRabn;
-    uint[] isRabp;
-
-    uint[] receiver;
+    // *************************************Registering A Hospital*****************************************//
     struct Memo {
         string username;
-        uint id;
-        uint timestamp;
+        uint256 id;
+        uint256 timestamp;
         bool flag;
     }
 
     mapping(address => Memo) map;
 
-    Memo[] memos;
-
     function registerHospital(
         string memory name,
-        uint hospital_id,
+        uint256 hospital_id,
         address metamask_address
     ) public payable {
         Memo memory newMemo = Memo(name, hospital_id, block.timestamp, true);
         map[metamask_address] = newMemo;
-        memos.push(newMemo);
     }
 
     function check(address id) public view returns (bool) {
         return map[id].flag;
     }
+
+    // *****************************************************************************************************//
+
+    // *************************************Registering A Donor*****************************************//
 
     struct RegDonor {
         address metamask_address;
@@ -52,40 +47,19 @@ contract register is ERC721URIStorage {
         string bloodgrp;
         string[] organs;
         bool flag;
+        bool status;
+        bool braindead;
     }
 
-    struct RegRecieve {
-        address metamask_address;
-        string hla;
-        string bloodgrp;
-        string[] organs;
-        bool flag;
-    }
+    mapping(uint256 => bool) isRandom;
+
+    mapping(uint256 => bool) isDead;
 
     mapping(uint256 => RegDonor) isDonor;
 
     mapping(uint256 => RegDonor) RejectDonor;
 
-    mapping(uint256 => RegRecieve) isReceiver;
-
-    mapping(uint256 => RegRecieve) RejectReceiver;
-
-    mapping(uint256 => bool) isRandom;
-
-    uint randNonce = 0;
-
-    //NFT--Minting
-    function awardItem(
-        address player,
-        string memory tokenURI
-    ) public returns (uint256) {
-        uint256 newItemId = _tokenIds.current();
-        _mint(player, newItemId);
-        _setTokenURI(newItemId, tokenURI);
-
-        _tokenIds.increment();
-        return newItemId;
-    }
+    uint256 randNonce = 0;
 
     //Registering Donor
 
@@ -101,7 +75,9 @@ contract register is ERC721URIStorage {
             hla,
             bloodgrp,
             organs,
-            true
+            true,
+            status,
+            false
         );
 
         randNonce++;
@@ -109,7 +85,7 @@ contract register is ERC721URIStorage {
 
         do {
             id =
-                uint(
+                uint256(
                     keccak256(
                         abi.encodePacked(block.timestamp, msg.sender, randNonce)
                     )
@@ -138,9 +114,15 @@ contract register is ERC721URIStorage {
         return isDonor[id];
     }
 
-    function checkDonor(uint256 id) public view returns (bool) {
-        return isDonor[id].flag;
-    }
+    // ****************************************************************************************************//
+
+    // *************************************Registering A Reciever*****************************************//
+
+    mapping(uint256 => RegDonor) isReceiver;
+
+    mapping(uint256 => RegDonor) transplant_recipent;
+
+    mapping(uint256 => RegDonor) RejectReceiver;
 
     function registerReceive(
         address metamask_address,
@@ -149,12 +131,14 @@ contract register is ERC721URIStorage {
         string[] memory organs,
         bool status
     ) public returns (uint256) {
-        RegRecieve memory regRecieve = RegRecieve(
+        RegDonor memory regRecieve = RegDonor(
             metamask_address,
             hla,
             bloodgrp,
             organs,
-            true
+            true,
+            status,
+            false
         );
 
         randNonce++;
@@ -162,7 +146,7 @@ contract register is ERC721URIStorage {
 
         do {
             id =
-                uint(
+                uint256(
                     keccak256(
                         abi.encodePacked(block.timestamp, msg.sender, randNonce)
                     )
@@ -229,38 +213,30 @@ contract register is ERC721URIStorage {
         return receiver[receiver.length - 1];
     }
 
-    function getRegReceive(uint256 id) public view returns (RegRecieve memory) {
+    function getRegReceive(uint256 id) public view returns (RegDonor memory) {
         return isReceiver[id];
     }
 
-    function checkReceive(uint256 id) public view returns (bool) {
-        return isReceiver[id].flag;
-    }
+    // ********************************************************************************************************//
 
-    function printArraydonor() public view returns (uint[] memory) {
-        return donor;
-    }
+    // ****************************************Matching Organs*************************************************//
 
-    function printArrayreceiver() public view returns (uint[] memory) {
-        return receiver;
-    }
-
-    uint[] matched_receiver;
+    uint256[] matched_receiver;
 
     function matchDonorwReceiver(
-        uint[] memory receivers,
-        uint id,
+        uint256[] memory receivers,
+        uint256 id,
         string memory org
-    ) public returns (uint[] memory) {
+    ) public returns (uint256[] memory) {
         delete matched_receiver;
 
-        for (uint j = 0; j < receivers.length; j++) {
+        for (uint256 j = 0; j < receivers.length; j++) {
             if (
                 keccak256(abi.encode(isDonor[id].hla)) ==
                 keccak256(abi.encode(isReceiver[receiver[j]].hla))
             ) {
                 for (
-                    uint i = 0;
+                    uint256 i = 0;
                     i < isReceiver[receiver[j]].organs.length;
                     i++
                 ) {
@@ -276,18 +252,43 @@ contract register is ERC721URIStorage {
         return matched_receiver;
     }
 
-    function getMatchedArray() public view returns (uint[] memory) {
+    function getMatchedArray() public view returns (uint256[] memory) {
         return matched_receiver;
     }
 
-    uint[] ans;
+    uint256[] ans;
 
     function passbloodgrpid(
         string memory bloodgrp,
-        uint id,
+        uint256 id,
         string memory organ
-    ) public returns (uint[] memory) {
+    ) public returns (uint256[] memory) {
         delete ans;
+        bool flag = false;
+
+        require(
+            isDead[id] == false,
+            "Sorry the patient organs have already been pledged"
+        );
+
+        require(isDonor[id].flag, "Sorry no such patient exists");
+
+        require(
+            keccak256(abi.encode(bloodgrp)) ==
+                keccak256(abi.encode(isDonor[id].bloodgrp)),
+            "Sorry wrong details entered"
+        );
+
+        for (uint256 i = 0; i < isDonor[id].organs.length; i++) {
+            if (
+                keccak256(abi.encode(organ)) ==
+                keccak256(abi.encode(isDonor[id].organs[i]))
+            ) {
+                flag = true;
+            }
+        }
+
+        if (flag == false) revert("Sorry the user has'nt pledged this organ..");
 
         if (keccak256(abi.encode(bloodgrp)) == keccak256(abi.encode("O+"))) {
             ans = matchDonorwReceiver(isRop, id, organ);
@@ -320,5 +321,47 @@ contract register is ERC721URIStorage {
         }
 
         return ans;
+    }
+
+    // *****************************************************************************************************//
+
+    // *************************************Removing Organs After Transplant *****************************************//
+
+    function end_surgery(
+        uint256 id,
+        uint256 r_id,
+        string memory organ
+    ) public returns (bool) {
+        for (uint256 i = 0; i < isDonor[id].organs.length; i++) {
+            if (
+                keccak256(abi.encode(organ)) ==
+                keccak256(abi.encode(isDonor[id].organs[i]))
+            ) {
+                delete isDonor[id].organs[i];
+            }
+        }
+
+        for (uint256 i = 0; i < isReceiver[r_id].organs.length; i++) {
+            if (
+                keccak256(abi.encode(organ)) ==
+                keccak256(abi.encode(isReceiver[r_id].organs[i]))
+            ) {
+                delete isReceiver[id].organs[i];
+            }
+        }
+
+        return true;
+    }
+
+    // ***********************************************************************************************************//
+
+    // *************************************Transfering Donor to DeadList*****************************************//
+
+    function getOrganLength(uint256 id) public returns (uint256) {
+        if (isDonor[id].organs.length == 0) {
+            isDead[id] = true;
+        }
+
+        return isDonor[id].organs.length;
     }
 }

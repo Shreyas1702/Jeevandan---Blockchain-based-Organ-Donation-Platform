@@ -113,9 +113,9 @@ const ReceiverForm = ({ account, setAccount , state ,setState}) => {
   }
 
     const contractCall = async (resp) => {
-        const {contract}  = state;
+        const {contract_nft}  = state;
         console.log(resp)
-        const transaction = await contract.awardItem(data.meta_address , resp);
+        const transaction = await contract_nft.awardItem(data.meta_address , resp);
         const rc = await transaction.wait();
         var num = parseInt(rc.logs[1].data.toString())
         return num

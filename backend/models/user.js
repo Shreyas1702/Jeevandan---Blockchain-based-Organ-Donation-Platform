@@ -12,6 +12,10 @@ const UserSchema = new Schema({
     required: true,
     unique: true,
   },
+  city: {
+    type: String,
+    required: true,
+  },
   id: {
     type: Number,
     required: true,
@@ -28,6 +32,10 @@ const UserSchema = new Schema({
     type: String,
     required: true,
     unique: true,
+  },
+  type: {
+    type: String,
+    default: "hospital",
   },
 });
 
