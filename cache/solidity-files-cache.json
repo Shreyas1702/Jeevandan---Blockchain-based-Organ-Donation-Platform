@@ -641,8 +641,8 @@
       ]
     },
     "C:\\Users\\AAA\\Desktop\\be_project_frontend\\Jeevandan---Blockchain-based-Organ-Donation-Platform\\contracts\\Contract_2.sol": {
-      "lastModificationDate": 1710340378016,
-      "contentHash": "dd907bd6714455a1b775fd9ca1401402",
+      "lastModificationDate": 1710829889748,
+      "contentHash": "3b772a7b2447e8e2fa58a68e10c425c1",
       "sourceName": "contracts/Contract_2.sol",
       "solcConfig": {
         "version": "0.8.20",
@@ -671,7 +671,8 @@
       "imports": [
         "hardhat/console.sol",
         "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol",
-        "@openzeppelin/contracts/utils/Counters.sol"
+        "@openzeppelin/contracts/utils/Counters.sol",
+        "./Signin.sol"
       ],
       "versionPragmas": [
         "^0.8.2"

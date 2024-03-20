@@ -2,6 +2,8 @@ import React from 'react'
 import { useState } from 'react';
 import axios from 'axios'
 import Select from "react-select";
+import DashAside from './DashAside';
+import { toast , ToastContainer} from 'react-toastify';
 
 const ReceiverForm = ({ account, setAccount , state ,setState}) => {
   const options = [
@@ -81,9 +83,11 @@ const ReceiverForm = ({ account, setAccount , state ,setState}) => {
 
         humanData.image = "https://gateway.pinata.cloud/ipfs/QmPQvvpRgEYDfkB1xe7gJYTaD1iNgJczEjbCRbtTt6S5Au"
         const d = await uploadToPinataJson(humanData);
+        const toastId = toast.info('Creating NFT', { autoClose: false });
         const resp = `https://gateway.pinata.cloud/ipfs/${d.data.IpfsHash}`
         var num = await contractCall(resp)
         data.nftId = num;
+        toast.update(toastId, { render: 'NFT Created Successfully', type: 'success', autoClose: 3000 });
         
         try{
         const {contract}  = state;
@@ -91,6 +95,7 @@ const ReceiverForm = ({ account, setAccount , state ,setState}) => {
         console.log(data);
         data.address = account
         const transaction = await contract.registerReceive(data.address ,  data.hla  , data.bloodgroup  , data.organs , data.flag);
+        const toastId = toast.info('Transaction in Progress', { autoClose: false });
         const rc = await transaction.wait();
         console.log("Transaction Done");
 
@@ -102,14 +107,22 @@ const ReceiverForm = ({ account, setAccount , state ,setState}) => {
         await axios.post(`http://localhost:8000/reciever_reg/${Id}`, data)
         .then(function (response) {
             console.log(response);
+            toast.update(toastId, { render: 'Transaction Successfully', type: 'success', autoClose: 5000 });
         })
         .catch(function (error) {
             console.log(error);
+            toast.error(error);
         });
         }
          catch (error) {
-        console.error("Error during transaction:", error);
+        toast.error(error);
     }
+
+    setTimeout(() => {
+        window.location.reload(true);
+    },6000);
+
+
   }
 
     const contractCall = async (resp) => {
@@ -140,7 +153,7 @@ const ReceiverForm = ({ account, setAccount , state ,setState}) => {
                 const formData = new FormData();
                 formData.append("file" , file);
 
-                console.log(file)
+                const toastId = toast.info('Uploading in Progress', { autoClose: false });
 
                 const response = await axios({
                     method: "post",
@@ -156,6 +169,9 @@ const ReceiverForm = ({ account, setAccount , state ,setState}) => {
                 ImgHash = `https://gateway.pinata.cloud/ipfs/${response.data.IpfsHash}`;
 
                 setPic(true)
+
+                toast.update(toastId, { render: 'Document Uploaded Successfully', type: 'success', autoClose: 3000 });
+
             }
             catch(error){
                 console.log(error)
@@ -201,49 +217,8 @@ const ReceiverForm = ({ account, setAccount , state ,setState}) => {
       }
     return (
         <div style={{display : "flex"}}>
-            <aside style={{marginTop : "20px" , marginLeft : "50px" , width : "450px"}}>
-                <div class="top">
-                <div class="logo">
-                    <h2 style={{fontSize : "2rem" , marginTop : "1rem"}}>
-                    <span style={{ color: "#5ec576" }}>Jeeva</span>ndan
-                    </h2>
-                </div>
-                <div class="close" id="close-btn">
-                    <span class="material-icons-sharp">close</span>
-                </div>
-                </div>
-                <div class="sidebar">
-                <a href="/dashboard">
-                    <span class="material-icons-sharp"> grid_view </span>
-                    <h3>Dashboard</h3>
-                </a>
-                <a href="/dashboard/DonorForm" className='acc_hov' style={{backgroundColor : "#5ec567" , borderRadius : "10px" , color : "white"}}>
-                    <span class="material-icons-sharp"> person_outline </span>
-                    <h3>{account.slice(0, 6) + "...." + account.slice(38, 42)}</h3>
-                </a>
-                <a href="/dashboard/DonorForm">
-                    <span class="material-icons-sharp"> person_outline </span>
-                    <h3>Donor Entry</h3>
-                </a>
-                <a href="/dashboard/ReceiverForm" class="active">
-                    <span class="material-icons-sharp"> receipt_long </span>
-                    <h3>Reciever Entry</h3>
-                </a>
-                <a href="/dashboard/MatchingPage">
-                    <span class="material-icons-sharp"> insights </span>
-                    <h3>Organ Matching</h3>
-                </a>
-
-                <a href="/dashboard/DonorForm">
-                    <span class="material-icons-sharp"> add </span>
-                    <h3>Living Donation</h3>
-                </a>
-                <a href="#">
-                    <span class="material-icons-sharp"> logout </span>
-                    <h3>Logout</h3>
-                </a>
-                </div>
-            </aside>
+        <ToastContainer />
+        <DashAside account={account} style={{marginTop : "20px" , marginLeft : "50px" , width : "170px"}} />
         <div className="donor-reg-form" style={{marginLeft : "280px"}}>
             <h1 style={{marginLeft : "300px" , marginBottom : "25px" , marginTop : "30px" , color : "#5ec567"}}>Reciever Registration Form</h1>
             <div className='donor-register'>

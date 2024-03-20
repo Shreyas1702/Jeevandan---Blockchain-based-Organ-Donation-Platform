@@ -18,6 +18,8 @@ import DashAdmin from "./component/DashAdmin";
 import DonorCard from "./component/DonorCard";
 import RecieverCard from "./component/RecieverCard";
 import TransAdmin from "./component/TransAdmin";
+import DonorEntry from "./component/DonorEntry";
+import DoctorPage from "./component/DoctorPage";
 function App() {
   const [state, setState] = useState({
     provider: null,
@@ -34,7 +36,7 @@ function App() {
       const contractAddress = "0x65e5Fc36c3D8906CD25c358cF892d8fE1389Fb7A";
       const contractABI = abi.abi;
 
-      const contractAddress_NFT = "0x5BbE9441E0b9DdF0197702a5Ab8bd55eB36670a0";
+      const contractAddress_NFT = "0x2EC823963665DDa4e857806D967dC2b9001edE4f";
       const contractABI_NFT = abis.abi;
 
       try {
@@ -253,6 +255,28 @@ function App() {
             path="/dashboard"
             element={
               <Dashboard
+                account={account}
+                setAccount={setAccount}
+                state={state}
+                setState={setState}
+              />
+            }
+          ></Route>
+          <Route
+            path="/dashboard/approval"
+            element={
+              <DonorEntry
+                account={account}
+                setAccount={setAccount}
+                state={state}
+                setState={setState}
+              />
+            }
+          ></Route>
+          <Route
+            path="/doctor"
+            element={
+              <DoctorPage
                 account={account}
                 setAccount={setAccount}
                 state={state}

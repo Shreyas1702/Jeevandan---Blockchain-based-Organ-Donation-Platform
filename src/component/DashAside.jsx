@@ -1,6 +1,6 @@
 import React from 'react'
 
-const Aside = ({account , style}) => {
+const DashAside = ({account , style}) => {
   return (
     <div>
         <aside style={style}>
@@ -15,7 +15,7 @@ const Aside = ({account , style}) => {
           </div>
         </div>
         <div class="sidebar">
-          <a href="/dashboard_admin">
+          <a href="/dashboard">
                 <span class="material-icons-sharp"> grid_view </span>
                 <h3>Dashboard</h3>
           </a>
@@ -25,17 +25,26 @@ const Aside = ({account , style}) => {
           </a> : <a href="#" className='acc_hov' style={{backgroundColor : "#5ec567" , paddingLeft : "5px" , borderRadius : "10px" , color : "white"}}>
             <span class="material-icons-sharp"> account_circle </span>
           </a>}
-          <a href="/dashboard_admin/donors">
+          <a href="/dashboard/DonorForm">
             <span class="material-icons-sharp"> person_outline </span>
             <h3>Donor Entry</h3>
           </a>
-          <a href="/dashboard_admin/reciever">
+          <a href="/dashboard/ReceiverForm">
             <span class="material-icons-sharp"> receipt_long </span>
             <h3>Reciever Entry</h3>
           </a>
-          <a href="/dashboard_admin/transAdmin">
+          <a href="/dashboard/MatchingPage">
             <span class="material-icons-sharp"> insights </span>
-            <h3>Transplant Process</h3>
+            <h3>Organ Matching</h3>
+          </a>
+
+          <a href="/dashboard/DonorForm">
+            <span class="material-icons-sharp"> add </span>
+            <h3>Living Donation</h3>
+          </a>
+          <a href="/dashboard/approval">
+            <span class="material-icons-sharp"> person_outline </span>
+            <h3>Approval List</h3>
           </a>
           <a href="#">
             <span class="material-icons-sharp"> logout </span>
@@ -47,4 +56,4 @@ const Aside = ({account , style}) => {
   )
 }
 
-export default Aside
+export default DashAside

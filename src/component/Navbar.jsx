@@ -2,6 +2,7 @@ import React from 'react'
 import { ethers } from "ethers";
 import abi from "./../contracts/register.json";
 import { useState, useEffect } from "react";
+import axios from 'axios';
 
 const Navbar = () => {
   const [state, setState] = useState({
@@ -14,6 +15,8 @@ const Navbar = () => {
   const [func, setFunc] = useState("");
   const [loggedIn, setLoggedIn] = useState(false);
   const [admin, setAdmin] = useState(false);
+  const [doc, setDoc] = useState(false);
+
   useEffect(() => {
     const connectWallet = async () => {
       const contractAddress = "0x65e5Fc36c3D8906CD25c358cF892d8fE1389Fb7A";
@@ -22,7 +25,6 @@ const Navbar = () => {
       try {
         const { ethereum } = window;
 
-        console.group(ethereum);
 
         var accounts;
         if (ethereum) {
@@ -30,9 +32,7 @@ const Navbar = () => {
             method: "eth_requestAccounts",
           });
 
-          console.log(accounts[0]);
           await setAccount(accounts[0]);
-          console.log(account);
         }
 
         const provider = new ethers.BrowserProvider(ethereum);
@@ -42,22 +42,25 @@ const Navbar = () => {
           contractABI,
           signer
         );
-        console.log(await signer.getAddress());
-        console.log("contract");
+
         setState({ provider, signer, contract });
-        console.log(contract);
-        console.log(accounts[0]);
+
 
         const transaction = await contract.check(accounts[0]);
         console.log(transaction);
         if (transaction) {
           setLoggedIn(true);
-          console.log(loggedIn);
         }
-        console.log(account)
+        const bool = await axios.post("http://localhost:8000/admin/checkDoc" , {account})        
+        if(bool.data.success == true){
+          setAdmin(false);
+          setLoggedIn(false);
+          setDoc(true);
+        }
         if(account == "0x87804696f85bef5801fe3e0cabf2392a7a1e26dd"){
           setAdmin(true);
           setLoggedIn(false)
+          setDoc(false);
         }
       } catch (error) {
         console.log(error);
@@ -107,8 +110,7 @@ function btnhandler() {
                   </button>
                 )}
               </li>
-              {console.log(loggedIn)}
-              {!loggedIn && !admin && (
+              {!loggedIn && !admin && !doc &&(
                 <li>
                   <a className="my_links" href="/signin">
                     Register
@@ -125,6 +127,13 @@ function btnhandler() {
               {admin && (
                 <li>
                   <a className="my_links" href="/dashboard_admin">
+                    DashBoard
+                  </a>
+                </li>
+              )}
+              {doc && (
+                <li>
+                  <a className="my_links" href="/doctor">
                     DashBoard
                   </a>
                 </li>

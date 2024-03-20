@@ -10,18 +10,32 @@ body {
   font-family: "Source Sans Pro", sans-serif;
 }
 
-.css-b62m3t-container {
+.donor-reg-form .css-b62m3t-container {
   width: 35%;
 }
 
-.css-13cymwt-control {
+.donor-reg-form .css-13cymwt-control {
   margin-left: 10px;
   width: 100%;
   margin-top: 40px;
 }
 
+.Admin .css-b62m3t-container {
+  width: 80%;
+}
+
+.Admin .css-13cymwt-control {
+  margin-left: 10px;
+  width: 100%;
+  margin-left: 40px;
+}
+
 .select-items {
   margin-left: 230px;
+}
+
+.Toastify__toast-body {
+  font-size: 18px;
 }
 
 :root {
@@ -680,4 +694,8 @@ h4 {
   text-align: center;
   box-shadow: var(--box-shadow);
   transition: all 300ms ease;
+}
+
+.modal {
+  background-color: var(--color-light);
 }

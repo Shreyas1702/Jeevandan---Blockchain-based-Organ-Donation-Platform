@@ -3,6 +3,8 @@ import { useState } from 'react';
 import axios from 'axios'
 import Select from "react-select";
 import { ethers } from "ethers";
+import DashAside from './DashAside';
+import { toast , ToastContainer} from 'react-toastify';
 const Web3 = require('web3')
 
 const DonorForm = ({ account, setAccount , state ,setState}) => {
@@ -68,25 +70,31 @@ const DonorForm = ({ account, setAccount , state ,setState}) => {
                 humanData.organ = "kidney"
                 humanData.image = "https://gateway.pinata.cloud/ipfs/QmPQvvpRgEYDfkB1xe7gJYTaD1iNgJczEjbCRbtTt6S5Au"
                 const d = await uploadToPinataJson(humanData);
+                const toastId = toast.info('Creating NFT', { autoClose: false });
                 const resp = `https://gateway.pinata.cloud/ipfs/${d.data.IpfsHash}`
                 var num = await contractCall(resp)
                 data.nftId.kidney = num;
+                toast.update(toastId, { render: 'NFT Created Successfully', type: 'success', autoClose: 3000 });
             }
             else if(skills[i].value == "pancreas" && status){
                 humanData.organ = "pancreas"
-                const d = await uploadToPinataJson(humanData)
                 humanData.image = "https://gateway.pinata.cloud/ipfs/Qmbgzp9DgWCba4BAwoCwVLAD7w53nDkT3gPDz3vU3e2xyE"
+                const d = await uploadToPinataJson(humanData)
+                const toastId = toast.info('Creating NFT', { autoClose: false });
                 const resp = `https://gateway.pinata.cloud/ipfs/${d.data.IpfsHash}`
                 var num = await contractCall(resp)
                 data.nftId.pancreas = num;
+                toast.update(toastId, { render: 'NFT Created Successfully', type: 'success', autoClose: 3000 });
             }
             else if(skills[i].value == "liver" && status){
                 humanData.organ = "liver"
                 humanData.image = "https://gateway.pinata.cloud/ipfs/QmcWr1t9RxhbZauQ6MgvJm9sxQDyei6uWdik3SfX9HQtXF"
                 const d = await uploadToPinataJson(humanData)
+                const toastId = toast.info('Creating NFT', { autoClose: false });
                 const resp = `https://gateway.pinata.cloud/ipfs/${d.data.IpfsHash}`
                 var num = await contractCall(resp)
                 data.nftId.liver = num;
+                toast.update(toastId, { render: 'NFT Created Successfully', type: 'success', autoClose: 3000 });
             }
             else{
                 continue
@@ -96,32 +104,39 @@ const DonorForm = ({ account, setAccount , state ,setState}) => {
         data.flag = status;
         
         try{
-        const {contract}  = state;
-        console.log(contract)
-        console.log(data);
-        data.address = account
-        const transaction = await contract.registerDonor(data.address ,  data.hla  , data.bloodgroup  , data.organs , data.flag);
-        const rc = await transaction.wait();
-        console.log("Transaction Done");
-        console.log(rc)
+            const {contract}  = state;
+            console.log(contract)
+            console.log(data);
+            data.address = account
+            const transaction = await contract.registerDonor(data.address ,  data.hla  , data.bloodgroup  , data.organs , data.flag);
+            const toastId = toast.info('Transaction in Progress', { autoClose: false });
+            const rc = await transaction.wait();
 
-        var Id = await contract.getDonorId();
-        Id = parseInt(Id.toString())
-        console.log(Id)
-        console.log(data);
+            var Id = await contract.getDonorId();
+            Id = parseInt(Id.toString())
+            console.log(Id)
+            console.log(data);
 
-        await axios.post(`http://localhost:8000/donor_reg/${Id}`, data)
-        .then(function (response) {
-            console.log(response);
-        })
-        .catch(function (error) {
-            console.log(error);
-        });
+            await axios.post(`http://localhost:8000/donor_reg/${Id}`, data)
+            .then(function (response) {
+                console.log(response);
+                toast.update(toastId, { render: 'Transaction Successfully', type: 'success', autoClose: 4000 });
+            })
+            .catch(function (error) {
+                console.log(error);
+                toast.error(error);
+            });
         }
-         catch (error) {
-        console.error("Error during transaction:", error);
+        catch (error) {
+            console.error("Error during transaction:", error);
+            toast.error("Error during transaction");
+        }
+
+        setTimeout(() => {
+            window.location.reload(true);
+        },6000);
+
     }
-  }
 
     const contractCall = async (resp) => {
         const {contract_nft}  = state;
@@ -151,8 +166,7 @@ const DonorForm = ({ account, setAccount , state ,setState}) => {
                 const formData = new FormData();
                 formData.append("file" , file);
 
-                console.log(file)
-
+                const toastId = toast.info('Uploading in Progress', { autoClose: false });
                 const response = await axios({
                     method: "post",
                     url: "https://api.pinata.cloud/pinning/pinFileToIPFS",
@@ -166,11 +180,13 @@ const DonorForm = ({ account, setAccount , state ,setState}) => {
 
                 ImgHash = `https://gateway.pinata.cloud/ipfs/${response.data.IpfsHash}`;
 
-                setPic(true)
+                setPic(true);
+                
+                toast.update(toastId, { render: 'Document Uploaded Successfully', type: 'success', autoClose: 3000 });
             }
             catch(error){
                 console.log(error)
-                console.log("Unable to Upload the Image")
+                toast.error("Unable to Upload the Image");
             }
 
             data.link = ImgHash;
@@ -211,49 +227,8 @@ const DonorForm = ({ account, setAccount , state ,setState}) => {
       }
     return (
         <div style={{display : "flex"}}>
-            <aside style={{marginTop : "20px" , marginLeft : "50px" , width : "400px"}}>
-                <div class="top">
-                <div class="logo">
-                    <h2 style={{fontSize : "2rem" , marginTop : "1rem"}}>
-                    <span style={{ color: "#5ec576" }}>Jeeva</span>ndan
-                    </h2>
-                </div>
-                <div class="close" id="close-btn">
-                    <span class="material-icons-sharp">close</span>
-                </div>
-                </div>
-                <div class="sidebar">
-                <a href="/dashboard">
-                    <span class="material-icons-sharp"> grid_view </span>
-                    <h3>Dashboard</h3>
-                </a>
-                <a href="/dashboard/DonorForm" className='acc_hov' style={{backgroundColor : "#5ec567" , borderRadius : "10px" , color : "white"}}>
-                    <span class="material-icons-sharp"> person_outline </span>
-                    <h3>{account.slice(0, 6) + "...." + account.slice(38, 42)}</h3>
-                </a>
-                <a href="/dashboard/DonorForm" class="active">
-                    <span class="material-icons-sharp"> person_outline </span>
-                    <h3>Donor Entry</h3>
-                </a>
-                <a href="/dashboard/ReceiverForm">
-                    <span class="material-icons-sharp"> receipt_long </span>
-                    <h3>Reciever Entry</h3>
-                </a>
-                <a href="/dashboard/MatchingPage">
-                    <span class="material-icons-sharp"> insights </span>
-                    <h3>Organ Matching</h3>
-                </a>
-
-                <a href="/dashboard/DonorForm">
-                    <span class="material-icons-sharp"> add </span>
-                    <h3>Living Donation</h3>
-                </a>
-                <a href="#">
-                    <span class="material-icons-sharp"> logout </span>
-                    <h3>Logout</h3>
-                </a>
-                </div>
-            </aside>
+        <ToastContainer />
+        <DashAside account={account} style={{marginTop : "20px" , marginLeft : "50px" , width : "170px"}}/>
         <div className="donor-reg-form" style={{marginLeft : "280px"}}>
             <h1 style={{marginLeft : "300px" , marginBottom : "30px" , marginTop : "50px" , color : "#5ec567"}}>Donor Registration Form</h1>
             <div className='donor-register'>

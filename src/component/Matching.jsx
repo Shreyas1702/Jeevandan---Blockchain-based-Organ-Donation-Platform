@@ -1,6 +1,8 @@
 import React from 'react'
 import { useState } from 'react';
 import axios from 'axios';
+import DashAside from './DashAside';
+import { toast , ToastContainer } from 'react-toastify';
 const Matching = ({ account, setAccount , state ,setState}) => {
 const [data  , setData] = React.useState({
   id : 0,
@@ -18,9 +20,8 @@ const SubmitForm = async (e) => {
     const {contract}  = state;
     console.log(contract)
     const transaction = await contract.passbloodgrpid(data.bloodgrp , data.id , data.organ);
+    const toastId = toast.info('Organ Matching in Progress', { autoClose: false });
     const rc = await transaction.wait();
-    console.log("Transaction Done");
-    console.log(transaction);
 
     var datas = await contract.getMatchedArray();
     // const d = await datas.wait();
@@ -41,13 +42,16 @@ const SubmitForm = async (e) => {
     .then(function (response) {
         console.log(response);
         setptlist(response.data.data)
+        toast.update(toastId, { render: 'Transaction Successful', type: 'success', autoClose: 5000 });
     })
     .catch(function (error) {
         console.log(error);
+        toast.error(error)
     });
     }
      catch (error) {
     console.error("Error during transaction:", error);
+    toast.error(error);
   }
   }
 
@@ -66,18 +70,26 @@ function handleChange(e){
 }
 
 const startProcess = async (id) => {
+  const toastId = toast.success('Reciever Confirmed', { autoClose: 5000 });
   console.log(data);
   const Id = data.id;
   const organ = data.organ;
+  const d_hosp = account
   const d  = {
     id,
     Id,
-    organ
+    organ,
+    d_hosp,
   }
 
   await axios.post('http://localhost:8000/transplant' , d).then((response) => {
     console.log(response);
-  })
+  });
+  
+  setTimeout(() => {
+    window.location.reload(true);
+  },6000)
+
 }
 
 const tbody = () => {
@@ -105,49 +117,8 @@ const tbody = () => {
 
   return (
     <div style={{display : "flex"}}>
-            <aside style={{marginTop : "20px" , marginLeft : "50px" , width : "12%"}}>
-                <div class="top">
-                <div class="logo">
-                    <h2 style={{fontSize : "2rem" , marginTop : "1rem"}}>
-                    <span style={{ color: "#5ec576" }}>Jeeva</span>ndan
-                    </h2>
-                </div>
-                <div class="close" id="close-btn">
-                    <span class="material-icons-sharp">close</span>
-                </div>
-                </div>
-                <div class="sidebar">
-                <a href="/dashboard">
-                    <span class="material-icons-sharp"> grid_view </span>
-                    <h3>Dashboard</h3>
-                </a>
-                <a href="/dashboard/DonorForm" className='acc_hov' style={{backgroundColor : "#5ec567" , borderRadius : "10px" , color : "white"}}>
-                  <span class="material-icons-sharp"> person_outline </span>
-                  <h3>{account.slice(0, 6) + "...." + account.slice(34, 42)}</h3>
-                </a>
-                <a href="/dashboard/DonorForm">
-                    <span class="material-icons-sharp"> person_outline </span>
-                    <h3>Donor Entry</h3>
-                </a>
-                <a href="/dashboard/ReceiverForm">
-                    <span class="material-icons-sharp"> receipt_long </span>
-                    <h3>Reciever Entry</h3>
-                </a>
-                <a href="/dashboard/MatchingPage" class="active">
-                    <span class="material-icons-sharp"> insights </span>
-                    <h3>Organ Matching</h3>
-                </a>
-
-                <a href="/dashboard/DonorForm">
-                    <span class="material-icons-sharp"> add </span>
-                    <h3>Living Donation</h3>
-                </a>
-                <a href="#">
-                    <span class="material-icons-sharp"> logout </span>
-                    <h3>Logout</h3>
-                </a>
-                </div>
-            </aside>
+    <ToastContainer/>
+    <DashAside account={account} style={{marginTop : "20px" , marginLeft : "50px" , width : "90%"}} />
     <div className="MatchingPage">
       <h1 style={{textAlign : "center" , color : "#5ec567" , marginTop : "60px"}}>Organ Matching Process</h1>
        <div className='hosp-register'>

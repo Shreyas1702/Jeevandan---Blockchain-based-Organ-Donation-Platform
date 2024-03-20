@@ -5,63 +5,179 @@ import 'react-circular-progressbar/dist/styles.css';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 import Aside from './Aside';
+import Select from "react-select";
+import Modal from 'react-bootstrap/Modal';
+import Button from 'react-bootstrap/Button';
+
+
 
 const DashAdmin = ({ account, setAccount , state ,setState}) => {
 
   const [loading , setloading] = React.useState(true);
   var [process , setProcess] = React.useState([]);
+  const [show, setShow] = React.useState(false);
+
+   const [skills, setSkills] = React.useState([]);
+
+   const [skills2, setSkills2] = React.useState([]);
+  
   const [data , setData] = React.useState({
     no_donor : Number,
     no_reciever : Number,
     total_pt: Number,
     complete_trans : Number,
     incomplete_trans: Number,
+    donor : Array,
+    reciever : Array,
+    completed_d_trans : Array,
+    incompleted_d_trans : Array
   });
 
   const [func , setFunc] = React.useState(true);
+  const {contract_nft} = state;
 
   React.useEffect(() => {
+    
     setTimeout(async () => {
       const ddata = await getEntireData();
-      console.log(ddata.ongoing_p.length)
-      setProcess(ddata.ongoing_p);
       setData(ddata)
-      console.log(process);
-      console.log("Data :- " , data);
+
       setloading(false);
-    } , 5000)
+    } , 3000);
 
-  },[account])
+    async function getBrain(){
+      console.log("Get Brain Dead :- ")
+      const datas = await contract_nft.getAllBDs();
+      console.log(datas);
+      const list = [];
+      for(var i = 0 ; i < datas.length ; i++){
+        if(datas[i][2] == '0x0000000000000000000000000000000000000000'){
+          const doctors = [];
+          const id = parseInt(datas[i][0]);
+          const donor_hosp = datas[i][1];
+          const d = {id , donor_hosp};
+          const data = await axios.post("http://localhost:8000/admin/getEntiredData" , d);
 
+          for(var i = 0 ; i < data.data.docs.length ; i++){
+            const value = data.data.docs[i].meta_address;
+            const label = data.data.docs[i].name;
+            const id = data.data.docs[i].id;
+            doctors.push({value , label , id});
+          }
 
+          const name = data.data.donor[0].name;
+          const json = {
+            name : name,
+            id : id,
+            doctors,
+            success : false,
+          }
+
+          list.push(json);
+        }
+        else{
+          const id = parseInt(datas[i][0]);
+          const donor_hosp = datas[i][1];
+          const doc1 = datas[i][2];
+          const doc2 = datas[i][3];
+          const d = {id , donor_hosp , doc1 , doc2};
+          const data = await axios.post("http://localhost:8000/admin/getEntiredDatas" , d);
+          console.log(data);
+          const name = data.data.donor[0].name;
+          const doc_1 = data.data.doc_1.name;
+          const doc_2 = data.data.doc_2.name;
+
+          const json = {
+            name : name,
+            id : id,
+            doc_1 : doc_1,
+            doc_2 : doc_2,
+            success : true,
+          }
+
+          list.push(json);
+        }
+      }
+
+      setProcess(list);
+      console.log("Datas : - " , list);
+    }
+
+    if(contract_nft)
+      getBrain();
+
+  },[account , state , func])
+
+  function handleClose(){
+    show = false;
+  }
 
   async function getEntireData(){
       const d = {account}
       var dta; 
       console.log("Account :- " , account)
-      const da = await axios.post("http://localhost:8000/getEntireData" , d).then((response) => {
+      const da = await axios.post("http://localhost:8000/admin/getEntire" , d).then((response) => {
         console.log(response.data)
         dta = response.data;
       });
       return dta;
     }
 
+  const handleChanges = (skills) => {
+    setSkills(skills || []);
+    console.log(skills);
+  };
+
+  const handleChanges2 = (skills2) => {
+    setSkills2(skills2 || []);
+    console.log(skills2);
+  };
+
+  async function submitDocs(id){
+    await contract_nft.reg_braindead(id , skills.value , skills2.value , skills.id , skills2.id , account);
+  }
+
   function getTableData(){
     console.log("getTableData")
     console.log("Process :-" , process)
     var num = 1;
     return process.map((data) => {
-      const ids = data.transplant_id;  
+      console.log(data)
+      if(data.success == false){  
       return (
-          <tr style={{ fontSize : "1.5rem"}}>
+          <tr style={{ fontSize : "1.5rem"}} className = "Admin">
             <td style={{paddingBottom : "15px" , paddingTop : "1.5rem"}}>{num++}</td>
-            <td style={{paddingBottom : "15px" , paddingTop : "1.5rem" }}>{data.transplant_id}</td>
-            <td style={{paddingBottom : "15px" , paddingTop : "1.5rem" }}>{data.donor_id.name}</td>
-            <td style={{paddingBottom : "15px" , paddingTop : "1.5rem" }}>{data.reciever_id.name}</td>
-            <td style={{paddingBottom : "15px" , paddingTop : "1.5rem" }}>{data.stage}</td>
-            <td style={{paddingBottom : "15px" , paddingTop : "1.5rem" }}>{<Link style={{margin : "0"}} to="/dashboard/TransplantPage" state = {{ tId : ids}}>View </Link>}</td>
+            <td style={{paddingBottom : "15px" , paddingTop : "1.5rem" }}>{data.id}</td>
+            <td style={{paddingBottom : "15px" , paddingTop : "1.5rem" }}>{data.name}</td>
+            <td style={{paddingBottom : "15px" , paddingTop : "1.5rem" }}><Select
+                    options={data.doctors}
+                    onChange= {handleChanges}
+                    value={skills}
+                    style={{ fontSize : "18px" , width : "90px"  , color : "black" , height : "30px"}}
+                    
+                    /></td>
+            <td style={{paddingBottom : "15px" , paddingTop : "1.5rem" }}><Select
+                    options={data.doctors}
+                    onChange= {handleChanges2}
+                    value={skills2}
+                    style={{ fontSize : "18px" , width : "90px"  , color : "black" , height : "30px"}}
+                    /></td>
+            <td style={{paddingBottom : "15px" , paddingTop : "1.5rem" }}><button type="submit" onClick={(event) => submitDocs(data.id)} style={{padding : "10px 20px" , fontSize : "17px" , borderRadius : "10px" , backgroundColor: "#5ec567" , color : "white"}}>Submit</button></td>
           </tr>
         )
+      }
+      else{
+        return (
+        <tr style={{ fontSize : "1.5rem"}}>
+            <td style={{paddingBottom : "15px" , paddingTop : "1.5rem"}}>{num++}</td>
+            <td style={{paddingBottom : "15px" , paddingTop : "1.5rem" }}>{data.id}</td>
+            <td style={{paddingBottom : "15px" , paddingTop : "1.5rem" }}>{data.name}</td>
+            <td style={{paddingBottom : "15px" , paddingTop : "1.5rem" }}>{data.doc_1}</td>
+            <td style={{paddingBottom : "15px" , paddingTop : "1.5rem" }}>{data.doc_2}</td>
+            <td style={{paddingBottom : "15px" , paddingTop : "1.5rem" }}>Completed</td>
+          </tr>
+        )
+      }
     })
   }
 
@@ -69,7 +185,7 @@ const DashAdmin = ({ account, setAccount , state ,setState}) => {
   return (
     <div className='containerss'>
         {console.log(account)}
-        <Aside account={account}/>
+        <Aside account={account} data={data}/>
       <main>
         <div class="insights">
           <div class="sales">
@@ -144,10 +260,10 @@ const DashAdmin = ({ account, setAccount , state ,setState}) => {
             <thead>
               <tr>
                 <th>Sr No.</th>
-                <th>Transplant Id</th>
+                <th>Donor Id</th>
                 <th>Donor Name</th>
-                <th>Reciever Name</th>
-                <th>Stage</th>
+                <th>Doctor 1</th>
+                <th>Doctor 2</th>
                 <th>Status</th>
               </tr>
             </thead>

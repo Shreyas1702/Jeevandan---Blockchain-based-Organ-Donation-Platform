@@ -7,11 +7,16 @@ import { useState , useEffect } from 'react';
 import axios from 'axios'
 import HospitalPage from "./HospitalPage";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { toast } from 'react-toastify';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 
 const SignIn = ({ account, setAccount , state ,setState , loggedIn ,  setLoggedIn}) => {
     
     const [longitudes  , setLongitude] = React.useState();
     const [latitudes  , setLatitude] = React.useState();
+
     const [data , setData] = useState({
         username : "",
         id : 0,
@@ -43,7 +48,7 @@ const SignIn = ({ account, setAccount , state ,setState , loggedIn ,  setLoggedI
       const contractAddress = "0x65e5Fc36c3D8906CD25c358cF892d8fE1389Fb7A";
       const contractABI = abi.abi;
 
-      const contractAddress_NFT = "0x5BbE9441E0b9DdF0197702a5Ab8bd55eB36670a0";
+      const contractAddress_NFT = "0x2EC823963665DDa4e857806D967dC2b9001edE4f";
       const contractABI_NFT = abis.abi;
 
       try {
@@ -55,7 +60,6 @@ const SignIn = ({ account, setAccount , state ,setState , loggedIn ,  setLoggedI
           });
           setAccount(accounts[0]);
         }
-        console.log(ethereum)
         const provider = new ethers.BrowserProvider(ethereum);
         const signer = await provider.getSigner();
         const contract = new ethers.Contract(
@@ -69,10 +73,9 @@ const SignIn = ({ account, setAccount , state ,setState , loggedIn ,  setLoggedI
           contractABI_NFT,
           signer
         );
-        console.log(await signer.getAddress());
         setState({ provider, signer, contract, contract_nft });
       } catch (error) {
-        console.log(error);
+        toast.error(error);
       }
 
       setFunc(false);
@@ -89,31 +92,35 @@ const SignIn = ({ account, setAccount , state ,setState , loggedIn ,  setLoggedI
       data.ltd = latitudes;
     if(longitudes != undefined)
       data.lngt = longitudes;
-    console.log(data);
     const {contract}  = state;
-    console.log(contract)
 
-    console.log(data);
     const transaction = await contract.registerHospital(data.username , data.id , data.meta_address);
+    const toastId = toast.info('Transaction in Progress', { autoClose: false });
     await transaction.wait();
 
-    await axios.post('http://localhost:8000/register', data)
-  .then(function (response) {
+  await axios.post('http://localhost:8000/register', data)
+  .then((response) => {
     console.log(response);
+    toast.update(toastId, { render: 'Transaction Successful', type: 'success', autoClose: 5000 });
+
   })
-  .catch(function (error) {
+  .catch((error) => {
     console.log(error);
+    toast.error('Upload Failed');
   });
-    console.log(transaction)
-    console.log("Transaction Done");
 
     setLoggedIn(true)
+ 
+    setTimeout(() => {
+        window.location.reload(true);
+    },6000);
 
   }
 
   function handleChange(e){
     e.preventDefault();
     const {name  , value} = e.target;
+
 
     setData((prevData) => ({
         ...prevData,
@@ -126,6 +133,7 @@ const SignIn = ({ account, setAccount , state ,setState , loggedIn ,  setLoggedI
   
     return (
     <div className="div">
+      <ToastContainer />
       <Navbar/>
     <div className="hosp-reg-form">
         <div className='hosp-register'>

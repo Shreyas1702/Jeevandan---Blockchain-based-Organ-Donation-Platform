@@ -10,6 +10,8 @@ const MongoStore = require("connect-mongo");
 const User = require("./models/user");
 const userRoutes = require("./route/user");
 const path = require("path");
+const adminRoutes = require("./route/admin");
+const doctorRoutes = require("./route/doctor");
 const viewPath = path.resolve(__dirname, "./templates/views/");
 const engine = require("ejs-mate");
 
@@ -51,5 +53,9 @@ app.use((req, res, next) => {
 });
 
 app.use("/", userRoutes);
+
+app.use("/admin", adminRoutes);
+
+app.use("/doctor", doctorRoutes);
 
 module.exports = app;

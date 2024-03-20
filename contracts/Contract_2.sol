@@ -3,6 +3,7 @@ pragma solidity ^0.8.2;
 import "hardhat/console.sol";
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
+import "./Signin.sol";
 
 contract NFT is ERC721URIStorage {
     using Counters for Counters.Counter;
@@ -30,13 +31,175 @@ contract NFT is ERC721URIStorage {
 
     // *************************************Pushing Brain Dead Patient*****************************************//
 
-    function brain_Dead(uint256 donor_id) public returns (bool) {
-        brainDead.push(donor_id);
+    struct BD {
+        uint256 id;
+        address donor_hosp;
+        address doc_1;
+        address doc_2;
+        uint256 id1;
+        uint256 id2;
+        uint256 sign1;
+        uint256 sign2;
+        bool status;
+        bool flag;
+        uint256 timestamp;
+    }
+
+    uint256[] brainDeadList;
+
+    mapping(uint256 => BD) public BDmapping;
+
+    mapping(address => uint256[]) BdArray;
+
+    mapping(uint256 => uint256[]) DocArray;
+
+    function brain_Dead(
+        uint256 donor_id,
+        address donor_hosp,
+        address ContractA_Address
+    ) public returns (bool) {
+        require(
+            BDmapping[donor_id].flag == false,
+            "The Donor is already present in the List"
+        );
+
+        register ContractA = register(ContractA_Address);
+
+        require(
+            ContractA.check(donor_hosp) == true,
+            "No such MetaMask Address..Please Check..!!"
+        );
+
+        BdArray[donor_hosp].push(donor_id);
+
+        BD memory regBD = BD(
+            donor_id,
+            donor_hosp,
+            0x0000000000000000000000000000000000000000,
+            0x0000000000000000000000000000000000000000,
+            0,
+            0,
+            0,
+            0,
+            false,
+            true,
+            block.timestamp
+        );
+
+        BDmapping[donor_id] = regBD;
+
+        brainDeadList.push(donor_id);
+
         return true;
     }
 
-    function getbrainDead() public view returns (uint256[] memory) {
-        return brainDead;
+    // For Admins..
+
+    function getAllBDs() public view returns (BD[] memory) {
+        BD[] memory data = new BD[](brainDeadList.length);
+
+        for (uint256 i = 0; i < brainDeadList.length; i++) {
+            // Retrieve the BD struct from the mapping using brainDeadList[i] as the key
+            BD memory bd = BDmapping[brainDeadList[i]];
+            data[i] = bd;
+        }
+
+        return data;
+    }
+
+    // For Hsopitals..
+    function getbrainDead(
+        address donor_hosp,
+        address ContractA_Address
+    ) public view returns (uint256[] memory) {
+        register ContractA = register(ContractA_Address);
+
+        require(
+            ContractA.check(donor_hosp) == true,
+            "No such MetaMask Address..Please Check..!!"
+        );
+
+        return BdArray[donor_hosp];
+    }
+
+    function reg_braindead(
+        uint256 id,
+        address doc_1,
+        address doc_2,
+        uint256 id1,
+        uint256 id2,
+        address donor_hosp
+    ) public {
+        require(
+            BDmapping[id].flag == true,
+            "Donor is not there in the list.Please verify.."
+        );
+
+        BDmapping[id].doc_1 = doc_1;
+
+        BDmapping[id].doc_2 = doc_2;
+
+        BDmapping[id].id1 = id1;
+        DocArray[id1].push(id);
+
+        BDmapping[id].id2 = id2;
+        DocArray[id2].push(id);
+    }
+
+    // for Doctors...
+
+    function DocPat(uint256 id) public view returns (BD[] memory) {
+        BD[] memory data = new BD[](DocArray[id].length);
+
+        for (uint256 i = 0; i < DocArray[id].length; i++) {
+            // Retrieve the BD struct from the mapping using brainDeadList[i] as the key
+            BD memory bd = BDmapping[DocArray[id][i]];
+            data[i] = bd;
+        }
+
+        return data;
+    }
+
+    function signApproval(uint256 id, uint256 val) public {
+        require(
+            BDmapping[id].flag == true,
+            "Donor is not there in the list.Please verify.."
+        );
+
+        require(
+            msg.sender == BDmapping[id].doc_1 ||
+                msg.sender == BDmapping[id].doc_2,
+            "Your are not allowed to perform this operation"
+        );
+
+        if (msg.sender == BDmapping[id].doc_1) {
+            require(BDmapping[id].sign1 == 0, "You can only do it once");
+            BDmapping[id].sign1 = val;
+        } else {
+            require(BDmapping[id].sign2 == 0, "You can only do it once");
+            BDmapping[id].sign2 = val;
+        }
+
+        if (BDmapping[id].sign1 != 0 && BDmapping[id].sign2 != 0) {
+            if (BDmapping[id].sign1 == 2 || BDmapping[id].sign2 == 0)
+                BDmapping[id].status = false;
+            else BDmapping[id].status = true;
+        }
+    }
+
+    function getBrainDeadDetails(
+        uint256[] memory list
+    ) public view returns (BD[] memory) {
+        // Allocate memory for the result array
+        BD[] memory data = new BD[](list.length);
+
+        for (uint256 i = 0; i < list.length; i++) {
+            // Retrieve the BD struct from the mapping using list[i] as the key
+            BD memory bd = BDmapping[list[i]];
+            data[i] = bd;
+        }
+
+        return data;
     }
 
     // ******************************************************************************************************//
@@ -171,5 +334,16 @@ contract NFT is ERC721URIStorage {
 
         // Transfer the token
         safeTransferFrom(from, to, tokenId);
+    }
+
+    function interactWithContractB(
+        address contractAAddress,
+        uint256 id
+    ) public returns (register.RegDonor memory) {
+        // Create an instance of ContractA
+        register contractA = register(contractAAddress);
+
+        // Call ContractA's function to set the value
+        return contractA.getRegDonor(id);
     }
 }
