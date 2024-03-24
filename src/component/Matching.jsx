@@ -19,39 +19,45 @@ const SubmitForm = async (e) => {
   try{
     const {contract}  = state;
     console.log(contract)
-    const transaction = await contract.passbloodgrpid(data.bloodgrp , data.id , data.organ);
+    const transaction = await contract.passbloodgrpid(data.bloodgrp , data.id , data.organ , process.env.REACT_APP_NFTAddress);
     const toastId = toast.info('Organ Matching in Progress', { autoClose: false });
     const rc = await transaction.wait();
 
     var datas = await contract.getMatchedArray();
     // const d = await datas.wait();
-    console.log("Transaction Done");
-    console.log(datas);
 
-    var list = [];
+    if(datas.length > 0){
+      console.log("Transaction Done");
+      console.log(datas);
 
-    for(var i = 0 ; i < datas.length ; i++){
-      var num = (parseInt(datas[i].toString()));
-      list.push(num);
-      console.log(num);
+      var list = [];
+
+      for(var i = 0 ; i < datas.length ; i++){
+        var num = (parseInt(datas[i].toString()));
+        list.push(num);
+        console.log(num);
+      }
+
+      console.log(list)
+      
+      await axios.post(`http://localhost:8000/MatchingPage/${data.id}`, list)
+      .then(function (response) {
+          console.log(response);
+          setptlist(response.data.data)
+          toast.update(toastId, { render: 'Transaction Successful', type: 'success', autoClose: 5000 });
+      })
+      .catch(function (error) {
+          console.log(error);
+          toast.error(error)
+      });
     }
-
-    console.log(list)
-    
-    await axios.post(`http://localhost:8000/MatchingPage/${data.id}`, list)
-    .then(function (response) {
-        console.log(response);
-        setptlist(response.data.data)
-        toast.update(toastId, { render: 'Transaction Successful', type: 'success', autoClose: 5000 });
-    })
-    .catch(function (error) {
-        console.log(error);
-        toast.error(error)
-    });
+    else{
+      toast.update(toastId, { render: 'Sorry no Match Found', type: 'success', autoClose: 5000 });
+      }
     }
      catch (error) {
-    console.error("Error during transaction:", error);
-    toast.error(error);
+    console.error("Error during transaction:", error.revert.args[0]);
+    toast.error(error.revert.args[0]);
   }
   }
 
@@ -69,26 +75,43 @@ function handleChange(e){
   console.log(value);
 }
 
-const startProcess = async (id) => {
-  const toastId = toast.success('Reciever Confirmed', { autoClose: 5000 });
-  console.log(data);
-  const Id = data.id;
-  const organ = data.organ;
-  const d_hosp = account
-  const d  = {
-    id,
-    Id,
-    organ,
-    d_hosp,
-  }
+const startProcess = async (id , r_id , r_add) => {
+  try{
+    console.log(id);
+    console.log(r_id);
+    console.log(r_add);
 
-  await axios.post('http://localhost:8000/transplant' , d).then((response) => {
-    console.log(response);
-  });
-  
-  setTimeout(() => {
-    window.location.reload(true);
-  },6000)
+    const toastId = toast.success('Reciever Confirmed', { autoClose: 5000 });
+    console.log(data);
+    const {contract_nft} = state;
+
+    const Id = data.id;
+    const organ = data.organ;
+    const d_hosp = account
+    const d  = {
+      id,
+      Id,
+      organ,
+      d_hosp,
+    }
+    
+    var t_id;
+
+    await axios.post('http://localhost:8000/transplant' , d).then((response) => {
+      console.log(response);
+      t_id = response.data.data;
+      console.log(t_id);
+    });
+    console.log(Id , r_id , d_hosp , r_add , t_id , organ)
+    await contract_nft.TransDetails(Id , r_id  , d_hosp , r_add , t_id , organ , "0x5AC86Bf7789605c54F1fa68e63697de9a8875437")
+    
+    setTimeout(() => {
+      window.location.href = "http://localhost:3000/dashboard"
+    },6000)
+  }
+  catch(error){
+    toast.error(error.revert.args[0]);
+  }
 
 }
 
@@ -104,7 +127,7 @@ const tbody = () => {
         <td style={{textAlign : "center" , paddingRight : "30px" , paddingTop : "10px" , paddingBottom : "10px" , paddingLeft : "30px"}}>{data.address.id}</td>
         <td style={{textAlign : "center" , paddingRight : "30px" , paddingTop : "10px" , paddingBottom : "10px" , paddingLeft : "30px"}}>
           <ul style={{display : "flex" , flexDirection : "row"}}>
-            <li style={{listStyle : "none"}} ><button className = "item-buttons" onClick={() => startProcess(data._id)}>Accept</button></li>
+            <li style={{listStyle : "none"}} ><button className = "item-buttons" onClick={() => startProcess(data._id , data.id , data.address.meta_address)}>Accept</button></li>
           </ul>
         </td>
       </tr>

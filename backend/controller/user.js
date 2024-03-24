@@ -266,7 +266,8 @@ module.exports.transplantIn = async (req, res, next) => {
     };
 
     const dd_hosp = await User.find({ meta_address: d_hosp.toLowerCase() });
-    const donor_hosp = dd_hosp[0].address;
+    console.log("Donor Hosp :- ", dd_hosp);
+    const donor_hosp = dd_hosp[0]._id;
     const reciever_hosp = r.address;
 
     const transplant = await new Transplant({
@@ -549,6 +550,11 @@ module.exports.getEntireData = async (req, res, next) => {
         ongoing_p.push(incompleted_r_trans[i]);
       }
 
+      for (var i = 0; i < completed_r_trans.length; i++) {
+        // console.log(arrObject[i].distance);
+        ongoing_p.push(completed_r_trans[i]);
+      }
+
       const data = {
         no_donor,
         no_reciever,
@@ -572,9 +578,21 @@ module.exports.getEntireData = async (req, res, next) => {
 module.exports.approveNFT = async (req, res, next) => {
   try {
     const { id } = req.params;
+    console.log("In NFT");
     const donor = await Donor.find({ id: id }).populate("address");
 
-    const hosp_address = donor[0].address.meta_address;
+    console.log(donor);
+
+    const hosps = await User.find({});
+
+    console.log(hosps);
+    var hosp_address = [];
+
+    for (var i = 0; i < hosps.length; i++) {
+      hosp_address.push(hosps[i].meta_address);
+    }
+
+    console.log(hosp_address);
 
     var list = [];
 
@@ -582,6 +600,9 @@ module.exports.approveNFT = async (req, res, next) => {
       const name = donor[0].organs[i];
       list.push(donor[0].nftId[name]);
     }
+
+    console.log(id, hosp_address, list);
+
     res.render("index.ejs", { id: req.params.id, hosp_address, list });
   } catch (e) {
     res.status(400).json({
@@ -612,4 +633,8 @@ module.exports.getDonor = async (req, res, next) => {
       error: e,
     });
   }
+};
+
+module.exports.transNFT = async (req, res, next) => {
+  const { id } = req.params;
 };

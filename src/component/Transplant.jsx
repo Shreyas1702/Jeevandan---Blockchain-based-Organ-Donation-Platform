@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useLocation } from 'react-router-dom';
 import TimeLine from './TimeLine'
 import axios from 'axios';
-
+import Navbar from './Navbar'
 
 const Transplant = ({account , state}) => {
 
@@ -63,6 +63,7 @@ const Transplant = ({account , state}) => {
 
   return (
     <div>
+        <Navbar/>
         <div style={{display : "flex" , flexDirection : "row"  , justifyContent : "center" , marginTop : "40px"}}>
             <div class="card mb-5" style={{maxWidth: "800px" , boxShadow: "0 2rem 3rem var(--color-light)" , position : "relative"}}>
                 <div class="row g-0">

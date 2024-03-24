@@ -66,8 +66,23 @@ contract NFT is ERC721URIStorage {
         register ContractA = register(ContractA_Address);
 
         require(
+            ContractA.checkDead(donor_id) == false,
+            "The Patient can not donate Organs"
+        );
+
+        require(
             ContractA.check(donor_hosp) == true,
             "No such MetaMask Address..Please Check..!!"
+        );
+
+        require(
+            ContractA.checkDonor(donor_id) == true,
+            "Please check and verify your Donor Id!!"
+        );
+
+        require(
+            ContractA.AcceptedDonor(donor_id) == true,
+            "The Given Donor is rejected..!!"
         );
 
         BdArray[donor_hosp].push(donor_id);
@@ -128,8 +143,10 @@ contract NFT is ERC721URIStorage {
         address doc_2,
         uint256 id1,
         uint256 id2,
-        address donor_hosp
+        address ContractA_Address
     ) public {
+        register ContractA = register(ContractA_Address);
+
         require(
             BDmapping[id].flag == true,
             "Donor is not there in the list.Please verify.."
@@ -181,10 +198,14 @@ contract NFT is ERC721URIStorage {
         }
 
         if (BDmapping[id].sign1 != 0 && BDmapping[id].sign2 != 0) {
-            if (BDmapping[id].sign1 == 2 || BDmapping[id].sign2 == 0)
+            if (BDmapping[id].sign1 == 2 || BDmapping[id].sign2 == 2)
                 BDmapping[id].status = false;
             else BDmapping[id].status = true;
         }
+    }
+
+    function verifyBrainDead(uint256 id) public view returns (bool) {
+        return BDmapping[id].status;
     }
 
     function getBrainDeadDetails(
@@ -209,16 +230,18 @@ contract NFT is ERC721URIStorage {
     struct DriverDetails {
         string name;
         string plate_num;
-        int256 contact;
+        uint256 contact;
     }
 
     struct TransplantDetail {
-        int256 donor_id;
-        int256 reciever_id;
+        uint256 donor_id;
+        uint256 reciever_id;
         address donor_hosp;
         address reciever_hosp;
+        string organ;
         int stage;
         bool success;
+        bool flag;
     }
 
     struct TimeLine {
@@ -234,19 +257,50 @@ contract NFT is ERC721URIStorage {
     mapping(int256 => DriverDetails) driver_details;
 
     function TransDetails(
-        int256 donor_id,
-        int256 reciever_id,
+        uint256 donor_id,
+        uint256 reciever_id,
         address donor_hosp,
         address reciever_hosp,
-        int256 transplant_id
+        int256 transplant_id,
+        string memory organ,
+        address ContractA_Address
     ) public returns (bool) {
+        register ContractA = register(ContractA_Address);
+
+        require(
+            ContractA.check(donor_hosp) == true,
+            "No such MetaMask Address..Please Check..!!"
+        );
+
+        require(
+            ContractA.checkDonor(donor_id) == true,
+            "Please check and verify your Donor Id!!"
+        );
+
+        require(
+            ContractA.AcceptedDonor(donor_id) == true,
+            "The Given Donor is rejected..!!"
+        );
+
+        require(
+            ContractA.checkReciever(reciever_id) == true,
+            "Please check and verify your Reciever Id!!"
+        );
+
+        require(
+            ContractA.AcceptedReciever(reciever_id) == true,
+            "The Given Reciever is rejected..!!"
+        );
+
         TransplantDetail memory transplant = TransplantDetail(
             donor_id,
             reciever_id,
             donor_hosp,
             reciever_hosp,
+            organ,
             1,
-            false
+            false,
+            true
         );
         trans_Detail[transplant_id] = transplant;
 
@@ -267,10 +321,15 @@ contract NFT is ERC721URIStorage {
 
     function start_transport(
         int transplant_id,
-        int contact,
+        uint contact,
         string memory name,
         string memory plate_num
     ) public returns (bool) {
+        require(
+            trans_Detail[transplant_id].flag == true,
+            "No such transplant process taking place"
+        );
+
         trans_timeline[transplant_id].start_trans = block.timestamp;
 
         DriverDetails memory driver = DriverDetails(name, plate_num, contact);
@@ -287,6 +346,12 @@ contract NFT is ERC721URIStorage {
             trans_Detail[transplant_id].stage == 2,
             "Sorry complete the previous step first"
         );
+
+        require(
+            trans_Detail[transplant_id].flag == true,
+            "No such transplant process taking place"
+        );
+
         trans_timeline[transplant_id].end_trans = block.timestamp;
         trans_Detail[transplant_id].stage = 3;
         return true;
@@ -297,19 +362,44 @@ contract NFT is ERC721URIStorage {
             trans_Detail[transplant_id].stage == 3,
             "Sorry complete the previous step first"
         );
+
+        require(
+            trans_Detail[transplant_id].flag == true,
+            "No such transplant process taking place"
+        );
+
         trans_timeline[transplant_id].start_sur = block.timestamp;
         trans_Detail[transplant_id].stage = 4;
         return true;
     }
 
-    function end_surgery(int transplant_id) public returns (bool) {
+    function end_surgery(
+        int transplant_id,
+        address ContractA_Address
+    ) public returns (bool) {
+        register ContractA = register(ContractA_Address);
         require(
             trans_Detail[transplant_id].stage == 4,
             "Sorry complete the previous step first"
         );
+
+        require(
+            trans_Detail[transplant_id].flag == true,
+            "No such transplant process taking place"
+        );
+
         trans_timeline[transplant_id].end_sur = block.timestamp;
         trans_Detail[transplant_id].stage = 5;
         trans_Detail[transplant_id].success = true;
+
+        ContractA.remove_organ(
+            trans_Detail[transplant_id].donor_id,
+            trans_Detail[transplant_id].reciever_id,
+            trans_Detail[transplant_id].organ
+        );
+
+        ContractA.getOrganLength(trans_Detail[transplant_id].donor_id);
+
         return true;
     }
 
@@ -317,7 +407,7 @@ contract NFT is ERC721URIStorage {
 
     // *************************************Transfering and Approval Of NFT***********************************//
 
-    function approveTransfer(address to, uint256 tokenId) public {
+    function approveTransfer(address[] memory to, uint256 tokenId) public {
         // Ensure that the caller is the owner of the token
         require(
             ownerOf(tokenId) == msg.sender,
@@ -325,7 +415,10 @@ contract NFT is ERC721URIStorage {
         );
 
         // Approve the transfer
-        approve(to, tokenId);
+
+        for (uint256 i = 0; i < to.length; i++) {
+            approve(to[i], tokenId);
+        }
     }
 
     // Transfer NFT from one address to another
@@ -334,16 +427,5 @@ contract NFT is ERC721URIStorage {
 
         // Transfer the token
         safeTransferFrom(from, to, tokenId);
-    }
-
-    function interactWithContractB(
-        address contractAAddress,
-        uint256 id
-    ) public returns (register.RegDonor memory) {
-        // Create an instance of ContractA
-        register contractA = register(contractAAddress);
-
-        // Call ContractA's function to set the value
-        return contractA.getRegDonor(id);
     }
 }

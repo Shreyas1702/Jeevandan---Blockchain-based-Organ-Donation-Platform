@@ -264,9 +264,9 @@ const Dashboard = ({ account, setAccount , state ,setState}) => {
           </div> --> */}
           <div class="item add-product">
             <div>
-              <span class="material-icons-sharp">add</span>
-              <a href="/verify/user">
-                <h3>Verify Patient</h3>
+              <span class="material-icons-sharp">move_up</span>
+              <a href="/transferNFt">
+                <h3 >Transfer NFT's</h3>
               </a>
             </div>
           </div>

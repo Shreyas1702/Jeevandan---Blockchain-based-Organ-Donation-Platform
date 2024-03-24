@@ -149,6 +149,7 @@ module.exports.brainData = async (req, res, next) => {
         `https://api.geoapify.com/v1/geocode/reverse?lat=${hosp[0].ltd}&lon=${hosp[0].lngt}&type=postcode&format=json&apiKey=546c7760cf0940f1bb4e2dc549625656`
       );
       const city = location.data.results[0].city;
+      console.log(city);
       const docs = await Doctor.find({ city: city });
       console.log(docs);
       res.status(200).json({

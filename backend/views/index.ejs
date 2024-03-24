@@ -7,7 +7,7 @@
     <title>Document</title>
   </head>
   <body>
-    <%= console.log(list) %>
+    <%= console.log(hosp_address) %> <%= console.log(list) %>
     <button
       type="submit"
       data-id="<%= id%>"
@@ -26,758 +26,1171 @@
     ></script>
 
     <script type="module">
-      const id = <%= id %>;
-      const address = "<%= hosp_address %>";
-      var list = <%= JSON.stringify(list) %>;
+          const id = <%= id %>;
+          var list = <%- JSON.stringify(list) %>;
 
-      const web3Provider = new ethers.providers.Web3Provider(window.ethereum);
+          var hosp_address = [
+            <% hosp_address.forEach(function(addresss) { %>
+              "<%= addresss %>",
+            <% }); %>
+          ];
 
-      async function requestAccounts() {
-        try {
-          await window.ethereum.request({ method: "eth_requestAccounts" });
-          console.log("MetaMask account access granted");
-        } catch (error) {
-          console.error("Error:", error);
-        }
-      }
+          console.log(hosp_address);
 
-      // Listen for button click
+          const web3Provider = new ethers.providers.Web3Provider(window.ethereum);
 
-      // const tokenId = document.getElementById("approveButton").value;
-      document
-        .getElementById("approveButton")
-        .addEventListener("click", async () => {
-          await requestAccounts();
-          // console.log(event.target.dataset.id);
-          // Contract ABI and address
-          const contractABI = [
-            {
-              inputs: [],
-              stateMutability: "nonpayable",
-              type: "constructor",
-            },
-            {
-              inputs: [
-                {
-                  internalType: "address",
-                  name: "sender",
-                  type: "address",
-                },
-                {
-                  internalType: "uint256",
-                  name: "tokenId",
-                  type: "uint256",
-                },
-                {
-                  internalType: "address",
-                  name: "owner",
-                  type: "address",
-                },
-              ],
-              name: "ERC721IncorrectOwner",
-              type: "error",
-            },
-            {
-              inputs: [
-                {
-                  internalType: "address",
-                  name: "operator",
-                  type: "address",
-                },
-                {
-                  internalType: "uint256",
-                  name: "tokenId",
-                  type: "uint256",
-                },
-              ],
-              name: "ERC721InsufficientApproval",
-              type: "error",
-            },
-            {
-              inputs: [
-                {
-                  internalType: "address",
-                  name: "approver",
-                  type: "address",
-                },
-              ],
-              name: "ERC721InvalidApprover",
-              type: "error",
-            },
-            {
-              inputs: [
-                {
-                  internalType: "address",
-                  name: "operator",
-                  type: "address",
-                },
-              ],
-              name: "ERC721InvalidOperator",
-              type: "error",
-            },
-            {
-              inputs: [
-                {
-                  internalType: "address",
-                  name: "owner",
-                  type: "address",
-                },
-              ],
-              name: "ERC721InvalidOwner",
-              type: "error",
-            },
-            {
-              inputs: [
-                {
-                  internalType: "address",
-                  name: "receiver",
-                  type: "address",
-                },
-              ],
-              name: "ERC721InvalidReceiver",
-              type: "error",
-            },
-            {
-              inputs: [
-                {
-                  internalType: "address",
-                  name: "sender",
-                  type: "address",
-                },
-              ],
-              name: "ERC721InvalidSender",
-              type: "error",
-            },
-            {
-              inputs: [
-                {
-                  internalType: "uint256",
-                  name: "tokenId",
-                  type: "uint256",
-                },
-              ],
-              name: "ERC721NonexistentToken",
-              type: "error",
-            },
-            {
-              anonymous: false,
-              inputs: [
-                {
-                  indexed: true,
-                  internalType: "address",
-                  name: "owner",
-                  type: "address",
-                },
-                {
-                  indexed: true,
-                  internalType: "address",
-                  name: "approved",
-                  type: "address",
-                },
-                {
-                  indexed: true,
-                  internalType: "uint256",
-                  name: "tokenId",
-                  type: "uint256",
-                },
-              ],
-              name: "Approval",
-              type: "event",
-            },
-            {
-              anonymous: false,
-              inputs: [
-                {
-                  indexed: true,
-                  internalType: "address",
-                  name: "owner",
-                  type: "address",
-                },
-                {
-                  indexed: true,
-                  internalType: "address",
-                  name: "operator",
-                  type: "address",
-                },
-                {
-                  indexed: false,
-                  internalType: "bool",
-                  name: "approved",
-                  type: "bool",
-                },
-              ],
-              name: "ApprovalForAll",
-              type: "event",
-            },
-            {
-              anonymous: false,
-              inputs: [
-                {
-                  indexed: false,
-                  internalType: "uint256",
-                  name: "_fromTokenId",
-                  type: "uint256",
-                },
-                {
-                  indexed: false,
-                  internalType: "uint256",
-                  name: "_toTokenId",
-                  type: "uint256",
-                },
-              ],
-              name: "BatchMetadataUpdate",
-              type: "event",
-            },
-            {
-              anonymous: false,
-              inputs: [
-                {
-                  indexed: false,
-                  internalType: "uint256",
-                  name: "_tokenId",
-                  type: "uint256",
-                },
-              ],
-              name: "MetadataUpdate",
-              type: "event",
-            },
-            {
-              anonymous: false,
-              inputs: [
-                {
-                  indexed: true,
-                  internalType: "address",
-                  name: "from",
-                  type: "address",
-                },
-                {
-                  indexed: true,
-                  internalType: "address",
-                  name: "to",
-                  type: "address",
-                },
-                {
-                  indexed: true,
-                  internalType: "uint256",
-                  name: "tokenId",
-                  type: "uint256",
-                },
-              ],
-              name: "Transfer",
-              type: "event",
-            },
-            {
-              inputs: [
-                {
-                  internalType: "int256",
-                  name: "donor_id",
-                  type: "int256",
-                },
-                {
-                  internalType: "int256",
-                  name: "reciever_id",
-                  type: "int256",
-                },
-                {
-                  internalType: "address",
-                  name: "donor_hosp",
-                  type: "address",
-                },
-                {
-                  internalType: "address",
-                  name: "reciever_hosp",
-                  type: "address",
-                },
-                {
-                  internalType: "int256",
-                  name: "transplant_id",
-                  type: "int256",
-                },
-              ],
-              name: "TransDetails",
-              outputs: [
-                {
-                  internalType: "bool",
-                  name: "",
-                  type: "bool",
-                },
-              ],
-              stateMutability: "nonpayable",
-              type: "function",
-            },
-            {
-              inputs: [
-                {
-                  internalType: "address",
-                  name: "to",
-                  type: "address",
-                },
-                {
-                  internalType: "uint256",
-                  name: "tokenId",
-                  type: "uint256",
-                },
-              ],
-              name: "approve",
-              outputs: [],
-              stateMutability: "nonpayable",
-              type: "function",
-            },
-            {
-              inputs: [
-                {
-                  internalType: "address",
-                  name: "to",
-                  type: "address",
-                },
-                {
-                  internalType: "uint256",
-                  name: "tokenId",
-                  type: "uint256",
-                },
-              ],
-              name: "approveTransfer",
-              outputs: [],
-              stateMutability: "nonpayable",
-              type: "function",
-            },
-            {
-              inputs: [
-                {
-                  internalType: "address",
-                  name: "player",
-                  type: "address",
-                },
-                {
-                  internalType: "string",
-                  name: "tokenURI",
-                  type: "string",
-                },
-              ],
-              name: "awardItem",
-              outputs: [
-                {
-                  internalType: "uint256",
-                  name: "",
-                  type: "uint256",
-                },
-              ],
-              stateMutability: "nonpayable",
-              type: "function",
-            },
-            {
-              inputs: [
-                {
-                  internalType: "address",
-                  name: "owner",
-                  type: "address",
-                },
-              ],
-              name: "balanceOf",
-              outputs: [
-                {
-                  internalType: "uint256",
-                  name: "",
-                  type: "uint256",
-                },
-              ],
-              stateMutability: "view",
-              type: "function",
-            },
-            {
-              inputs: [
-                {
-                  internalType: "uint256",
-                  name: "donor_id",
-                  type: "uint256",
-                },
-              ],
-              name: "brain_Dead",
-              outputs: [
-                {
-                  internalType: "bool",
-                  name: "",
-                  type: "bool",
-                },
-              ],
-              stateMutability: "nonpayable",
-              type: "function",
-            },
-            {
-              inputs: [
-                {
-                  internalType: "int256",
-                  name: "transplant_id",
-                  type: "int256",
-                },
-              ],
-              name: "end_surgery",
-              outputs: [
-                {
-                  internalType: "bool",
-                  name: "",
-                  type: "bool",
-                },
-              ],
-              stateMutability: "nonpayable",
-              type: "function",
-            },
-            {
-              inputs: [
-                {
-                  internalType: "int256",
-                  name: "transplant_id",
-                  type: "int256",
-                },
-              ],
-              name: "end_transport",
-              outputs: [
-                {
-                  internalType: "bool",
-                  name: "",
-                  type: "bool",
-                },
-              ],
-              stateMutability: "nonpayable",
-              type: "function",
-            },
-            {
-              inputs: [
-                {
-                  internalType: "uint256",
-                  name: "tokenId",
-                  type: "uint256",
-                },
-              ],
-              name: "getApproved",
-              outputs: [
-                {
-                  internalType: "address",
-                  name: "",
-                  type: "address",
-                },
-              ],
-              stateMutability: "view",
-              type: "function",
-            },
-            {
-              inputs: [],
-              name: "getbrainDead",
-              outputs: [
-                {
-                  internalType: "uint256[]",
-                  name: "",
-                  type: "uint256[]",
-                },
-              ],
-              stateMutability: "view",
-              type: "function",
-            },
-            {
-              inputs: [
-                {
-                  internalType: "address",
-                  name: "owner",
-                  type: "address",
-                },
-                {
-                  internalType: "address",
-                  name: "operator",
-                  type: "address",
-                },
-              ],
-              name: "isApprovedForAll",
-              outputs: [
-                {
-                  internalType: "bool",
-                  name: "",
-                  type: "bool",
-                },
-              ],
-              stateMutability: "view",
-              type: "function",
-            },
-            {
-              inputs: [],
-              name: "name",
-              outputs: [
-                {
-                  internalType: "string",
-                  name: "",
-                  type: "string",
-                },
-              ],
-              stateMutability: "view",
-              type: "function",
-            },
-            {
-              inputs: [
-                {
-                  internalType: "uint256",
-                  name: "tokenId",
-                  type: "uint256",
-                },
-              ],
-              name: "ownerOf",
-              outputs: [
-                {
-                  internalType: "address",
-                  name: "",
-                  type: "address",
-                },
-              ],
-              stateMutability: "view",
-              type: "function",
-            },
-            {
-              inputs: [
-                {
-                  internalType: "address",
-                  name: "from",
-                  type: "address",
-                },
-                {
-                  internalType: "address",
-                  name: "to",
-                  type: "address",
-                },
-                {
-                  internalType: "uint256",
-                  name: "tokenId",
-                  type: "uint256",
-                },
-              ],
-              name: "safeTransferFrom",
-              outputs: [],
-              stateMutability: "nonpayable",
-              type: "function",
-            },
-            {
-              inputs: [
-                {
-                  internalType: "address",
-                  name: "from",
-                  type: "address",
-                },
-                {
-                  internalType: "address",
-                  name: "to",
-                  type: "address",
-                },
-                {
-                  internalType: "uint256",
-                  name: "tokenId",
-                  type: "uint256",
-                },
-                {
-                  internalType: "bytes",
-                  name: "data",
-                  type: "bytes",
-                },
-              ],
-              name: "safeTransferFrom",
-              outputs: [],
-              stateMutability: "nonpayable",
-              type: "function",
-            },
-            {
-              inputs: [
-                {
-                  internalType: "address",
-                  name: "operator",
-                  type: "address",
-                },
-                {
-                  internalType: "bool",
-                  name: "approved",
-                  type: "bool",
-                },
-              ],
-              name: "setApprovalForAll",
-              outputs: [],
-              stateMutability: "nonpayable",
-              type: "function",
-            },
-            {
-              inputs: [
-                {
-                  internalType: "int256",
-                  name: "transplant_id",
-                  type: "int256",
-                },
-              ],
-              name: "start_surgery",
-              outputs: [
-                {
-                  internalType: "bool",
-                  name: "",
-                  type: "bool",
-                },
-              ],
-              stateMutability: "nonpayable",
-              type: "function",
-            },
-            {
-              inputs: [
-                {
-                  internalType: "int256",
-                  name: "transplant_id",
-                  type: "int256",
-                },
-                {
-                  internalType: "int256",
-                  name: "contact",
-                  type: "int256",
-                },
-                {
-                  internalType: "string",
-                  name: "name",
-                  type: "string",
-                },
-                {
-                  internalType: "string",
-                  name: "plate_num",
-                  type: "string",
-                },
-              ],
-              name: "start_transport",
-              outputs: [
-                {
-                  internalType: "bool",
-                  name: "",
-                  type: "bool",
-                },
-              ],
-              stateMutability: "nonpayable",
-              type: "function",
-            },
-            {
-              inputs: [
-                {
-                  internalType: "bytes4",
-                  name: "interfaceId",
-                  type: "bytes4",
-                },
-              ],
-              name: "supportsInterface",
-              outputs: [
-                {
-                  internalType: "bool",
-                  name: "",
-                  type: "bool",
-                },
-              ],
-              stateMutability: "view",
-              type: "function",
-            },
-            {
-              inputs: [],
-              name: "symbol",
-              outputs: [
-                {
-                  internalType: "string",
-                  name: "",
-                  type: "string",
-                },
-              ],
-              stateMutability: "view",
-              type: "function",
-            },
-            {
-              inputs: [
-                {
-                  internalType: "uint256",
-                  name: "tokenId",
-                  type: "uint256",
-                },
-              ],
-              name: "tokenURI",
-              outputs: [
-                {
-                  internalType: "string",
-                  name: "",
-                  type: "string",
-                },
-              ],
-              stateMutability: "view",
-              type: "function",
-            },
-            {
-              inputs: [
-                {
-                  internalType: "address",
-                  name: "from",
-                  type: "address",
-                },
-                {
-                  internalType: "address",
-                  name: "to",
-                  type: "address",
-                },
-                {
-                  internalType: "uint256",
-                  name: "tokenId",
-                  type: "uint256",
-                },
-              ],
-              name: "transferFrom",
-              outputs: [],
-              stateMutability: "nonpayable",
-              type: "function",
-            },
-            {
-              inputs: [
-                {
-                  internalType: "address",
-                  name: "from",
-                  type: "address",
-                },
-                {
-                  internalType: "address",
-                  name: "to",
-                  type: "address",
-                },
-                {
-                  internalType: "uint256",
-                  name: "tokenId",
-                  type: "uint256",
-                },
-              ],
-              name: "transferNFT",
-              outputs: [],
-              stateMutability: "nonpayable",
-              type: "function",
-            },
-          ]; // ABI of your smart contract
-          const contractAddress = "0x5BbE9441E0b9DdF0197702a5Ab8bd55eB36670a0"; // Address of your smart contract
-
-          // Connect to Ethereum network
-          const provider = new ethers.providers.JsonRpcProvider(
-            "https://eth-sepolia.g.alchemy.com/v2/fHEDI3zQ_MlbsF1jD11HKt29CUfoSMR0"
-          );
-
-          const signer = web3Provider.getSigner();
-
-          // Create contract instance
-          const contract = new ethers.Contract(
-            contractAddress,
-            contractABI,
-            signer
-          );
-
-          try {
-            console.log(list.length);
-
-            for (var i = 0; i < list.length; i++) {
-              const num = JSON.parse(list[i])
-              const result = await contract.approveTransfer(address, num); // Call a function without sending a transaction
-              console.log("Result:", result);
+          async function requestAccounts() {
+            try {
+              const account = await window.ethereum.request({ method: "eth_requestAccounts" });
+              console.log("MetaMask account access granted");
+              console.log(account);
+            } catch (error) {
+              console.error("Error:", error);
             }
-          } catch (error) {
-            console.error("Error:", error);
           }
 
-        });
+          // Listen for button click
+
+          // const tokenId = document.getElementById("approveButton").value;
+          document
+            .getElementById("approveButton")
+            .addEventListener("click", async () => {
+              await requestAccounts();
+              // console.log(event.target.dataset.id);
+              // Contract ABI and address
+              const contractABI = [
+        {
+          "inputs": [],
+          "stateMutability": "nonpayable",
+          "type": "constructor"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "sender",
+              "type": "address"
+            },
+            {
+              "internalType": "uint256",
+              "name": "tokenId",
+              "type": "uint256"
+            },
+            {
+              "internalType": "address",
+              "name": "owner",
+              "type": "address"
+            }
+          ],
+          "name": "ERC721IncorrectOwner",
+          "type": "error"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "operator",
+              "type": "address"
+            },
+            {
+              "internalType": "uint256",
+              "name": "tokenId",
+              "type": "uint256"
+            }
+          ],
+          "name": "ERC721InsufficientApproval",
+          "type": "error"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "approver",
+              "type": "address"
+            }
+          ],
+          "name": "ERC721InvalidApprover",
+          "type": "error"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "operator",
+              "type": "address"
+            }
+          ],
+          "name": "ERC721InvalidOperator",
+          "type": "error"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "owner",
+              "type": "address"
+            }
+          ],
+          "name": "ERC721InvalidOwner",
+          "type": "error"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "receiver",
+              "type": "address"
+            }
+          ],
+          "name": "ERC721InvalidReceiver",
+          "type": "error"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "sender",
+              "type": "address"
+            }
+          ],
+          "name": "ERC721InvalidSender",
+          "type": "error"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "uint256",
+              "name": "tokenId",
+              "type": "uint256"
+            }
+          ],
+          "name": "ERC721NonexistentToken",
+          "type": "error"
+        },
+        {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": true,
+              "internalType": "address",
+              "name": "owner",
+              "type": "address"
+            },
+            {
+              "indexed": true,
+              "internalType": "address",
+              "name": "approved",
+              "type": "address"
+            },
+            {
+              "indexed": true,
+              "internalType": "uint256",
+              "name": "tokenId",
+              "type": "uint256"
+            }
+          ],
+          "name": "Approval",
+          "type": "event"
+        },
+        {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": true,
+              "internalType": "address",
+              "name": "owner",
+              "type": "address"
+            },
+            {
+              "indexed": true,
+              "internalType": "address",
+              "name": "operator",
+              "type": "address"
+            },
+            {
+              "indexed": false,
+              "internalType": "bool",
+              "name": "approved",
+              "type": "bool"
+            }
+          ],
+          "name": "ApprovalForAll",
+          "type": "event"
+        },
+        {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "_fromTokenId",
+              "type": "uint256"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "_toTokenId",
+              "type": "uint256"
+            }
+          ],
+          "name": "BatchMetadataUpdate",
+          "type": "event"
+        },
+        {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "_tokenId",
+              "type": "uint256"
+            }
+          ],
+          "name": "MetadataUpdate",
+          "type": "event"
+        },
+        {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": true,
+              "internalType": "address",
+              "name": "from",
+              "type": "address"
+            },
+            {
+              "indexed": true,
+              "internalType": "address",
+              "name": "to",
+              "type": "address"
+            },
+            {
+              "indexed": true,
+              "internalType": "uint256",
+              "name": "tokenId",
+              "type": "uint256"
+            }
+          ],
+          "name": "Transfer",
+          "type": "event"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "uint256",
+              "name": "",
+              "type": "uint256"
+            }
+          ],
+          "name": "BDmapping",
+          "outputs": [
+            {
+              "internalType": "uint256",
+              "name": "id",
+              "type": "uint256"
+            },
+            {
+              "internalType": "address",
+              "name": "donor_hosp",
+              "type": "address"
+            },
+            {
+              "internalType": "address",
+              "name": "doc_1",
+              "type": "address"
+            },
+            {
+              "internalType": "address",
+              "name": "doc_2",
+              "type": "address"
+            },
+            {
+              "internalType": "uint256",
+              "name": "id1",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "id2",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "sign1",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "sign2",
+              "type": "uint256"
+            },
+            {
+              "internalType": "bool",
+              "name": "status",
+              "type": "bool"
+            },
+            {
+              "internalType": "bool",
+              "name": "flag",
+              "type": "bool"
+            },
+            {
+              "internalType": "uint256",
+              "name": "timestamp",
+              "type": "uint256"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "uint256",
+              "name": "id",
+              "type": "uint256"
+            }
+          ],
+          "name": "DocPat",
+          "outputs": [
+            {
+              "components": [
+                {
+                  "internalType": "uint256",
+                  "name": "id",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "address",
+                  "name": "donor_hosp",
+                  "type": "address"
+                },
+                {
+                  "internalType": "address",
+                  "name": "doc_1",
+                  "type": "address"
+                },
+                {
+                  "internalType": "address",
+                  "name": "doc_2",
+                  "type": "address"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "id1",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "id2",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "sign1",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "sign2",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "bool",
+                  "name": "status",
+                  "type": "bool"
+                },
+                {
+                  "internalType": "bool",
+                  "name": "flag",
+                  "type": "bool"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "timestamp",
+                  "type": "uint256"
+                }
+              ],
+              "internalType": "struct NFT.BD[]",
+              "name": "",
+              "type": "tuple[]"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "uint256",
+              "name": "donor_id",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "reciever_id",
+              "type": "uint256"
+            },
+            {
+              "internalType": "address",
+              "name": "donor_hosp",
+              "type": "address"
+            },
+            {
+              "internalType": "address",
+              "name": "reciever_hosp",
+              "type": "address"
+            },
+            {
+              "internalType": "int256",
+              "name": "transplant_id",
+              "type": "int256"
+            },
+            {
+              "internalType": "string",
+              "name": "organ",
+              "type": "string"
+            },
+            {
+              "internalType": "address",
+              "name": "ContractA_Address",
+              "type": "address"
+            }
+          ],
+          "name": "TransDetails",
+          "outputs": [
+            {
+              "internalType": "bool",
+              "name": "",
+              "type": "bool"
+            }
+          ],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "to",
+              "type": "address"
+            },
+            {
+              "internalType": "uint256",
+              "name": "tokenId",
+              "type": "uint256"
+            }
+          ],
+          "name": "approve",
+          "outputs": [],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address[]",
+              "name": "to",
+              "type": "address[]"
+            },
+            {
+              "internalType": "uint256",
+              "name": "tokenId",
+              "type": "uint256"
+            }
+          ],
+          "name": "approveTransfer",
+          "outputs": [],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "player",
+              "type": "address"
+            },
+            {
+              "internalType": "string",
+              "name": "tokenURI",
+              "type": "string"
+            }
+          ],
+          "name": "awardItem",
+          "outputs": [
+            {
+              "internalType": "uint256",
+              "name": "",
+              "type": "uint256"
+            }
+          ],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "owner",
+              "type": "address"
+            }
+          ],
+          "name": "balanceOf",
+          "outputs": [
+            {
+              "internalType": "uint256",
+              "name": "",
+              "type": "uint256"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "uint256",
+              "name": "donor_id",
+              "type": "uint256"
+            },
+            {
+              "internalType": "address",
+              "name": "donor_hosp",
+              "type": "address"
+            },
+            {
+              "internalType": "address",
+              "name": "ContractA_Address",
+              "type": "address"
+            }
+          ],
+          "name": "brain_Dead",
+          "outputs": [
+            {
+              "internalType": "bool",
+              "name": "",
+              "type": "bool"
+            }
+          ],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "int256",
+              "name": "transplant_id",
+              "type": "int256"
+            },
+            {
+              "internalType": "address",
+              "name": "ContractA_Address",
+              "type": "address"
+            }
+          ],
+          "name": "end_surgery",
+          "outputs": [
+            {
+              "internalType": "bool",
+              "name": "",
+              "type": "bool"
+            }
+          ],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "int256",
+              "name": "transplant_id",
+              "type": "int256"
+            }
+          ],
+          "name": "end_transport",
+          "outputs": [
+            {
+              "internalType": "bool",
+              "name": "",
+              "type": "bool"
+            }
+          ],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        {
+          "inputs": [],
+          "name": "getAllBDs",
+          "outputs": [
+            {
+              "components": [
+                {
+                  "internalType": "uint256",
+                  "name": "id",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "address",
+                  "name": "donor_hosp",
+                  "type": "address"
+                },
+                {
+                  "internalType": "address",
+                  "name": "doc_1",
+                  "type": "address"
+                },
+                {
+                  "internalType": "address",
+                  "name": "doc_2",
+                  "type": "address"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "id1",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "id2",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "sign1",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "sign2",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "bool",
+                  "name": "status",
+                  "type": "bool"
+                },
+                {
+                  "internalType": "bool",
+                  "name": "flag",
+                  "type": "bool"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "timestamp",
+                  "type": "uint256"
+                }
+              ],
+              "internalType": "struct NFT.BD[]",
+              "name": "",
+              "type": "tuple[]"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "uint256",
+              "name": "tokenId",
+              "type": "uint256"
+            }
+          ],
+          "name": "getApproved",
+          "outputs": [
+            {
+              "internalType": "address",
+              "name": "",
+              "type": "address"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "uint256[]",
+              "name": "list",
+              "type": "uint256[]"
+            }
+          ],
+          "name": "getBrainDeadDetails",
+          "outputs": [
+            {
+              "components": [
+                {
+                  "internalType": "uint256",
+                  "name": "id",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "address",
+                  "name": "donor_hosp",
+                  "type": "address"
+                },
+                {
+                  "internalType": "address",
+                  "name": "doc_1",
+                  "type": "address"
+                },
+                {
+                  "internalType": "address",
+                  "name": "doc_2",
+                  "type": "address"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "id1",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "id2",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "sign1",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "sign2",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "bool",
+                  "name": "status",
+                  "type": "bool"
+                },
+                {
+                  "internalType": "bool",
+                  "name": "flag",
+                  "type": "bool"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "timestamp",
+                  "type": "uint256"
+                }
+              ],
+              "internalType": "struct NFT.BD[]",
+              "name": "",
+              "type": "tuple[]"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "donor_hosp",
+              "type": "address"
+            },
+            {
+              "internalType": "address",
+              "name": "ContractA_Address",
+              "type": "address"
+            }
+          ],
+          "name": "getbrainDead",
+          "outputs": [
+            {
+              "internalType": "uint256[]",
+              "name": "",
+              "type": "uint256[]"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "owner",
+              "type": "address"
+            },
+            {
+              "internalType": "address",
+              "name": "operator",
+              "type": "address"
+            }
+          ],
+          "name": "isApprovedForAll",
+          "outputs": [
+            {
+              "internalType": "bool",
+              "name": "",
+              "type": "bool"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [],
+          "name": "name",
+          "outputs": [
+            {
+              "internalType": "string",
+              "name": "",
+              "type": "string"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "uint256",
+              "name": "tokenId",
+              "type": "uint256"
+            }
+          ],
+          "name": "ownerOf",
+          "outputs": [
+            {
+              "internalType": "address",
+              "name": "",
+              "type": "address"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "uint256",
+              "name": "id",
+              "type": "uint256"
+            },
+            {
+              "internalType": "address",
+              "name": "doc_1",
+              "type": "address"
+            },
+            {
+              "internalType": "address",
+              "name": "doc_2",
+              "type": "address"
+            },
+            {
+              "internalType": "uint256",
+              "name": "id1",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "id2",
+              "type": "uint256"
+            },
+            {
+              "internalType": "address",
+              "name": "ContractA_Address",
+              "type": "address"
+            }
+          ],
+          "name": "reg_braindead",
+          "outputs": [],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "from",
+              "type": "address"
+            },
+            {
+              "internalType": "address",
+              "name": "to",
+              "type": "address"
+            },
+            {
+              "internalType": "uint256",
+              "name": "tokenId",
+              "type": "uint256"
+            }
+          ],
+          "name": "safeTransferFrom",
+          "outputs": [],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "from",
+              "type": "address"
+            },
+            {
+              "internalType": "address",
+              "name": "to",
+              "type": "address"
+            },
+            {
+              "internalType": "uint256",
+              "name": "tokenId",
+              "type": "uint256"
+            },
+            {
+              "internalType": "bytes",
+              "name": "data",
+              "type": "bytes"
+            }
+          ],
+          "name": "safeTransferFrom",
+          "outputs": [],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "operator",
+              "type": "address"
+            },
+            {
+              "internalType": "bool",
+              "name": "approved",
+              "type": "bool"
+            }
+          ],
+          "name": "setApprovalForAll",
+          "outputs": [],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "uint256",
+              "name": "id",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "val",
+              "type": "uint256"
+            }
+          ],
+          "name": "signApproval",
+          "outputs": [],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "int256",
+              "name": "transplant_id",
+              "type": "int256"
+            }
+          ],
+          "name": "start_surgery",
+          "outputs": [
+            {
+              "internalType": "bool",
+              "name": "",
+              "type": "bool"
+            }
+          ],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "int256",
+              "name": "transplant_id",
+              "type": "int256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "contact",
+              "type": "uint256"
+            },
+            {
+              "internalType": "string",
+              "name": "name",
+              "type": "string"
+            },
+            {
+              "internalType": "string",
+              "name": "plate_num",
+              "type": "string"
+            }
+          ],
+          "name": "start_transport",
+          "outputs": [
+            {
+              "internalType": "bool",
+              "name": "",
+              "type": "bool"
+            }
+          ],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "bytes4",
+              "name": "interfaceId",
+              "type": "bytes4"
+            }
+          ],
+          "name": "supportsInterface",
+          "outputs": [
+            {
+              "internalType": "bool",
+              "name": "",
+              "type": "bool"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [],
+          "name": "symbol",
+          "outputs": [
+            {
+              "internalType": "string",
+              "name": "",
+              "type": "string"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "uint256",
+              "name": "tokenId",
+              "type": "uint256"
+            }
+          ],
+          "name": "tokenURI",
+          "outputs": [
+            {
+              "internalType": "string",
+              "name": "",
+              "type": "string"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "from",
+              "type": "address"
+            },
+            {
+              "internalType": "address",
+              "name": "to",
+              "type": "address"
+            },
+            {
+              "internalType": "uint256",
+              "name": "tokenId",
+              "type": "uint256"
+            }
+          ],
+          "name": "transferFrom",
+          "outputs": [],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "from",
+              "type": "address"
+            },
+            {
+              "internalType": "address",
+              "name": "to",
+              "type": "address"
+            },
+            {
+              "internalType": "uint256",
+              "name": "tokenId",
+              "type": "uint256"
+            }
+          ],
+          "name": "transferNFT",
+          "outputs": [],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "uint256",
+              "name": "id",
+              "type": "uint256"
+            }
+          ],
+          "name": "verifyBrainDead",
+          "outputs": [
+            {
+              "internalType": "bool",
+              "name": "",
+              "type": "bool"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        }
+      ]; // ABI of your smart contract
+              const contractAddress = "0xfB960E7Ed328656B012400f9b67438737512D753"; // Address of your smart contract
+
+              // Connect to Ethereum network
+              const provider = new ethers.providers.JsonRpcProvider(
+                "https://eth-sepolia.g.alchemy.com/v2/fHEDI3zQ_MlbsF1jD11HKt29CUfoSMR0"
+              );
+
+              const signer = web3Provider.getSigner();
+
+              // Create contract instance
+              const contract = new ethers.Contract(
+                contractAddress,
+                contractABI,
+                signer
+              );
+
+              try {
+                console.log(list.length);
+
+                console.log(hosp_address)
+
+                  for (var i = 0; i < list.length; i++) {
+                    const num = JSON.parse(list[i])
+                    const result = await contract.approveTransfer(hosp_address , num); // Call a function without sending a transaction
+                    console.log("Result:", result);
+                  }
+
+              } catch (error) {
+                console.error("Error:", error);
+              }
+
+            });
     </script>
   </body>
 </html>

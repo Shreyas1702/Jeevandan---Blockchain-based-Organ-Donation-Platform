@@ -28,6 +28,8 @@ router.route("/getEntireData").post(users.getEntireData);
 
 router.route("/getApprovalPage/:id").get(users.approveNFT);
 
+router.route("/transNFT/:id").post(users.transNFT);
+
 router.route("/getDonor").post(users.getDonor);
 
 module.exports = router;

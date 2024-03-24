@@ -641,8 +641,8 @@
       ]
     },
     "C:\\Users\\AAA\\Desktop\\be_project_frontend\\Jeevandan---Blockchain-based-Organ-Donation-Platform\\contracts\\Contract_2.sol": {
-      "lastModificationDate": 1710829889748,
-      "contentHash": "3b772a7b2447e8e2fa58a68e10c425c1",
+      "lastModificationDate": 1711153225295,
+      "contentHash": "b594129c06dc1bd489ad05f9afc06592",
       "sourceName": "contracts/Contract_2.sol",
       "solcConfig": {
         "version": "0.8.20",
@@ -682,8 +682,8 @@
       ]
     },
     "C:\\Users\\AAA\\Desktop\\be_project_frontend\\Jeevandan---Blockchain-based-Organ-Donation-Platform\\contracts\\Signin.sol": {
-      "lastModificationDate": 1710340318547,
-      "contentHash": "1c6be58ea136026b823b54b03b2c9aae",
+      "lastModificationDate": 1710981995670,
+      "contentHash": "bf98e193c6246aa213164397c04937d7",
       "sourceName": "contracts/Signin.sol",
       "solcConfig": {
         "version": "0.8.20",
@@ -710,7 +710,8 @@
         }
       },
       "imports": [
-        "hardhat/console.sol"
+        "hardhat/console.sol",
+        "./Contract_2.sol"
       ],
       "versionPragmas": [
         "^0.8.2"

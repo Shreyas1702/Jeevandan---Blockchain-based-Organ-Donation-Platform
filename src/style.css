@@ -562,6 +562,10 @@ main .recent-orders a {
   color: white;
 }
 
+/* .right .sales-analytics .add-product a h3:hover {
+  color: white;
+} */
+
 .right .sales-analytics .add-product div {
   display: flex;
   align-items: center;
@@ -570,6 +574,11 @@ main .recent-orders a {
 
 .right .sales-analytics .add-product div h3 {
   font-weight: 600;
+  color: black;
+}
+
+.right .sales-analytics .add-product div h3:hover {
+  color: white;
 }
 
 /* /=============================MEDIA Queries======================/ */

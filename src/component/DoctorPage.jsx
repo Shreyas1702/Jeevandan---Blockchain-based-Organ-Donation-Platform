@@ -1,6 +1,7 @@
 import axios from 'axios';
 import React from 'react'
 import { ListGroupItem } from 'react-bootstrap';
+import { ToastContainer , toast } from 'react-toastify';
 import Navbar from './Navbar'
 
 const DoctorPage = ({account , state}) => {
@@ -109,10 +110,24 @@ const DoctorPage = ({account , state}) => {
     },[account , state , detail.id]);
 
     async function signApproval(val , id){
-        const {contract_nft} = state;
-        console.log(id)
-        const reciept = await contract_nft.signApproval(id , val);
-        console.log(reciept)
+        try{
+            const {contract_nft} = state;
+            console.log(id)
+            
+            const toastId = toast.info('Transaction in Progress', { autoClose: false });
+            const reciept = await contract_nft.signApproval(id , val);
+            await reciept.wait()
+
+            console.log(reciept);
+            toast.update(toastId, { render: 'Transaction Successful', type: 'success', autoClose: 8000 });
+            
+            setTimeout(() => {
+                window.location.reload(true);
+            },10000)
+        }
+        catch(error){
+            console.log(error);
+        }
     }
 
     function getTableData(){
@@ -145,6 +160,7 @@ const DoctorPage = ({account , state}) => {
     return (
         <div>
             <Navbar/> 
+            <ToastContainer/>
             <p style={{color : "#5ec567" , paddingTop : "20px" , width : "100%" , fontSize : "22px" , paddingRight : "100px" , textAlign : "end"}}><span style={{paddingRight : "8px" , color : "black"}}>Welcome Doctor</span> <br></br> {detail.name} !!</p>
             <div class="recent-orders">
                 <h2 style={{paddingLeft : "40px"}}><span style={{color : "#5ec567"  , fontSize : "22px"}}>Examinations :- </span></h2>

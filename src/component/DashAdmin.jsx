@@ -8,7 +8,7 @@ import Aside from './Aside';
 import Select from "react-select";
 import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
-
+import { ToastContainer , toast } from 'react-toastify';
 
 
 const DashAdmin = ({ account, setAccount , state ,setState}) => {
@@ -64,6 +64,8 @@ const DashAdmin = ({ account, setAccount , state ,setState}) => {
             const id = data.data.docs[i].id;
             doctors.push({value , label , id});
           }
+
+          console.log(data.data.donor[0])
 
           const name = data.data.donor[0].name;
           const json = {
@@ -134,12 +136,17 @@ const DashAdmin = ({ account, setAccount , state ,setState}) => {
   };
 
   async function submitDocs(id){
-    await contract_nft.reg_braindead(id , skills.value , skills2.value , skills.id , skills2.id , account);
+    const toastId = toast.info('Transaction in Progress', { autoClose: false });
+    await contract_nft.reg_braindead(id , skills.value , skills2.value , skills.id , skills2.id  , "0x5AC86Bf7789605c54F1fa68e63697de9a8875437");
+    toast.update(toastId, { render: 'Transaction Successfully', type: 'success', autoClose: 4000 });
+    setTimeout(() => {
+      window.location.reload(true);
+    },8000)
   }
 
   function getTableData(){
-    console.log("getTableData")
-    console.log("Process :-" , process)
+    // console.log("getTableData")
+    // console.log("Process :-" , process)
     var num = 1;
     return process.map((data) => {
       console.log(data)
@@ -184,9 +191,9 @@ const DashAdmin = ({ account, setAccount , state ,setState}) => {
 
   return (
     <div className='containerss'>
-        {console.log(account)}
         <Aside account={account} data={data}/>
       <main>
+        <ToastContainer/>
         <div class="insights">
           <div class="sales">
             <span class="material-icons-sharp"> analytics </span>

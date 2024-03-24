@@ -45,10 +45,10 @@ const SignIn = ({ account, setAccount , state ,setState , loggedIn ,  setLoggedI
 
     useEffect(() => {
     const connectWallet = async () => {
-      const contractAddress = "0x65e5Fc36c3D8906CD25c358cF892d8fE1389Fb7A";
+      const contractAddress = process.env.REACT_APP_SignAddress;
       const contractABI = abi.abi;
 
-      const contractAddress_NFT = "0x2EC823963665DDa4e857806D967dC2b9001edE4f";
+      const contractAddress_NFT = process.env.REACT_APP_NFTAddress;
       const contractABI_NFT = abis.abi;
 
       try {

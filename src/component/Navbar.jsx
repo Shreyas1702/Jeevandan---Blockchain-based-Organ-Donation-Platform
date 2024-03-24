@@ -19,7 +19,7 @@ const Navbar = () => {
 
   useEffect(() => {
     const connectWallet = async () => {
-      const contractAddress = "0x65e5Fc36c3D8906CD25c358cF892d8fE1389Fb7A";
+      const contractAddress = process.env.REACT_APP_SignAddress;
       const contractABI = abi.abi;
 
       try {

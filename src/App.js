@@ -1,3 +1,5 @@
+// require("dotenv").config();
+
 import "./index.css";
 import abi from "./contracts/register.json";
 import abis from "./contracts/NFT.json";
@@ -20,6 +22,7 @@ import RecieverCard from "./component/RecieverCard";
 import TransAdmin from "./component/TransAdmin";
 import DonorEntry from "./component/DonorEntry";
 import DoctorPage from "./component/DoctorPage";
+import TransferNFT from "./component/TransferNFT";
 function App() {
   const [state, setState] = useState({
     provider: null,
@@ -33,12 +36,14 @@ function App() {
 
   useEffect(() => {
     const connectWallet = async () => {
-      const contractAddress = "0x65e5Fc36c3D8906CD25c358cF892d8fE1389Fb7A";
+      const contractAddress = process.env.REACT_APP_SignAddress;
       const contractABI = abi.abi;
 
-      const contractAddress_NFT = "0x2EC823963665DDa4e857806D967dC2b9001edE4f";
+      const contractAddress_NFT = process.env.REACT_APP_NFTAddress;
       const contractABI_NFT = abis.abi;
-
+      {
+        console.log(process.env.REACT_APP_NFTAddress);
+      }
       try {
         const { ethereum } = window;
 
@@ -233,6 +238,17 @@ function App() {
             path="/dashboard/TransplantPage"
             element={
               <Transplant
+                account={account}
+                setAccount={setAccount}
+                state={state}
+                setState={setState}
+              />
+            }
+          ></Route>
+          <Route
+            path="/transferNFt"
+            element={
+              <TransferNFT
                 account={account}
                 setAccount={setAccount}
                 state={state}

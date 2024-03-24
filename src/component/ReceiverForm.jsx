@@ -58,6 +58,7 @@ const ReceiverForm = ({ account, setAccount , state ,setState}) => {
 
     const SubmitForm = async (e) => {
         e.preventDefault();
+        console.log(account);
         data.seriouness = serious.value;
         console.log(data);
         for(let i = 0 ; i < skills.length ; i++){
@@ -98,7 +99,7 @@ const ReceiverForm = ({ account, setAccount , state ,setState}) => {
         const toastId = toast.info('Transaction in Progress', { autoClose: false });
         const rc = await transaction.wait();
         console.log("Transaction Done");
-
+        console.log(account);
         var Id = await contract.getRecieverId();
         Id = parseInt(Id.toString())
         console.log(Id)

@@ -133,10 +133,12 @@ const DonorEntry = ({account , state}) => {
     }
 
     async function submitBrainDead(id){
+        try{
         console.log(id);
         const {contract_nft} = state;
         const toastId = toast.info('Transaction in Progress', { autoClose: false });
-        const val = await contract_nft.brain_Dead(id , account , "0x65e5Fc36c3D8906CD25c358cF892d8fE1389Fb7A");
+        // console.log(process.env.REACT_APP_NFTAddress);
+        const val = await contract_nft.brain_Dead(id , account , "0x5AC86Bf7789605c54F1fa68e63697de9a8875437");
         console.log(val)
         toast.update(toastId, { render: 'Transaction Successfully', type: 'success', autoClose: 4000 });
         setTimeout(() => {
@@ -146,6 +148,10 @@ const DonorEntry = ({account , state}) => {
         setTimeout(() => {
             window.location.reload(true);
         },6000)
+    }
+    catch(error){
+        toast.error(error.revert.args[0]);
+    }
     }
 
     function getData(){

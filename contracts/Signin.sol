@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.2;
 import "hardhat/console.sol";
+import "./Contract_2.sol";
 
 contract register {
     uint256[] isRop;
@@ -114,6 +115,14 @@ contract register {
         return isDonor[id];
     }
 
+    function checkDonor(uint256 id) public view returns (bool) {
+        return isDonor[id].flag;
+    }
+
+    function AcceptedDonor(uint256 id) public view returns (bool) {
+        return isDonor[id].status;
+    }
+
     // ****************************************************************************************************//
 
     // *************************************Registering A Reciever*****************************************//
@@ -217,6 +226,14 @@ contract register {
         return isReceiver[id];
     }
 
+    function checkReciever(uint256 id) public view returns (bool) {
+        return isReceiver[id].flag;
+    }
+
+    function AcceptedReciever(uint256 id) public view returns (bool) {
+        return isReceiver[id].status;
+    }
+
     // ********************************************************************************************************//
 
     // ****************************************Matching Organs*************************************************//
@@ -261,17 +278,25 @@ contract register {
     function passbloodgrpid(
         string memory bloodgrp,
         uint256 id,
-        string memory organ
+        string memory organ,
+        address ContractB_Address
     ) public returns (uint256[] memory) {
         delete ans;
         bool flag = false;
+
+        NFT ContractB = NFT(ContractB_Address);
+
+        require(isDonor[id].flag, "Sorry no such patient exists");
 
         require(
             isDead[id] == false,
             "Sorry the patient organs have already been pledged"
         );
 
-        require(isDonor[id].flag, "Sorry no such patient exists");
+        require(
+            ContractB.verifyBrainDead(id) == true,
+            "Given Donor has not been approved for Organ Donation Process"
+        );
 
         require(
             keccak256(abi.encode(bloodgrp)) ==
@@ -327,28 +352,95 @@ contract register {
 
     // *************************************Removing Organs After Transplant *****************************************//
 
-    function end_surgery(
+    // function remove_organ(
+    //     uint256 id,
+    //     uint256 r_id,
+    //     string memory organ
+    // ) public {
+
+    //     for (uint256 i = 0; i < isDonor[id].organs.length; i++) {
+    //         if (
+    //             keccak256(abi.encode(organ)) ==
+    //             keccak256(abi.encode(isDonor[id].organs[i]))
+    //         ) {
+    //             delete isDonor[id].organs[i];
+    //         }
+    //     }
+
+    //     for (uint256 i = 0; i < isReceiver[r_id].organs.length; i++) {
+    //         if (
+    //             keccak256(abi.encode(organ)) ==
+    //             keccak256(abi.encode(isReceiver[r_id].organs[i]))
+    //         ) {
+    //           delete isReceiver[r_id].organs[i];
+    //         }
+    //     }
+
+    // }
+
+    function remove_organ(
         uint256 id,
         uint256 r_id,
         string memory organ
     ) public returns (bool) {
+        require(
+            isDonor[id].flag == true,
+            "Please check and verify your Donor Id!!"
+        );
+
+        require(isDonor[id].status == true, "The Given Donor is rejected..!!");
+
+        require(
+            isReceiver[r_id].flag == true,
+            "Please check and verify your Reciever Id!!"
+        );
+
+        require(
+            isReceiver[r_id].status == true,
+            "The Given Reciever is rejected..!!"
+        );
+
+        string[] memory donor_array = new string[](
+            isDonor[id].organs.length - 1
+        );
+
+        string[] memory rec_array = new string[](
+            isReceiver[r_id].organs.length - 1
+        );
+
+        uint256 index = 0;
+
         for (uint256 i = 0; i < isDonor[id].organs.length; i++) {
             if (
                 keccak256(abi.encode(organ)) ==
                 keccak256(abi.encode(isDonor[id].organs[i]))
             ) {
                 delete isDonor[id].organs[i];
+            } else {
+                donor_array[index] = isDonor[id].organs[i];
+
+                index = index + 1;
             }
         }
+
+        isDonor[id].organs = donor_array;
+
+        index = 0;
 
         for (uint256 i = 0; i < isReceiver[r_id].organs.length; i++) {
             if (
                 keccak256(abi.encode(organ)) ==
                 keccak256(abi.encode(isReceiver[r_id].organs[i]))
             ) {
-                delete isReceiver[id].organs[i];
+                delete isReceiver[r_id].organs[i];
+            } else {
+                rec_array[index] = isReceiver[r_id].organs[i];
+
+                index = index + 1;
             }
         }
+
+        isReceiver[r_id].organs = rec_array;
 
         return true;
     }
@@ -363,5 +455,9 @@ contract register {
         }
 
         return isDonor[id].organs.length;
+    }
+
+    function checkDead(uint256 id) public view returns (bool) {
+        return isDead[id];
     }
 }
