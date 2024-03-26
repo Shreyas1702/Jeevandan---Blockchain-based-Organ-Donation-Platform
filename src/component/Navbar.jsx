@@ -57,6 +57,7 @@ const Navbar = () => {
           setLoggedIn(false);
           setDoc(true);
         }
+        console.log(account == "0x87804696f85bef5801fe3e0cabf2392a7a1e26dd")
         if(account == "0x87804696f85bef5801fe3e0cabf2392a7a1e26dd"){
           setAdmin(true);
           setLoggedIn(false)

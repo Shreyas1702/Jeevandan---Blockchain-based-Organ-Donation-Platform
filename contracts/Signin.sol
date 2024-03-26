@@ -460,4 +460,135 @@ contract register {
     function checkDead(uint256 id) public view returns (bool) {
         return isDead[id];
     }
+
+    // ******************************************************************************************************//
+
+    // ************************************* Living Transplant *****************************************//
+
+    struct LivingTransplantDetails{
+        uint256 donor_id;
+        uint256 reciever_id;
+        address donor_hosp;
+        address reciever_hosp;
+        string organ;
+        int256 stage;
+        bool success;
+        bool flag;
+        bool consent;
+    }
+    struct LivingTimeLine {
+        uint256 start_donor_sur;
+        uint256 end_donor_sur;
+        uint256 start_receiver_sur;
+        uint256 end_receiver_sur;
+    }
+    mapping(uint256 => LivingTransplantDetails) living_trans_Detail;
+    mapping(uint256 => LivingTimeLine) living_trans_timeline;
+
+    function getlivingtransdetails(uint256 trans_id) public returns(LivingTransplantDetails memory)
+    {
+            return living_trans_Detail[trans_id];
+    }
+    function LivingTransDetails(
+        uint256 donor_id,
+        uint256 reciever_id,
+        address donor_hosp,
+        address reciever_hosp,
+        uint256 transplant_id,
+        string memory organ
+    ) public {
+        require(
+            check(donor_hosp) == true,
+            "No such MetaMask Address..Please Check..!!"
+        );
+
+        require(
+            checkDonor(donor_id) == true,
+            "Please check and verify your Donor Id!!"
+        );
+
+        require(
+            AcceptedDonor(donor_id) == true,
+            "The Given Donor is rejected..!!"
+        );
+
+        require(
+            checkReciever(reciever_id) == true,
+            "Please check and verify your Reciever Id!!"
+        );
+
+        require(
+            AcceptedReciever(reciever_id) == true,
+            "The Given Reciever is rejected..!!"
+        );
+
+        require(
+            keccak256(abi.encode(donor_hosp))==keccak256(abi.encode(reciever_hosp)),
+            "Donor and Receiver must be from same hospital"
+        );
+  
+        LivingTransplantDetails memory living_transplant = LivingTransplantDetails(
+            donor_id,
+            reciever_id,
+            donor_hosp,
+            reciever_hosp,
+            organ,
+            1,
+            false,
+            true,
+            true
+        );
+
+        living_trans_Detail[transplant_id] = living_transplant;
+        LivingTimeLine memory livingtimeline = LivingTimeLine(
+            block.timestamp,
+            block.timestamp,
+            block.timestamp,
+            block.timestamp
+        );
+        living_trans_timeline[transplant_id]= livingtimeline;
+    }
+    function start_living_donor_surgery(uint256 transplant_id) public returns (bool) {
+
+        living_trans_timeline[transplant_id].start_donor_sur= block.timestamp;
+        living_trans_Detail[transplant_id].stage = 2;
+        return true;
+    }
+    function end_living_donor__surgery(uint256 transplant_id
+    ) public returns (bool) {
+        require(
+            living_trans_Detail[transplant_id].stage == 2,
+            "Sorry complete the previous step first"
+        );
+        living_trans_timeline[transplant_id].end_donor_sur= block.timestamp;
+        living_trans_Detail[transplant_id].stage = 3;
+        return true;
+    }
+     function start_living_receiver_surgery(uint256 transplant_id) public returns (bool) {
+
+        require(
+            living_trans_Detail[transplant_id].stage == 3,
+            "Sorry complete the previous step first"
+        );
+        living_trans_timeline[transplant_id].start_receiver_sur= block.timestamp;
+        living_trans_Detail[transplant_id].stage = 4;
+        return true;
+    }
+        function end_living_receiver_surgery(
+        uint256 transplant_id
+    ) public returns (bool) {
+        require(
+            living_trans_Detail[transplant_id].stage == 4,
+            "Sorry complete the previous step first"
+        );
+        living_trans_timeline[transplant_id].end_receiver_sur= block.timestamp;
+        living_trans_Detail[transplant_id].stage = 5;
+        remove_organ(
+            living_trans_Detail[transplant_id].donor_id,
+            living_trans_Detail[transplant_id].reciever_id,
+            living_trans_Detail[transplant_id].organ
+        );
+        return true;
+    }
 }
+

@@ -26,6 +26,8 @@ const SubmitForm = async (e) => {
     var datas = await contract.getMatchedArray();
     // const d = await datas.wait();
 
+    console.log(datas)
+
     if(datas.length > 0){
       console.log("Transaction Done");
       console.log(datas);
@@ -103,7 +105,7 @@ const startProcess = async (id , r_id , r_add) => {
       console.log(t_id);
     });
     console.log(Id , r_id , d_hosp , r_add , t_id , organ)
-    await contract_nft.TransDetails(Id , r_id  , d_hosp , r_add , t_id , organ , "0x5AC86Bf7789605c54F1fa68e63697de9a8875437")
+    await contract_nft.TransDetails(Id , r_id  , d_hosp , r_add , t_id , organ , "0x28A8508855b055a7Bdb3bC9094320C12f5D282c6")
     
     setTimeout(() => {
       window.location.href = "http://localhost:3000/dashboard"

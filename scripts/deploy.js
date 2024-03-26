@@ -7,10 +7,10 @@
 const hre = require("hardhat");
 
 async function main() {
-  // const signin = await hre.ethers.getContractFactory("register");
-  // const contract = await signin.deploy();
-  // await contract.waitForDeployment();
-  // console.log("Address for Register :", contract.target);
+  const signin = await hre.ethers.getContractFactory("register");
+  const contract = await signin.deploy();
+  await contract.waitForDeployment();
+  console.log("Address for Register :", contract.target);
 
   const contract2 = await hre.ethers.getContractFactory("NFT");
   const contract3 = await contract2.deploy();

@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import FormWizard from "react-form-wizard-component";
 import "react-form-wizard-component/dist/style.css";
 import MultiForm from "./MultiForm"
+import {toast , ToastContainer} from "react-toastify"
 function TimeLine({dhosp , rhosp , account , state , tdata}) {
 
 console.log(tdata)
@@ -121,12 +122,23 @@ function sixthStage(){
       )
     }
     else {      
-      const {day , month , year , hours , minutes , seconds} = getTime(tdata.t_s_end);
       return (
         <div>
-          <h1 style={{marginTop : "20px"}}>Transplant Surgery Ended At :- </h1>
-          <p style={{marginTop : "50px"}}>Date: {day}-{month}-{year}</p>
-          <p>Task completed at time: {hours}:{minutes}:{seconds}</p>
+          <h1 style={{marginTop : "20px" , color : "#5ec567"}}>NFT has been Successfully Transfered</h1>
+        </div>
+      )
+    }
+  }
+
+  function seventhStage(){
+    if(tdata.stage < 5){
+      return (
+          <p style={{marginTop : "40px" , color : "#5ec567"}}>Please Complete the Previous Step</p>
+      )    
+    }else{
+      return(
+        <div>
+          <h1 style={{marginTop : "20px" , marginLeft : "15px" , color : "#5ec567"}}>Successfully Completed The Entire Process</h1>
         </div>
       )
     }
@@ -175,74 +187,98 @@ const handleComplete = () => {
   const stage = 0;
 
   async function orgrec(event){
-    event.preventDefault();
-    const {contract_nft} = state;
-    const transaction = await contract_nft.end_transport(tdata.transplant_id);
-    console.log(transaction)
-    await axios.post(`http://localhost:8000/org_rec/${tdata.transplant_id}`).then((response) => {
-    console.log(response)  
-    if(response.data.success == true){
-      console.log("thirdStage");
-      window.location.reload(true);
+    try{
+      event.preventDefault();
+      const {contract_nft} = state;
+      const transaction = await contract_nft.end_transport(tdata.transplant_id);
+      const toastId = toast.info('Transaction in Progress', { autoClose: false });
+      await transaction.wait();
+      toast.update(toastId, { render: 'Transaction Successfully', type: 'success', autoClose: 4000 });
+      console.log(transaction)
+      await axios.post(`http://localhost:8000/org_rec/${tdata.transplant_id}`).then((response) => {
+      console.log(response)  
+      if(response.data.success == true){
+        console.log("thirdStage");
+        window.location.reload(true);
+      }
+      });
     }
-    });
+    catch(error){
+      toast.error("Something went wrong");
+    }
   }
 
   async function transsur(event){
-    event.preventDefault();
-    const {contract_nft} = state;
-    const transaction = await contract_nft.start_surgery(tdata.transplant_id);
-    console.log(transaction)
-    axios.post(`http://localhost:8000/trans_sur/${tdata.transplant_id}`).then((response) => {
-    console.log(response)  
-    if(response.data.success == true){
-      console.log("thirdStage");
-      window.location.reload(true);
+    try{
+      event.preventDefault();
+      const {contract_nft} = state;
+      const transaction = await contract_nft.start_surgery(tdata.transplant_id);
+      const toastId = toast.info('Transaction in Progress', { autoClose: false });
+      await transaction.wait();
+      toast.update(toastId, { render: 'Transaction Successfully', type: 'success', autoClose: 4000 });
+      console.log(transaction)
+      axios.post(`http://localhost:8000/trans_sur/${tdata.transplant_id}`).then((response) => {
+      console.log(response)  
+      if(response.data.success == true){
+        console.log("thirdStage");
+        window.location.reload(true);
+      }
+      });
     }
-    });
+    catch(error){
+      toast.error("Something went wrong");
+    }
   }
 
     async function surend(event){
-    event.preventDefault();
-    const {contract_nft} = state;
-    const transaction = await contract_nft.end_surgery(tdata.transplant_id , "0x5AC86Bf7789605c54F1fa68e63697de9a8875437");
-    console.log(transaction)
-    axios.post(`http://localhost:8000/sur_end/${tdata.transplant_id}`).then((response) => {
-    console.log(response)  
-    if(response.data.success == true){
-      console.log("thirdStage");
-      window.location.reload(true);
+    try{
+      event.preventDefault();
+      const {contract_nft} = state;
+      const transaction = await contract_nft.end_surgery(tdata.transplant_id , "0x28A8508855b055a7Bdb3bC9094320C12f5D282c6");
+      const toastId = toast.info('Transaction in Progress', { autoClose: false });
+      await transaction.wait();
+      toast.update(toastId, { render: 'Transaction Successfully', type: 'success', autoClose: 4000 });
+      console.log(transaction)
+      axios.post(`http://localhost:8000/sur_end/${tdata.transplant_id}`).then((response) => {
+      console.log(response)  
+      if(response.data.success == true){
+        console.log("thirdStage");
+        window.location.reload(true);
+      }
+      });
     }
-    });
+    catch(error){
+      toast.error("Something went wrong");
+    }
   }
 
     async function tranNFT(event){
-    event.preventDefault();
-    const txOptions = {
-    from: account, // Sender address
-    gas: 300000, // Manually set gas limit
-    gasPrice: '20000000000' // Gas price (optional)
-};
-    const {contract_nft} = state;
-    const organ = tdata.organ;
-    var nftId = tdata.donor_id.nftId[organ]
-    // await axios.post(`http://localhost:8000/transNFT/${tdata.transplant_id}`).then((response) => {
-    // console.log(response)  
-    // if(response.data.success == true){
-    //   console.log(response);
-    //   nftId = response.data.data;
-    // }
-    console.log(organ);
-    console.log(contract_nft)
-    console.log(nftId , tdata.donor_id.meta_address , tdata.reciever_id.meta_address)
-    const transaction = await contract_nft.transferNFT(tdata.donor_id.meta_address , tdata.reciever_id.meta_address , nftId ,  { gasLimit: 30000 });
-    await transaction.wait();
-    console.log(transaction)
-    // });
+    try{
+      event.preventDefault();
+      const {contract_nft} = state;
+      const organ = tdata.organ;
+      var nftId = tdata.donor_id.nftId[organ]
+      console.log(nftId , tdata.donor_id.meta_address , tdata.reciever_id.meta_address)
+      const transaction = await contract_nft.transferNFT(tdata.donor_id.meta_address , tdata.reciever_id.meta_address , nftId );
+      const toastId = toast.info('Transaction in Progress', { autoClose: false });
+      await transaction.wait();
+      toast.update(toastId, { render: 'Transaction Successfully', type: 'success', autoClose: 4000 });
+      await axios.post(`http://localhost:8000/transNFT/${tdata.transplant_id}`).then((response) => {
+      console.log(response)  
+      if(response.data.success == true){
+        console.log(response);
+      }
+      console.log(transaction)
+      });
+    }
+    catch(error){
+      toast.error("Something Went Wrong");
+    }
   }
 
   return (
     <>
+      <ToastContainer/>
       <FormWizard
         shape="circle"
         color="#5ec576"
@@ -268,6 +304,7 @@ const handleComplete = () => {
         <FormWizard.TabContent title="Transfer NFT" icon="ti-check">
           {sixthStage()}
         </FormWizard.TabContent>
+          {seventhStage()}
       </FormWizard>
     </>
   )

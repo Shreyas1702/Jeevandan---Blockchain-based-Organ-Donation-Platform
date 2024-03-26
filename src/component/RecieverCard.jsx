@@ -64,7 +64,7 @@ const RecieverCard = ({account}) => {
                     </div>
                     <div style={{display : "flex" , flexDirection : "row" , marginTop : "25px" , marginLeft : "40px"}}>
                         <h2 style={{ fontSize: "18px"}}>Age :- {data.age}</h2>
-                        <h2 style={{marginLeft : "60px" ,  fontSize: "18px"}}>KinContact :- {data.kincontact}</h2>
+                        <h2 style={{marginLeft : "60px" ,  fontSize: "18px"}}>KinContact :- {data.contact}</h2>
                     </div>
                     <div style={{display : "flex" , flexDirection : "row" , marginTop : "25px" , justifyContent: "center"}}>
                         <h2 style={{ fontSize: "18px"}}>Organs Need:- {list}</h2>

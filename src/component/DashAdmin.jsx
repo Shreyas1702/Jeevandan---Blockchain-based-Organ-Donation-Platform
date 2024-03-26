@@ -37,7 +37,7 @@ const DashAdmin = ({ account, setAccount , state ,setState}) => {
   const {contract_nft} = state;
 
   React.useEffect(() => {
-    
+    var prevVal 
     setTimeout(async () => {
       const ddata = await getEntireData();
       setData(ddata)
@@ -48,9 +48,17 @@ const DashAdmin = ({ account, setAccount , state ,setState}) => {
     async function getBrain(){
       console.log("Get Brain Dead :- ")
       const datas = await contract_nft.getAllBDs();
-      console.log(datas);
+      console.log(datas.length);
       const list = [];
       for(var i = 0 ; i < datas.length ; i++){
+        console.log("value :-" ,  i  , " is " , prevVal);
+
+        if(prevVal == i) {
+          i++;
+          console.log("Over Here")
+          continue;
+        }
+        console.log("Given Data :- " , datas[i]);
         if(datas[i][2] == '0x0000000000000000000000000000000000000000'){
           const doctors = [];
           const id = parseInt(datas[i][0]);
@@ -99,7 +107,11 @@ const DashAdmin = ({ account, setAccount , state ,setState}) => {
 
           list.push(json);
         }
+        prevVal = i;
+
       }
+
+
 
       setProcess(list);
       console.log("Datas : - " , list);
@@ -137,7 +149,7 @@ const DashAdmin = ({ account, setAccount , state ,setState}) => {
 
   async function submitDocs(id){
     const toastId = toast.info('Transaction in Progress', { autoClose: false });
-    await contract_nft.reg_braindead(id , skills.value , skills2.value , skills.id , skills2.id  , "0x5AC86Bf7789605c54F1fa68e63697de9a8875437");
+    await contract_nft.reg_braindead(id , skills.value , skills2.value , skills.id , skills2.id  , "0x28A8508855b055a7Bdb3bC9094320C12f5D282c6");
     toast.update(toastId, { render: 'Transaction Successfully', type: 'success', autoClose: 4000 });
     setTimeout(() => {
       window.location.reload(true);

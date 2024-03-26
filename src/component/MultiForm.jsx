@@ -1,5 +1,6 @@
 import React from 'react'
 import axios from 'axios'
+import {toast , ToastContainer} from 'react-toastify'
 
 const MultiForm = ({dhosp , rhosp , account , state , tdata}) => {
 
@@ -89,15 +90,20 @@ const MultiForm = ({dhosp , rhosp , account , state , tdata}) => {
     }
 
     const submitDatas = async (event) => {
-        const {contract_nft} = state;
-        console.log(tdata);
-        event.preventDefault();
-        const transaction = await contract_nft.start_transport(tdata.transplant_id , data.contact , data.name , data.plate_num);
-        console.log(transaction);
-        axios.post(`http://localhost:8000/ambdetail/${tdata.transplant_id}` , data).then((response) => {
-            console.log(response);
-            window.location.reload(true);
-        });
+        try{
+            const {contract_nft} = state;
+            console.log(tdata);
+            event.preventDefault();
+            const transaction = await contract_nft.start_transport(tdata.transplant_id , data.contact , data.name , data.plate_num);
+            await transaction.wait();
+            axios.post(`http://localhost:8000/ambdetail/${tdata.transplant_id}` , data).then((response) => {
+                console.log(response);
+                window.location.reload(true);
+            });
+        }
+        catch(error){
+            toast.error("Something went wrong");
+        }
     }
 
     function getTime(date){
@@ -124,6 +130,7 @@ const MultiForm = ({dhosp , rhosp , account , state , tdata}) => {
     }
   return (
     <div>
+        <ToastContainer/>
         <div className="form-button" style={tdata.stage >= 2 ? {display : "none"} : {}}>
             <button type="submit" onClick={(event) => clickAmb(event)}>Ambulance</button>
             <button type="submit" onClick={(event) => clickAir(event)}>AirLift</button>
@@ -206,15 +213,15 @@ const MultiForm = ({dhosp , rhosp , account , state , tdata}) => {
             {getData()}
             <div style={{display : "flex" , flexDirection : "row" , justifyContent : "center" , marginTop : "25px"}}>
                 <label style={{fontSize : "22px"}}>Name : - &nbsp;&nbsp;</label>
-                <h2 style={{marginTop : "2px" , color : "#5ec576"}}>{vehicle.name}</h2>
+                <h2 style={{marginTop : "2px" , color : "#5ec576" , fontSize : "21px"}}>{vehicle.name}</h2>
             </div>
             <div style={{display : "flex" , flexDirection : "row" , justifyContent : "center" , marginTop : "25px"}}>
                 <label style={{fontSize : "22px"}}>Contact : - &nbsp;&nbsp;</label>
-                <h2 style={{marginTop : "2px" , color : "#5ec576"}}>{vehicle.contact}</h2>
+                <h2 style={{marginTop : "2px" , color : "#5ec576", fontSize : "21px"}}>{vehicle.contact}</h2>
             </div>
             <div style={{display : "flex" , flexDirection : "row" , justifyContent : "center" , marginTop : "25px"}}>
                 <label style={{fontSize : "22px"}}>Vehicle Number : - &nbsp;&nbsp;</label>
-                <h2 style={{marginTop : "2px" , color : "#5ec576"}}>{vehicle.plate_num}</h2>
+                <h2 style={{marginTop : "2px" , color : "#5ec576", fontSize : "21px"}}>{vehicle.plate_num}</h2>
             </div>
         </div>
     </div>

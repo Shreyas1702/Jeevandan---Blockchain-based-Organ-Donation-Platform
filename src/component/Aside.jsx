@@ -15,6 +15,10 @@ const Aside = ({account , style}) => {
           </div>
         </div>
         <div class="sidebar">
+          <a href="/">
+            <span class="material-icons-sharp"> home </span>
+            <h3>Home</h3>
+          </a>
           <a href="/dashboard_admin">
                 <span class="material-icons-sharp"> grid_view </span>
                 <h3>Dashboard</h3>

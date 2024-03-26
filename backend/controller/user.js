@@ -421,7 +421,6 @@ module.exports.sur_end = async (req, res, next) => {
 
     const update = {
       stage: 5,
-      success: true,
       t_s_end: Date.now(),
     };
 
@@ -477,6 +476,21 @@ module.exports.getTransData = async (req, res, next) => {
     });
   }
 };
+
+function areObjectsEqual(obj1, obj2) {
+  return JSON.stringify(obj1) === JSON.stringify(obj2);
+}
+
+function filterUniqueObjects(arr) {
+  const uniqueArray = [];
+  arr.forEach((obj) => {
+    // Check if the object is unique
+    if (!uniqueArray.some((uniqueObj) => areObjectsEqual(uniqueObj, obj))) {
+      uniqueArray.push(obj);
+    }
+  });
+  return uniqueArray;
+}
 
 module.exports.getEntireData = async (req, res, next) => {
   try {
@@ -554,6 +568,8 @@ module.exports.getEntireData = async (req, res, next) => {
         // console.log(arrObject[i].distance);
         ongoing_p.push(completed_r_trans[i]);
       }
+
+      ongoing_p = filterUniqueObjects(ongoing_p);
 
       const data = {
         no_donor,
@@ -636,5 +652,27 @@ module.exports.getDonor = async (req, res, next) => {
 };
 
 module.exports.transNFT = async (req, res, next) => {
-  const { id } = req.params;
+  try {
+    const { id } = req.params;
+
+    const filter = { transplant_id: id };
+
+    const update = {
+      stage: 6,
+      success: true,
+    };
+
+    await Transplant.findOneAndUpdate(filter, update, {
+      new: true,
+    });
+
+    res.status(200).json({
+      success: true,
+    });
+  } catch (e) {
+    res.status(400).json({
+      success: false,
+      error: e,
+    });
+  }
 };

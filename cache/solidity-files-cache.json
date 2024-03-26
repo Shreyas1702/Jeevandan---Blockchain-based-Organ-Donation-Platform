@@ -682,8 +682,8 @@
       ]
     },
     "C:\\Users\\AAA\\Desktop\\be_project_frontend\\Jeevandan---Blockchain-based-Organ-Donation-Platform\\contracts\\Signin.sol": {
-      "lastModificationDate": 1710981995670,
-      "contentHash": "bf98e193c6246aa213164397c04937d7",
+      "lastModificationDate": 1711408224948,
+      "contentHash": "6c4fb15dc5ab97a7ab9f00bac6ca2135",
       "sourceName": "contracts/Signin.sol",
       "solcConfig": {
         "version": "0.8.20",
