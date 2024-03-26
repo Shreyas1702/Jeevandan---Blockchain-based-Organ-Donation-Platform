@@ -19,6 +19,20 @@ const firstStage = () => {
     )
 }
 
+const secondStage=()=>{
+  if(account==dhosp.meta_address)
+  {
+    return(
+    <MultiForm account={account} state={state} dhosp={dhosp} rhosp={rhosp} tdata={tdata}/>
+
+    )
+  }
+  else{
+    return (
+      <p style={{marginTop : "40px" , color : "#5ec567"}}>The Process is Still Going on.</p>
+  )
+  }
+}
 const thirdStage = () => {
   console.log(tdata.stage)
   if(tdata.stage < 2){
@@ -27,14 +41,21 @@ const thirdStage = () => {
         <p style={{marginTop : "40px" , color : "#5ec567"}}>Please Complete the Previous Step</p>
     )
   }else if(tdata.stage == 2){
-      console.log("second")
-
-    return (
-      <div>
-        <h1 style={{marginTop : "20px" , marginLeft : "15px"}}>Organ Recieved :- &nbsp;</h1>
-        <button type="submit" className="orgrecbtn" onClick={(event) => orgrec(event)}>Organ Recieved Successfully</button>
-      </div>
+    if(account==rhosp.meta_address)
+    {
+      return (
+        <div>
+          <h1 style={{marginTop : "20px" , marginLeft : "15px"}}>Organ Recieved :- &nbsp;</h1>
+          <button type="submit" className="orgrecbtn" onClick={(event) => orgrec(event)}>Organ Recieved Successfully</button>
+        </div>
+      )
+    }
+    else{
+      return (
+        <p style={{marginTop : "40px" , color : "#5ec567"}}>The Process is Still Going on.</p>
     )
+    }
+   
   }
   else{
 
@@ -58,12 +79,21 @@ const fourthStage = () => {
         <p style={{marginTop : "40px" , color : "#5ec567"}}>Please Complete the Previous Step</p>
     )    
   }else if(tdata.stage == 3){
-    return(
-      <div>
-        <h1 style={{marginTop : "20px" , marginLeft : "15px"}}>Transplant Surgery Started :- &nbsp;</h1>
-        <button type="submit" className="orgrecbtn" onClick={(event) => transsur(event)}>Transplant Surgery Started</button>
-      </div>
+    if(account==rhosp.meta_address)
+    {
+      return(
+        <div>
+          <h1 style={{marginTop : "20px" , marginLeft : "15px"}}>Transplant Surgery Started :- &nbsp;</h1>
+          <button type="submit" className="orgrecbtn" onClick={(event) => transsur(event)}>Transplant Surgery Started</button>
+        </div>
+      )
+    }
+    else{
+      return (
+        <p style={{marginTop : "40px" , color : "#5ec567"}}>The Process is Still Going on.</p>
     )
+    }
+ 
   }
   else {
     
@@ -87,12 +117,21 @@ const fiftStage = () => {
         <p style={{marginTop : "40px" , color : "#5ec567"}}>Please Complete the Previous Step</p>
     )    
   }else if(tdata.stage == 4){
-    return(
-      <div>
-        <h1 style={{marginTop : "20px" , marginLeft : "15px"}}>Transplant Surgery Ended :- &nbsp;</h1>
-          <button type="submit" className="orgrecbtn" onClick={(event) => surend(event)}>Transplant Surgery Ended Successfully</button>
-      </div>
+    if(account==rhosp.meta_address)
+    {
+      return(
+        <div>
+          <h1 style={{marginTop : "20px" , marginLeft : "15px"}}>Transplant Surgery Ended :- &nbsp;</h1>
+            <button type="submit" className="orgrecbtn" onClick={(event) => surend(event)}>Transplant Surgery Ended Successfully</button>
+        </div>
+      )
+    }
+    else{
+      return (
+        <p style={{marginTop : "40px" , color : "#5ec567"}}>The Process is Still Going on.</p>
     )
+    }
+   
   }
   else {
     
@@ -114,12 +153,21 @@ function sixthStage(){
           <p style={{marginTop : "40px" , color : "#5ec567"}}>Please Complete the Previous Step</p>
       )    
     }else if(tdata.stage == 5){
-      return(
-        <div>
-          <h1 style={{marginTop : "20px" , marginLeft : "15px"}}>Transfer the Organ NFT :- &nbsp;</h1>
-            <button type="submit" className="orgrecbtn" onClick={(event) => tranNFT(event)}>Transfer NFT</button>
-        </div>
+      if(account==rhosp.meta_address)
+      {
+        return(
+          <div>
+            <h1 style={{marginTop : "20px" , marginLeft : "15px"}}>Transfer the Organ NFT :- &nbsp;</h1>
+              <button type="submit" className="orgrecbtn" onClick={(event) => tranNFT(event)}>Transfer NFT</button>
+          </div>
+        )
+      }
+      else{
+        return (
+          <p style={{marginTop : "40px" , color : "#5ec567"}}>The Process is Still Going on.</p>
       )
+      }
+      
     }
     else {      
       return (
@@ -290,7 +338,7 @@ const handleComplete = () => {
           {firstStage()}
         </FormWizard.TabContent>
         <FormWizard.TabContent title="Start Transportation" icon="ti-settings">
-          <MultiForm account={account} state={state} dhosp={dhosp} rhosp={rhosp} tdata={tdata}/>
+          {secondStage()}
         </FormWizard.TabContent>
         <FormWizard.TabContent title="End Transportation" icon="ti-check">
           {thirdStage()}
