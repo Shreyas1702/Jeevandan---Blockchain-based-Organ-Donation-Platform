@@ -32,4 +32,6 @@ router.route("/transNFT/:id").post(users.transNFT);
 
 router.route("/getDonor").post(users.getDonor);
 
+router.route("/getSuccessTrans").post(users.succTrans);
+
 module.exports = router;

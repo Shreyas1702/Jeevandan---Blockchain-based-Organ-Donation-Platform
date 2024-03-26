@@ -564,11 +564,6 @@ module.exports.getEntireData = async (req, res, next) => {
         ongoing_p.push(incompleted_r_trans[i]);
       }
 
-      for (var i = 0; i < completed_r_trans.length; i++) {
-        // console.log(arrObject[i].distance);
-        ongoing_p.push(completed_r_trans[i]);
-      }
-
       ongoing_p = filterUniqueObjects(ongoing_p);
 
       const data = {
@@ -675,4 +670,28 @@ module.exports.transNFT = async (req, res, next) => {
       error: e,
     });
   }
+};
+
+module.exports.succTrans = async (req, res, next) => {
+  const { account } = req.body;
+  const hosp = await User.find({ meta_address: account.toLowerCase() });
+  const hosp_id = hosp[0]._id;
+  const ddata = await Transplant.find({ donor_hosp: hosp_id })
+    .populate("donor_id")
+    .populate("reciever_id")
+    .exec();
+  const rdata = await Transplant.find({ reciever_hosp: hosp_id })
+    .populate("donor_id")
+    .populate("reciever_id")
+    .exec();
+  var ongoing_p = ddata;
+
+  for (var i = 0; i < rdata.length; i++) {
+    ongoing_p.push(rdata[i]);
+  }
+  ongoing_p = filterUniqueObjects(ongoing_p);
+
+  res.status(200).json({
+    data: ongoing_p,
+  });
 };

@@ -30,15 +30,15 @@ const Aside = ({account , style}) => {
             <span class="material-icons-sharp"> account_circle </span>
           </a>}
           <a href="/dashboard_admin/donors">
-            <span class="material-icons-sharp"> person_outline </span>
-            <h3>Donor Entry</h3>
+            <span class="material-icons-sharp"> volunteer_activism </span>
+            <h3>Donors</h3>
           </a>
           <a href="/dashboard_admin/reciever">
-            <span class="material-icons-sharp"> receipt_long </span>
-            <h3>Reciever Entry</h3>
+            <span class="material-icons-sharp"> monitor_heart </span>
+            <h3>Recievers</h3>
           </a>
           <a href="/dashboard_admin/transAdmin">
-            <span class="material-icons-sharp"> insights </span>
+            <span class="material-icons-sharp"> spellcheck </span>
             <h3>Transplant Process</h3>
           </a>
           <a href="#">

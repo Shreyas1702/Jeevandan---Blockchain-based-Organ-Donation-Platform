@@ -34,11 +34,11 @@ const DashAside = ({account , style}) => {
             <h3>Donor Entry</h3>
           </a>
           <a href="/dashboard/ReceiverForm">
-            <span class="material-icons-sharp"> receipt_long </span>
+            <span class="material-icons-sharp"> person_outline </span>
             <h3>Reciever Entry</h3>
           </a>
           <a href="/dashboard/MatchingPage">
-            <span class="material-icons-sharp"> insights </span>
+            <span class="material-icons-sharp"> join_inner </span>
             <h3>Organ Matching</h3>
           </a>
 
@@ -47,7 +47,7 @@ const DashAside = ({account , style}) => {
             <h3>Living Donation</h3>
           </a>
           <a href="/dashboard/approval">
-            <span class="material-icons-sharp"> person_outline </span>
+            <span class="material-icons-sharp"> thumb_up </span>
             <h3>Approval List</h3>
           </a>
           <a href="#">

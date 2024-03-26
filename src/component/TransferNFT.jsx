@@ -11,14 +11,17 @@ const TransferNFT = ({account , state}) => {
             
             var data;
 
-            await axios.post("http://localhost:8000/getTransfer" , {account}).then((response) => {
+            await axios.post("http://localhost:8000/getSuccessTrans" , {account}).then((response) => {
                 console.log(response);
+                data = response.data.data;
             });   
+
+            setProcess(data);
         }
 
         if(account != '')
             getData()
-    })
+    } , [account])
 
     function getTableData(){
             console.log("getTableData")
@@ -32,7 +35,7 @@ const TransferNFT = ({account , state}) => {
                 <td style={{paddingBottom : "15px" , paddingTop : "1.5rem" }}>{data.transplant_id}</td>
                 <td style={{paddingBottom : "15px" , paddingTop : "1.5rem" }}>{data.donor_id.name}</td>
                 <td style={{paddingBottom : "15px" , paddingTop : "1.5rem" }}>{data.reciever_id.name}</td>
-                <td style={{paddingBottom : "15px" , paddingTop : "1.5rem" }}>{data.stage}</td>
+                <td style={{paddingBottom : "15px" , paddingTop : "1.5rem" }}>Completed</td>
                 <td style={{paddingBottom : "15px" , paddingTop : "1.5rem" }}>{<Link style={{margin : "0"}} to="/dashboard/TransplantPage" state = {{ tId : ids}}>View </Link>}</td>
             </tr>
             )
@@ -51,12 +54,12 @@ const TransferNFT = ({account , state}) => {
                         <th>Transplant Id</th>
                         <th>Donor Name</th>
                         <th>Reciever Name</th>
-                        <th>Stage</th>
                         <th>Status</th>
+                        <th>TimeLine</th>
                     </tr>
                     </thead>
                 <tbody>
-                    {/* {getTableData()} */}
+                    {getTableData()}
                 </tbody>
                 </table>
             </div>

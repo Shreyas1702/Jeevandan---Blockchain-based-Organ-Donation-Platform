@@ -221,7 +221,7 @@ const Dashboard = ({ account, setAccount , state ,setState}) => {
           <h2>Paitent Analytics</h2>
           <div class="item online">
             <div class="icon">
-              <span class="material-icons-sharp"> shopping_cart </span>
+              <span class="material-icons-sharp"> volunteer_activism </span>
             </div>
             <div class="right">
               <div class="info">
@@ -233,7 +233,7 @@ const Dashboard = ({ account, setAccount , state ,setState}) => {
           </div>
           <div class="item offline">
             <div class="icon">
-              <span class="material-icons-sharp"> local_mall </span>
+              <span class="material-icons-sharp"> monitor_heart </span>
             </div>
             <div class="right">
               <div class="info">
@@ -264,9 +264,9 @@ const Dashboard = ({ account, setAccount , state ,setState}) => {
           </div> --> */}
           <div class="item add-product">
             <div>
-              <span class="material-icons-sharp">move_up</span>
+              <span class="material-icons-sharp">done</span>
               <a href="/transferNFt">
-                <h3 >Transfer NFT's</h3>
+                <h3 >Completed Transfers</h3>
               </a>
             </div>
           </div>
