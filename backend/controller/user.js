@@ -131,7 +131,7 @@ module.exports.reciever_reg = async (req, res, next) => {
     };
     var mailOptions = {
       from: "crce.9380.aids@gmail.com",
-      to: "crce.9380.aids@gmail.com",
+      to: email,
       subject: "Sending Email using Node.js",
       template: `reciever`,
       context: dynamicData,
@@ -447,16 +447,18 @@ module.exports.getTransData = async (req, res, next) => {
     const Data = await Transplant.find({ transplant_id: tId })
       .populate("donor_id")
       .populate("reciever_id")
+      .populate("donor_hosp")
+      .populate("reciever_hosp")
       .exec();
 
     const d = Data[0];
 
-    console.log(Data);
+    console.log("*%$$&&$%^@$%$^@^$&",Data);
 
-    const DonorHosp = await User.findById(d.donor_id.address);
+    const DonorHosp = await User.findById(d.donor_hosp._id);
     console.log(DonorHosp);
 
-    const RecHosp = await User.findById(d.reciever_id.address);
+    const RecHosp = await User.findById(d.reciever_hosp._id);
     console.log(RecHosp);
 
     console.log(d);

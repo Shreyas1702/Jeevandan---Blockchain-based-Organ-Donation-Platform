@@ -20,6 +20,8 @@ const firstStage = () => {
 }
 
 const secondStage=()=>{
+  console.log(account);
+  console.log(tdata);
   if(account==dhosp.meta_address)
   {
     return(
@@ -320,6 +322,7 @@ const handleComplete = () => {
       });
     }
     catch(error){
+      console.log(error);
       toast.error("Something Went Wrong");
     }
   }

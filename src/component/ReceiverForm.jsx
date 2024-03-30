@@ -222,7 +222,7 @@ const ReceiverForm = ({ account, setAccount , state ,setState}) => {
         <DashAside account={account} style={{marginTop : "20px" , marginLeft : "50px" , width : "170px"}} />
         <div className="donor-reg-form" style={{marginLeft : "280px"}}>
             <h1 style={{marginLeft : "300px" , marginBottom : "25px" , marginTop : "30px" , color : "#5ec567"}}>Reciever Registration Form</h1>
-            <div className='donor-register'>
+            <div className='donor-register' style={{width:"80%"}}>
                 <form class="row g-3 needs-validation" encType="multipart/form-data" novalidate>
                     <div className="col-md-12" style={{marginTop : "10px",marginLeft : "10px"}}>
                         <label for="validationCustom01" className="form-label" style={{fontSize : "20px", color : "#5ec576"}}>Name</label>
@@ -248,7 +248,7 @@ const ReceiverForm = ({ account, setAccount , state ,setState}) => {
                         </div>
                     </div>
 
-                    <div className="col-md-5" style={{marginTop : "50px",marginLeft:"100px"}}>
+                    <div className="col-md-5" style={{marginTop : "50px",marginLeft:"120px"}}>
                         <div className="input-group has-validation">
                             <span className="input-group-text" id="inputGroupPrepend" style={{fontSize : "18px" , color : "#5ec576" , backgroundColor : "#5ec576" , color : "white"}}>Email</span>
                             <input name='email' type="email" min="1" onChange={(event) => handleChange(event)} className="form-control" style={{ fontSize:"15px" , height: "43px" , width: "60px" }} id="validationCustomUsername" aria-describedby="inputGroupPrepend"  required/>
@@ -304,7 +304,7 @@ const ReceiverForm = ({ account, setAccount , state ,setState}) => {
                         </select>
                     </div>
 
-                    <div class="input-group mb-1" style={{height : "30px" , width : "40%" , marginLeft : "140px" , marginTop : "50px"}}>
+                    <div class="input-group mb-1" style={{height : "30px" , width : "40%" , marginLeft : "145px" , marginTop : "50px"}}>
                         <label class="input-group-text" style={{ fontSize : "18px" , backgroundColor : "#5ec576" , color : "white"}} for="inputGroupSelect01">HLA-Type</label>
                         <select class="form-select" onChange={(event) => handleChange(event)} name="hla" id="inputGroupSelect01" style={{ fontSize : "18px"}}>
                             <option selected>Select</option>

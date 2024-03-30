@@ -14,59 +14,47 @@
     integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
     crossorigin="anonymous"
   />
-
+ 
+  
   </head>
   <body>
-    <nav class="navbar navbar-expand-lg bg-body-tertiary">
-      <div class="container-fluid">
-        <a class="navbar-brand" href="#">Navbar</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-          <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNav">
-          <ul class="navbar-nav">
-            <li class="nav-item">
-              <a class="nav-link active" aria-current="page" href="#">Home</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#">Features</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#">Pricing</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link disabled" aria-disabled="true">Disabled</a>
-            </li>
-          </ul>
-        </div>
+    <nav class="navbar">
+      <div class="heading">
+        <h2>
+          <span style="color: #5ec576;">Jeeva</span>ndan
+        </h2>
       </div>
     </nav>
-
-    <h1 className="landingh1">
-      Thanks 
-      <span>&nbsp;For</span>
-      <span class="highlight"> Registering</span>
-      as a 
-      <span class="highlight"> Donor</span>
-    </h1>
-
+    
     <section class="section" id="section--1">
       <div class="section__title">
+        <h1 className="landingh1">
+          <span class="highlight">Congratulations </span>
+          <span>&nbsp;For</span>
+          <span class="highlight"> Registering</span>
+          As 
+          <span class="highlight"> Donor</span>
+        </h1>
         <h2 class="section__description">Now You are only 1 step away from completing your regsitration as Donor</h2>
         <h3 class="section__header">
-          Click on the Button Below to Complete your all regsitration steps
         </h3>
       </div>
-      
+      </section>
+    
+
     <%= console.log(hosp_address) %> <%= console.log(list) %>
-    <button class="btn"
+    <p class="paragraph-white-centered">
+      Click on the Button Below to Complete your all regsitration steps
+    </p>
+    <button class="btn btn-outline-dark"
+    style="font-size: 20px;border-radius: 20px;"
       type="submit"
       data-id="<%= id%>"
       data-hosp_address="<%= hosp_address%>"
       data-list="<%= list%>"
       id="approveButton"
     >
-          Approve
+          APPROVE
     </button>
 
     <script src="https://cdn.jsdelivr.net/npm/web3@1.5.3/dist/web3.min.js"></script>
