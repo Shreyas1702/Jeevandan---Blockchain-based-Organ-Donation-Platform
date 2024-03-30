@@ -231,7 +231,7 @@ const DonorForm = ({ account, setAccount , state ,setState}) => {
         <DashAside account={account} style={{marginTop : "20px" , marginLeft : "50px" , width : "170px"}}/>
         <div className="donor-reg-form" style={{marginLeft : "280px"}}>
             <h1 style={{marginLeft : "300px" , marginBottom : "30px" , marginTop : "50px" , color : "#5ec567"}}>Donor Registration Form</h1>
-            <div className='donor-register'>
+            <div className='donor-register'style={{width:"800px"}}>
                 <form class="row g-3 needs-validation" encType="multipart/form-data" novalidate>
                     <div className="col-md-12" style={{marginTop : "10px",marginLeft : "10px"}}>
                         <label for="validationCustom01" className="form-label" style={{fontSize : "20px", color : "#5ec576"}}>Name</label>
@@ -267,10 +267,10 @@ const DonorForm = ({ account, setAccount , state ,setState}) => {
                         </div>
                     </div>
 
-                    <div className="col-md-5" style={{marginTop : "50px",marginLeft:"100px"}}>
+                    <div className="col-md-5" style={{marginTop : "50px",marginLeft:"125px"}}>
                         <div className="input-group has-validation">
                             <span className="input-group-text" id="inputGroupPrepend" style={{fontSize : "18px" , color : "#5ec576" , backgroundColor : "#5ec576" , color : "white"}}>Email</span>
-                            <input name='email' type="email" min="1" onChange={(event) => handleChange(event)} className="form-control" style={{ fontSize:"15px" , height: "43px" , width: "60px" }} id="validationCustomUsername" aria-describedby="inputGroupPrepend"  required/>
+                            <input name='email' type="email" min="1" onChange={(event) => handleChange(event)} className="form-control" style={{ fontSize:"15px" , height: "43px" , width: "100px" }} id="validationCustomUsername" aria-describedby="inputGroupPrepend"  required/>
                             <div className="invalid-feedback">
                                 Please choose a username.
                             </div>
@@ -344,7 +344,7 @@ const DonorForm = ({ account, setAccount , state ,setState}) => {
                     isMulti
                     />
 
-                    <div className="col-md-5" style={{marginTop : "50px",marginLeft:"150px"}}>
+                    <div className="col-md-5" style={{marginTop : "50px",marginLeft:"189px"}}>
                         <div className="input-group has-validation">
                             <span className="input-group-text" id="inputGroupPrepend" style={{fontSize : "18px" , color : "#5ec576" , backgroundColor : "#5ec576" , color : "white"}}>Kin Contact</span>
                             <input name='kincontact' type="number" min="1" onChange={(event) => handleChange(event)} className="form-control" style={{ fontSize:"15px" , height: "43px" , width: "60px" }} id="validationCustomUsername" aria-describedby="inputGroupPrepend"  required/>
