@@ -719,6 +719,46 @@
       "artifacts": [
         "register"
       ]
+    },
+    "C:\\Users\\AAA\\Desktop\\be_project_frontend\\Jeevandan---Blockchain-based-Organ-Donation-Platform\\contracts\\Living.sol": {
+      "lastModificationDate": 1711723466057,
+      "contentHash": "c89df2535e17702fb14c508427391cbd",
+      "sourceName": "contracts/Living.sol",
+      "solcConfig": {
+        "version": "0.8.20",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "hardhat/console.sol",
+        "./Contract_2.sol",
+        "./Signin.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.2"
+      ],
+      "artifacts": [
+        "LivingDonor"
+      ]
     }
   }
 }

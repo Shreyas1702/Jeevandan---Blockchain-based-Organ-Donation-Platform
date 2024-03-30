@@ -48,7 +48,7 @@ const TransAdmin = ({account}) => {
             <td style={{paddingBottom : "15px" , paddingTop : "1.5rem" }}>{data.reciever_id.name}</td>
             <td style={{paddingBottom : "15px" , paddingTop : "1.5rem" }}>{data.donor_hosp.username}</td>
             <td style={{paddingBottom : "15px" , paddingTop : "1.5rem" }}>{data.reciever_hosp.username}</td>
-            {data.stage == 5 ? <td style={{paddingBottom : "15px" , paddingTop : "1.5rem" }}>Completed</td> : <td style={{paddingBottom : "15px" , paddingTop : "1.5rem" }}>Ongoing</td>}
+            {data.success ? <td style={{paddingBottom : "15px" , paddingTop : "1.5rem" }}>Completed</td> : <td style={{paddingBottom : "15px" , paddingTop : "1.5rem" }}>Ongoing</td>}
             <td style={{paddingBottom : "15px" , paddingTop : "1.5rem" }}>{<Link style={{margin : "0"}} to="/dashboard/TransplantPage" state = {{ tId : ids}}>View </Link>}</td>
           </tr>
         )

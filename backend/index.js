@@ -12,13 +12,14 @@ const userRoutes = require("./route/user");
 const path = require("path");
 const adminRoutes = require("./route/admin");
 const doctorRoutes = require("./route/doctor");
+const livingRoutes = require("./route/living");
 const viewPath = path.resolve(__dirname, "./templates/views/");
 const engine = require("ejs-mate");
 
 app.engine("ejs", engine);
 app.set("views", path.join(__dirname, "views"));
 app.use(cors());
-app.use(express.static(__dirname + "/public"))
+app.use(express.static(__dirname + "/public"));
 app.use(express.json());
 
 app.use(express.urlencoded({ extended: true }));
@@ -57,5 +58,7 @@ app.use("/", userRoutes);
 app.use("/admin", adminRoutes);
 
 app.use("/doctor", doctorRoutes);
+
+app.use("/living", livingRoutes);
 
 module.exports = app;

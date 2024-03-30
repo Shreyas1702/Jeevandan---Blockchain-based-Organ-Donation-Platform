@@ -68,7 +68,7 @@ const DonorForm = ({ account, setAccount , state ,setState}) => {
 
             if(skills[i].value == "kidney" && status){
                 humanData.organ = "kidney"
-                humanData.image = "https://gateway.pinata.cloud/ipfs/QmPQvvpRgEYDfkB1xe7gJYTaD1iNgJczEjbCRbtTt6S5Au"
+                humanData.image = "https://gateway.pinata.cloud/ipfs/QmPpPjXSoNNYMuQg7tUY63VNTfHm21he3WXMo56FMsMzgm"
                 const d = await uploadToPinataJson(humanData);
                 const toastId = toast.info('Creating NFT', { autoClose: false });
                 const resp = `https://gateway.pinata.cloud/ipfs/${d.data.IpfsHash}`
@@ -78,7 +78,7 @@ const DonorForm = ({ account, setAccount , state ,setState}) => {
             }
             else if(skills[i].value == "pancreas" && status){
                 humanData.organ = "pancreas"
-                humanData.image = "https://gateway.pinata.cloud/ipfs/Qmbgzp9DgWCba4BAwoCwVLAD7w53nDkT3gPDz3vU3e2xyE"
+                humanData.image = "https://gateway.pinata.cloud/ipfs/QmcGrAaJvZ5zU9NLTb2AfazE2E4vkgQwFcCYzuP43F7tUc"
                 const d = await uploadToPinataJson(humanData)
                 const toastId = toast.info('Creating NFT', { autoClose: false });
                 const resp = `https://gateway.pinata.cloud/ipfs/${d.data.IpfsHash}`
@@ -88,7 +88,7 @@ const DonorForm = ({ account, setAccount , state ,setState}) => {
             }
             else if(skills[i].value == "liver" && status){
                 humanData.organ = "liver"
-                humanData.image = "https://gateway.pinata.cloud/ipfs/QmcWr1t9RxhbZauQ6MgvJm9sxQDyei6uWdik3SfX9HQtXF"
+                humanData.image = "https://gateway.pinata.cloud/ipfs/QmQRzkrjSWfN1M6XFsSDSyus3jShAbrXc2o1FpzdSWE6rh"
                 const d = await uploadToPinataJson(humanData)
                 const toastId = toast.info('Creating NFT', { autoClose: false });
                 const resp = `https://gateway.pinata.cloud/ipfs/${d.data.IpfsHash}`

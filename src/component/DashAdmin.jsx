@@ -60,17 +60,25 @@ const DashAdmin = ({ account, setAccount , state ,setState}) => {
         }
         console.log("Given Data :- " , datas[i]);
         if(datas[i][2] == '0x0000000000000000000000000000000000000000'){
-          const doctors = [];
+          const neuro = [];
+          const phys = [];
           const id = parseInt(datas[i][0]);
           const donor_hosp = datas[i][1];
           const d = {id , donor_hosp};
           const data = await axios.post("http://localhost:8000/admin/getEntiredData" , d);
 
-          for(var i = 0 ; i < data.data.docs.length ; i++){
+          for(var i = 0 ; i < data.data.doc1.length ; i++){
             const value = data.data.docs[i].meta_address;
             const label = data.data.docs[i].name;
             const id = data.data.docs[i].id;
-            doctors.push({value , label , id});
+            neuro.push({value , label , id});
+          }
+
+          for(var i = 0 ; i < data.data.doc2.length ; i++){
+            const value = data.data.docs[i].meta_address;
+            const label = data.data.docs[i].name;
+            const id = data.data.docs[i].id;
+            phys.push({value , label , id});
           }
 
           console.log(data.data.donor[0])
@@ -79,7 +87,8 @@ const DashAdmin = ({ account, setAccount , state ,setState}) => {
           const json = {
             name : name,
             id : id,
-            doctors,
+            neuro,
+            phys,
             success : false,
           }
 
@@ -169,14 +178,14 @@ const DashAdmin = ({ account, setAccount , state ,setState}) => {
             <td style={{paddingBottom : "15px" , paddingTop : "1.5rem" }}>{data.id}</td>
             <td style={{paddingBottom : "15px" , paddingTop : "1.5rem" }}>{data.name}</td>
             <td style={{paddingBottom : "15px" , paddingTop : "1.5rem" }}><Select
-                    options={data.doctors}
+                    options={data.neuro}
                     onChange= {handleChanges}
                     value={skills}
                     style={{ fontSize : "18px" , width : "90px"  , color : "black" , height : "30px"}}
                     
                     /></td>
             <td style={{paddingBottom : "15px" , paddingTop : "1.5rem" }}><Select
-                    options={data.doctors}
+                    options={data.phys}
                     onChange= {handleChanges2}
                     value={skills2}
                     style={{ fontSize : "18px" , width : "90px"  , color : "black" , height : "30px"}}

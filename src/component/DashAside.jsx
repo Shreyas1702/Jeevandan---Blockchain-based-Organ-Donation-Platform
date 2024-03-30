@@ -42,7 +42,7 @@ const DashAside = ({account , style}) => {
             <h3>Organ Matching</h3>
           </a>
 
-          <a href="/dashboard/DonorForm">
+          <a href="/dashboard/living">
             <span class="material-icons-sharp"> add </span>
             <h3>Living Donation</h3>
           </a>

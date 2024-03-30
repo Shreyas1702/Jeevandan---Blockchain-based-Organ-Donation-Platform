@@ -3,6 +3,7 @@
 import "./index.css";
 import abi from "./contracts/register.json";
 import abis from "./contracts/NFT.json";
+import abil from "./contracts/LivingDonor.json";
 import { useState, useEffect } from "react";
 import SignIn from "./component/SignIn";
 import LandingPage from "./component/LandingPage";
@@ -23,6 +24,8 @@ import TransAdmin from "./component/TransAdmin";
 import DonorEntry from "./component/DonorEntry";
 import DoctorPage from "./component/DoctorPage";
 import TransferNFT from "./component/TransferNFT";
+import LivingDonate from "./component/LivingDonate";
+import LivingTransplant from "./component/LivingTransplant";
 function App() {
   const [state, setState] = useState({
     provider: null,
@@ -41,6 +44,9 @@ function App() {
 
       const contractAddress_NFT = process.env.REACT_APP_NFTAddress;
       const contractABI_NFT = abis.abi;
+
+      const contractAddress_living = process.env.REACT_APP_Living;
+      const contractABI_living = abil.abi;
       {
         console.log(process.env.REACT_APP_NFTAddress);
       }
@@ -74,9 +80,15 @@ function App() {
           signer
         );
 
+        const contract_living = await new ethers.Contract(
+          contractAddress_living,
+          contractABI_living,
+          signer
+        );
+
         console.log(await signer.getAddress());
         console.log("contract");
-        setState({ provider, signer, contract, contract_nft });
+        setState({ provider, signer, contract, contract_nft, contract_living });
         console.log(contract);
         console.log(accounts[0]);
 
@@ -257,6 +269,17 @@ function App() {
             }
           ></Route>
           <Route
+            path="/dashboard/living"
+            element={
+              <LivingDonate
+                account={account}
+                setAccount={setAccount}
+                state={state}
+                setState={setState}
+              />
+            }
+          ></Route>
+          <Route
             path="/hospitalPage/Timeline"
             element={
               <TimeLine
@@ -293,6 +316,17 @@ function App() {
             path="/doctor"
             element={
               <DoctorPage
+                account={account}
+                setAccount={setAccount}
+                state={state}
+                setState={setState}
+              />
+            }
+          ></Route>
+          <Route
+            path="/dashbaord/living/TransplantPage"
+            element={
+              <LivingTransplant
                 account={account}
                 setAccount={setAccount}
                 state={state}

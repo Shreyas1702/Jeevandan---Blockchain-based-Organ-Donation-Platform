@@ -7,15 +7,20 @@
 const hre = require("hardhat");
 
 async function main() {
-  const signin = await hre.ethers.getContractFactory("register");
-  const contract = await signin.deploy();
-  await contract.waitForDeployment();
-  console.log("Address for Register :", contract.target);
+  // const signin = await hre.ethers.getContractFactory("register");
+  // const contract = await signin.deploy();
+  // await contract.waitForDeployment();
+  // console.log("Address for Register :", contract.target);
 
-  const contract2 = await hre.ethers.getContractFactory("NFT");
-  const contract3 = await contract2.deploy();
-  await contract3.waitForDeployment();
-  console.log("Address for NFT :", contract3.target);
+  // const DocPat = await hre.ethers.getContractFactory("NFT");
+  // const docpat = await DocPat.deploy();
+  // await docpat.waitForDeployment();
+  // console.log("Address for NFT :", docpat.target);
+
+  const livingdonor = await hre.ethers.getContractFactory("LivingDonor");
+  const lives = await livingdonor.deploy();
+  await lives.waitForDeployment();
+  console.log("Address for LivingDonor :", lives.target);
   //instance of contract
 }
 

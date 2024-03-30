@@ -150,12 +150,17 @@ module.exports.brainData = async (req, res, next) => {
       );
       const city = location.data.results[0].city;
       console.log(city);
-      const docs = await Doctor.find({ city: city });
+      const doc1 = await Doctor.find({ city: city, Specialist: "Physician" });
+      const doc2 = await Doctor.find({
+        city: city,
+        Specialist: "Neurologist",
+      });
       console.log(docs);
       res.status(200).json({
         donor,
         hosp,
-        docs,
+        doc1,
+        doc2,
       });
     }
   } catch (e) {

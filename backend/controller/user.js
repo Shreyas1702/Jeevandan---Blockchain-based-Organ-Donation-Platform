@@ -500,7 +500,7 @@ module.exports.getEntireData = async (req, res, next) => {
     // console.log(user);
 
     if (user.length != 0) {
-      const completed_d_trans = await Transplant.find({
+      var completed_d_trans = await Transplant.find({
         donor_hosp: user[0]._id,
         success: true,
       })
@@ -550,11 +550,17 @@ module.exports.getEntireData = async (req, res, next) => {
       );
       // console.log(reciever);
 
+      for (var i = 0; i < completed_r_trans.length; i++) {
+        // console.log(arrObject[i].distance);
+        completed_d_trans.push(completed_r_trans[i]);
+      }
+
+      completed_d_trans = filterUniqueObjects(completed_r_trans);
+
       const no_donor = donor.length;
       const no_reciever = reciever.length;
       const total_pt = no_donor + no_reciever;
-      const complete_trans =
-        completed_d_trans.length + completed_r_trans.length;
+      const complete_trans = completed_d_trans.length;
       const incomplete_trans =
         incompleted_d_trans.length + incompleted_r_trans.length;
       var ongoing_p = incompleted_d_trans;

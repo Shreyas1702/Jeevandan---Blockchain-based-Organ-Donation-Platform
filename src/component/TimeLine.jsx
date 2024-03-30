@@ -27,10 +27,16 @@ const secondStage=()=>{
 
     )
   }
-  else{
+  else if(tdata.stage == 1){
     return (
       <p style={{marginTop : "40px" , color : "#5ec567"}}>The Process is Still Going on.</p>
   )
+  }
+  else{
+    return(
+    <MultiForm account={account} state={state} dhosp={dhosp} rhosp={rhosp} tdata={tdata}/>
+
+    )
   }
 }
 const thirdStage = () => {
