@@ -240,7 +240,7 @@ module.exports.matching = async (req, res, next) => {
 module.exports.transplantIn = async (req, res, next) => {
   try {
     console.log(req.body);
-    const { id, Id, organ, d_hosp } = req.body;
+    const { id, Id, organ, d_hosp, stage } = req.body;
     const donor = await Donor.find({ id: Id });
     console.log(id);
     const r = await Reciever.findById(id);
@@ -279,6 +279,7 @@ module.exports.transplantIn = async (req, res, next) => {
       transplant_id,
       ambulance_dd,
       airlift_dd,
+      stage,
     });
 
     transplant.save();
@@ -453,7 +454,7 @@ module.exports.getTransData = async (req, res, next) => {
 
     const d = Data[0];
 
-    console.log("*%$$&&$%^@$%$^@^$&",Data);
+    console.log("*%$$&&$%^@$%$^@^$&", Data);
 
     const DonorHosp = await User.findById(d.donor_hosp._id);
     console.log(DonorHosp);
@@ -504,14 +505,14 @@ module.exports.getEntireData = async (req, res, next) => {
     if (user.length != 0) {
       var completed_d_trans = await Transplant.find({
         donor_hosp: user[0]._id,
-        success: true,
+        success: "Success",
       })
         .populate("donor_id")
         .populate("reciever_id");
 
       const completed_r_trans = await Transplant.find({
         reciever_hosp: user[0]._id,
-        success: true,
+        success: "Success",
       })
         .populate("donor_id")
         .populate("reciever_id");
@@ -524,14 +525,14 @@ module.exports.getEntireData = async (req, res, next) => {
 
       const incompleted_d_trans = await Transplant.find({
         donor_hosp: user[0]._id,
-        success: false,
+        success: "Ongoing",
       })
         .populate("donor_id")
         .populate("reciever_id");
 
       const incompleted_r_trans = await Transplant.find({
         reciever_hosp: user[0]._id,
-        success: false,
+        success: "Ongoing",
       })
         .populate("donor_id")
         .populate("reciever_id");
@@ -662,7 +663,7 @@ module.exports.transNFT = async (req, res, next) => {
 
     const update = {
       stage: 6,
-      success: true,
+      success: "Success",
     };
 
     await Transplant.findOneAndUpdate(filter, update, {
@@ -684,11 +685,17 @@ module.exports.succTrans = async (req, res, next) => {
   const { account } = req.body;
   const hosp = await User.find({ meta_address: account.toLowerCase() });
   const hosp_id = hosp[0]._id;
-  const ddata = await Transplant.find({ donor_hosp: hosp_id })
+  const ddata = await Transplant.find({
+    donor_hosp: hosp_id,
+    success: "Success",
+  })
     .populate("donor_id")
     .populate("reciever_id")
     .exec();
-  const rdata = await Transplant.find({ reciever_hosp: hosp_id })
+  const rdata = await Transplant.find({
+    reciever_hosp: hosp_id,
+    success: "Success",
+  })
     .populate("donor_id")
     .populate("reciever_id")
     .exec();
@@ -701,5 +708,55 @@ module.exports.succTrans = async (req, res, next) => {
 
   res.status(200).json({
     data: ongoing_p,
+  });
+};
+
+module.exports.getFailedTrans = async (req, res) => {
+  const { account } = req.body;
+  const hosp = await User.find({ meta_address: account.toLowerCase() });
+  const hosp_id = hosp[0]._id;
+  const ddata = await Transplant.find({
+    donor_hosp: hosp_id,
+    success: "Failed",
+  })
+    .populate("donor_id")
+    .populate("reciever_id")
+    .exec();
+  const rdata = await Transplant.find({
+    reciever_hosp: hosp_id,
+    success: "Failed",
+  })
+    .populate("donor_id")
+    .populate("reciever_id")
+    .exec();
+  var ongoing_p = ddata;
+
+  console.log(ongoing_p);
+
+  for (var i = 0; i < rdata.length; i++) {
+    ongoing_p.push(rdata[i]);
+  }
+  ongoing_p = filterUniqueObjects(ongoing_p);
+
+  res.status(200).json({
+    data: ongoing_p,
+  });
+};
+
+module.exports.failedTrans = async (req, res, next) => {
+  const { id } = req.body;
+
+  const filter = { transplant_id: id };
+
+  const update = {
+    success: "Failed",
+  };
+
+  await Transplant.findOneAndUpdate(filter, update, {
+    new: true,
+  });
+
+  res.status(200).json({
+    success: true,
   });
 };

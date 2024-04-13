@@ -641,8 +641,8 @@
       ]
     },
     "C:\\Users\\AAA\\Desktop\\be_project_frontend\\Jeevandan---Blockchain-based-Organ-Donation-Platform\\contracts\\Contract_2.sol": {
-      "lastModificationDate": 1711153225295,
-      "contentHash": "b594129c06dc1bd489ad05f9afc06592",
+      "lastModificationDate": 1713005467121,
+      "contentHash": "478eb35ed00669069c9b40f975387100",
       "sourceName": "contracts/Contract_2.sol",
       "solcConfig": {
         "version": "0.8.20",
@@ -682,8 +682,8 @@
       ]
     },
     "C:\\Users\\AAA\\Desktop\\be_project_frontend\\Jeevandan---Blockchain-based-Organ-Donation-Platform\\contracts\\Signin.sol": {
-      "lastModificationDate": 1711408224948,
-      "contentHash": "6c4fb15dc5ab97a7ab9f00bac6ca2135",
+      "lastModificationDate": 1713005505357,
+      "contentHash": "9dfb9f6b7c3ca06578a2605a0699631c",
       "sourceName": "contracts/Signin.sol",
       "solcConfig": {
         "version": "0.8.20",
@@ -721,8 +721,8 @@
       ]
     },
     "C:\\Users\\AAA\\Desktop\\be_project_frontend\\Jeevandan---Blockchain-based-Organ-Donation-Platform\\contracts\\Living.sol": {
-      "lastModificationDate": 1711723466057,
-      "contentHash": "c89df2535e17702fb14c508427391cbd",
+      "lastModificationDate": 1713005798644,
+      "contentHash": "25a042d3a5abbb60a07961868736e35b",
       "sourceName": "contracts/Living.sol",
       "solcConfig": {
         "version": "0.8.20",

@@ -81,6 +81,9 @@ const SignIn = ({ account, setAccount , state ,setState , loggedIn ,  setLoggedI
       setFunc(false);
     };
 
+    console.log(process.env.REACT_APP_NFTAddress);
+
+
     connectWallet()
 
 } , [account , func]);

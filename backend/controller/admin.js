@@ -140,6 +140,7 @@ module.exports.getTrans = async (req, res, next) => {
 
 module.exports.brainData = async (req, res, next) => {
   try {
+    console.log("Req Body,,,");
     console.log(req.body);
     if (req.body) {
       const { id, donor_hosp } = req.body;
@@ -149,13 +150,15 @@ module.exports.brainData = async (req, res, next) => {
         `https://api.geoapify.com/v1/geocode/reverse?lat=${hosp[0].ltd}&lon=${hosp[0].lngt}&type=postcode&format=json&apiKey=546c7760cf0940f1bb4e2dc549625656`
       );
       const city = location.data.results[0].city;
+      console.log("city :- ");
       console.log(city);
       const doc1 = await Doctor.find({ city: city, Specialist: "Physician" });
+      console.log("Doc-1 :- ", doc1);
       const doc2 = await Doctor.find({
         city: city,
         Specialist: "Neurologist",
       });
-      console.log(docs);
+      console.log("Doctors :- ", doc1, " ", doc2);
       res.status(200).json({
         donor,
         hosp,

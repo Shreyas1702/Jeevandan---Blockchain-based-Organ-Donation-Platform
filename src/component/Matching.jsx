@@ -10,6 +10,8 @@ const [data  , setData] = React.useState({
   organ : "",
 });
 
+const {sign , nft , living} = state;
+
 const [ptlist , setptlist] = React.useState([]);
 
 const SubmitForm = async (e) => {
@@ -89,23 +91,29 @@ const startProcess = async (id , r_id , r_add) => {
 
     const Id = data.id;
     const organ = data.organ;
-    const d_hosp = account
+    const d_hosp = account;
+    var stage = 1;
+    if(d_hosp == r_add)
+      stage = 3;
     const d  = {
       id,
       Id,
       organ,
       d_hosp,
+      stage,
     }
     
     var t_id;
+
+    console.log(stage);
 
     await axios.post('http://localhost:8000/transplant' , d).then((response) => {
       console.log(response);
       t_id = response.data.data;
       console.log(t_id);
     });
-    console.log(Id , r_id , d_hosp , r_add , t_id , organ)
-    await contract_nft.TransDetails(Id , r_id  , d_hosp , r_add , t_id , organ , "0x28A8508855b055a7Bdb3bC9094320C12f5D282c6")
+    console.log(Id , r_id , d_hosp , r_add , t_id , organ , sign);
+    await contract_nft.TransDetails(Id , r_id  , d_hosp , r_add , t_id , organ, stage , sign)
     
     setTimeout(() => {
       window.location.href = "http://localhost:3000/dashboard"

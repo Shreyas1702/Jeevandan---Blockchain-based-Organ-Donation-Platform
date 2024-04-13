@@ -30,6 +30,10 @@ contract register {
         uint256 hospital_id,
         address metamask_address
     ) public payable {
+        require(
+            map[metamask_address].flag == false,
+            "Sorry the MetaMask Address is already being used"
+        );
         Memo memory newMemo = Memo(name, hospital_id, block.timestamp, true);
         map[metamask_address] = newMemo;
     }
@@ -60,6 +64,8 @@ contract register {
 
     mapping(uint256 => RegDonor) RejectDonor;
 
+    mapping(address => bool) Addresses;
+
     uint256 randNonce = 0;
 
     //Registering Donor
@@ -71,6 +77,8 @@ contract register {
         string[] memory organs,
         bool status
     ) public returns (uint256) {
+        require(check(msg.sender) == true, "Sorry the accout is not premitted");
+
         RegDonor memory regDonor = RegDonor(
             metamask_address,
             hla,
@@ -98,6 +106,7 @@ contract register {
 
         if (status == true) {
             isDonor[id] = regDonor;
+            Addresses[metamask_address] = true;
             donor.push(id);
         } else {
             RejectDonor[id] = regDonor;
@@ -140,6 +149,8 @@ contract register {
         string[] memory organs,
         bool status
     ) public returns (uint256) {
+        require(check(msg.sender) == true, "Sorry the accout is not premitted");
+
         RegDonor memory regRecieve = RegDonor(
             metamask_address,
             hla,
@@ -209,6 +220,7 @@ contract register {
 
         if (status == true) {
             isReceiver[id] = regRecieve;
+            Addresses[metamask_address] = true;
             receiver.push(id);
         } else {
             RejectReceiver[id] = regRecieve;
@@ -234,6 +246,10 @@ contract register {
         return isReceiver[id].status;
     }
 
+    function MatchedReciever(uint256 id) public {
+        isReceiver[id].braindead = true;
+    }
+
     // ********************************************************************************************************//
 
     // ****************************************Matching Organs*************************************************//
@@ -250,7 +266,8 @@ contract register {
         for (uint256 j = 0; j < receivers.length; j++) {
             if (
                 keccak256(abi.encode(isDonor[id].hla)) ==
-                keccak256(abi.encode(isReceiver[receiver[j]].hla))
+                keccak256(abi.encode(isReceiver[receiver[j]].hla)) &&
+                (isDead[receiver[j]] == false)
             ) {
                 for (
                     uint256 i = 0;
@@ -281,6 +298,7 @@ contract register {
         string memory organ,
         address ContractB_Address
     ) public returns (uint256[] memory) {
+        require(check(msg.sender) == true, "Sorry the accout is not premitted");
         delete ans;
         bool flag = false;
 
@@ -348,39 +366,12 @@ contract register {
         return ans;
     }
 
-    // *****************************************************************************************************//
+    // ***************************************************************************************************************//
 
     // *************************************Removing Organs After Transplant *****************************************//
 
-    // function remove_organ(
-    //     uint256 id,
-    //     uint256 r_id,
-    //     string memory organ
-    // ) public {
-
-    //     for (uint256 i = 0; i < isDonor[id].organs.length; i++) {
-    //         if (
-    //             keccak256(abi.encode(organ)) ==
-    //             keccak256(abi.encode(isDonor[id].organs[i]))
-    //         ) {
-    //             delete isDonor[id].organs[i];
-    //         }
-    //     }
-
-    //     for (uint256 i = 0; i < isReceiver[r_id].organs.length; i++) {
-    //         if (
-    //             keccak256(abi.encode(organ)) ==
-    //             keccak256(abi.encode(isReceiver[r_id].organs[i]))
-    //         ) {
-    //           delete isReceiver[r_id].organs[i];
-    //         }
-    //     }
-
-    // }
-
     function remove_organ(
         uint256 id,
-        uint256 r_id,
         string memory organ
     ) public returns (bool) {
         require(
@@ -390,22 +381,8 @@ contract register {
 
         require(isDonor[id].status == true, "The Given Donor is rejected..!!");
 
-        require(
-            isReceiver[r_id].flag == true,
-            "Please check and verify your Reciever Id!!"
-        );
-
-        require(
-            isReceiver[r_id].status == true,
-            "The Given Reciever is rejected..!!"
-        );
-
         string[] memory donor_array = new string[](
             isDonor[id].organs.length - 1
-        );
-
-        string[] memory rec_array = new string[](
-            isReceiver[r_id].organs.length - 1
         );
 
         uint256 index = 0;
@@ -425,7 +402,28 @@ contract register {
 
         isDonor[id].organs = donor_array;
 
-        index = 0;
+        return true;
+    }
+
+    function remove_receiver_organ(
+        uint256 r_id,
+        string memory organ
+    ) public returns (bool) {
+        require(
+            isReceiver[r_id].flag == true,
+            "Please check and verify your Reciever Id!!"
+        );
+
+        require(
+            isReceiver[r_id].status == true,
+            "The Given Reciever is rejected..!!"
+        );
+
+        string[] memory rec_array = new string[](
+            isReceiver[r_id].organs.length - 1
+        );
+
+        uint256 index = 0;
 
         for (uint256 i = 0; i < isReceiver[r_id].organs.length; i++) {
             if (
@@ -441,6 +439,25 @@ contract register {
         }
 
         isReceiver[r_id].organs = rec_array;
+
+        return true;
+    }
+
+    function add_receiver_organ(
+        uint256 r_id,
+        string memory organ
+    ) public returns (bool) {
+        require(
+            isReceiver[r_id].flag == true,
+            "Please check and verify your Reciever Id!!"
+        );
+
+        require(
+            isReceiver[r_id].status == true,
+            "The Given Reciever is rejected..!!"
+        );
+
+        isReceiver[r_id].organs.push(organ);
 
         return true;
     }
@@ -461,134 +478,100 @@ contract register {
         return isDead[id];
     }
 
+    function DeadReceiver(uint256 id) public {
+        isDead[id] = true;
+    }
+
     // ******************************************************************************************************//
 
-    // ************************************* Living Transplant *****************************************//
+    // *************************************Failed Transaction ***********************************//
 
-    struct LivingTransplantDetails{
-        uint256 donor_id;
-        uint256 reciever_id;
-        address donor_hosp;
-        address reciever_hosp;
-        string organ;
-        int256 stage;
-        bool success;
+    struct Failed {
         bool flag;
-        bool consent;
+        string report;
     }
-    struct LivingTimeLine {
-        uint256 start_donor_sur;
-        uint256 end_donor_sur;
-        uint256 start_receiver_sur;
-        uint256 end_receiver_sur;
-    }
-    mapping(uint256 => LivingTransplantDetails) living_trans_Detail;
-    mapping(uint256 => LivingTimeLine) living_trans_timeline;
 
-    function getlivingtransdetails(uint256 trans_id) public returns(LivingTransplantDetails memory)
-    {
-            return living_trans_Detail[trans_id];
-    }
-    function LivingTransDetails(
-        uint256 donor_id,
-        uint256 reciever_id,
-        address donor_hosp,
-        address reciever_hosp,
-        uint256 transplant_id,
-        string memory organ
+    mapping(int => Failed) failed;
+
+    function failedTrans(
+        int transplant_id,
+        uint256 r_id,
+        string memory link,
+        string memory organ,
+        address ContractB_Address
     ) public {
-        require(
-            check(donor_hosp) == true,
-            "No such MetaMask Address..Please Check..!!"
-        );
+        NFT ContractB = NFT(ContractB_Address);
 
-        require(
-            checkDonor(donor_id) == true,
-            "Please check and verify your Donor Id!!"
-        );
+        Failed memory f = Failed(true, link);
 
-        require(
-            AcceptedDonor(donor_id) == true,
-            "The Given Donor is rejected..!!"
-        );
+        failed[transplant_id] = f;
 
-        require(
-            checkReciever(reciever_id) == true,
-            "Please check and verify your Reciever Id!!"
-        );
+        add_receiver_organ(r_id, organ);
 
-        require(
-            AcceptedReciever(reciever_id) == true,
-            "The Given Reciever is rejected..!!"
-        );
-
-        require(
-            keccak256(abi.encode(donor_hosp))==keccak256(abi.encode(reciever_hosp)),
-            "Donor and Receiver must be from same hospital"
-        );
-  
-        LivingTransplantDetails memory living_transplant = LivingTransplantDetails(
-            donor_id,
-            reciever_id,
-            donor_hosp,
-            reciever_hosp,
-            organ,
-            1,
-            false,
-            true,
-            true
-        );
-
-        living_trans_Detail[transplant_id] = living_transplant;
-        LivingTimeLine memory livingtimeline = LivingTimeLine(
-            block.timestamp,
-            block.timestamp,
-            block.timestamp,
-            block.timestamp
-        );
-        living_trans_timeline[transplant_id]= livingtimeline;
+        ContractB.failed(transplant_id);
     }
-    function start_living_donor_surgery(uint256 transplant_id) public returns (bool) {
 
-        living_trans_timeline[transplant_id].start_donor_sur= block.timestamp;
-        living_trans_Detail[transplant_id].stage = 2;
-        return true;
+    function checkTrans(int transplant_id) public view returns (bool) {
+        return failed[transplant_id].flag;
     }
-    function end_living_donor__surgery(uint256 transplant_id
-    ) public returns (bool) {
-        require(
-            living_trans_Detail[transplant_id].stage == 2,
-            "Sorry complete the previous step first"
-        );
-        living_trans_timeline[transplant_id].end_donor_sur= block.timestamp;
-        living_trans_Detail[transplant_id].stage = 3;
-        return true;
-    }
-     function start_living_receiver_surgery(uint256 transplant_id) public returns (bool) {
 
-        require(
-            living_trans_Detail[transplant_id].stage == 3,
-            "Sorry complete the previous step first"
-        );
-        living_trans_timeline[transplant_id].start_receiver_sur= block.timestamp;
-        living_trans_Detail[transplant_id].stage = 4;
-        return true;
+    function getFailedTrans(
+        int transplant_id
+    ) public view returns (Failed memory) {
+        return failed[transplant_id];
     }
-        function end_living_receiver_surgery(
-        uint256 transplant_id
-    ) public returns (bool) {
-        require(
-            living_trans_Detail[transplant_id].stage == 4,
-            "Sorry complete the previous step first"
-        );
-        living_trans_timeline[transplant_id].end_receiver_sur= block.timestamp;
-        living_trans_Detail[transplant_id].stage = 5;
-        remove_organ(
-            living_trans_Detail[transplant_id].donor_id,
-            living_trans_Detail[transplant_id].reciever_id,
-            living_trans_Detail[transplant_id].organ
-        );
-        return true;
+
+    function getTransDet(
+        int trans_id,
+        address ContractB_Address
+    )
+        public
+        view
+        returns (
+            uint256 donor_id,
+            uint256 receiver_id,
+            address donor_hosp,
+            address receiever_hosp,
+            string memory organ,
+            int256 stage,
+            uint256 success,
+            bool flag
+        )
+    {
+        NFT ContractB = NFT(ContractB_Address);
+
+        return ContractB.trans_Detail(trans_id);
+    }
+
+    function getTransTime(
+        int trans_id,
+        address ContractB_Address
+    )
+        public
+        view
+        returns (
+            uint256 organ_match,
+            uint256 start_trans,
+            uint256 end_trans,
+            uint256 start_sur,
+            uint256 end_sur
+        )
+    {
+        NFT ContractB = NFT(ContractB_Address);
+
+        return ContractB.trans_timeline(trans_id);
+    }
+
+    function getDriverDet(
+        int trans_id,
+        address ContractB_Address
+    )
+        public
+        view
+        returns (string memory name, string memory plate_num, uint256 contact)
+    {
+        NFT ContractB = NFT(ContractB_Address);
+
+        return ContractB.driver_details(trans_id);
     }
 }
-

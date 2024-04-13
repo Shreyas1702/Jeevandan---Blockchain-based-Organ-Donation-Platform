@@ -55,6 +55,7 @@
   },
   "devDependencies": {
     "@nomicfoundation/hardhat-toolbox": "^3.0.0",
+    "flow-babel-webpack-plugin": "^1.1.1",
     "hardhat": "^2.19.0"
   }
 }

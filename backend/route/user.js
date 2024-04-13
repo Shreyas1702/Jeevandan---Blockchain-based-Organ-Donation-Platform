@@ -34,4 +34,8 @@ router.route("/getDonor").post(users.getDonor);
 
 router.route("/getSuccessTrans").post(users.succTrans);
 
+router.route("/failedTrans").post(users.failedTrans);
+
+router.route("/getFailedTrans").post(users.getFailedTrans);
+
 module.exports = router;

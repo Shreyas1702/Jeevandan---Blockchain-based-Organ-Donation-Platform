@@ -64,20 +64,22 @@ const DashAdmin = ({ account, setAccount , state ,setState}) => {
           const phys = [];
           const id = parseInt(datas[i][0]);
           const donor_hosp = datas[i][1];
+          console.log(id)
+          console.log(donor_hosp)
           const d = {id , donor_hosp};
           const data = await axios.post("http://localhost:8000/admin/getEntiredData" , d);
-
+          console.log(data);
           for(var i = 0 ; i < data.data.doc1.length ; i++){
-            const value = data.data.docs[i].meta_address;
-            const label = data.data.docs[i].name;
-            const id = data.data.docs[i].id;
+            const value = data.data.doc1[i].meta_address;
+            const label = data.data.doc1[i].name;
+            const id = data.data.doc1[i].id;
             neuro.push({value , label , id});
           }
 
           for(var i = 0 ; i < data.data.doc2.length ; i++){
-            const value = data.data.docs[i].meta_address;
-            const label = data.data.docs[i].name;
-            const id = data.data.docs[i].id;
+            const value = data.data.doc2[i].meta_address;
+            const label = data.data.doc2[i].name;
+            const id = data.data.doc2[i].id;
             phys.push({value , label , id});
           }
 
@@ -158,7 +160,8 @@ const DashAdmin = ({ account, setAccount , state ,setState}) => {
 
   async function submitDocs(id){
     const toastId = toast.info('Transaction in Progress', { autoClose: false });
-    await contract_nft.reg_braindead(id , skills.value , skills2.value , skills.id , skills2.id  , "0x28A8508855b055a7Bdb3bC9094320C12f5D282c6");
+    const transaction = await contract_nft.reg_braindead(id , skills.value , skills2.value , skills.id , skills2.id );
+    await transaction.wait();
     toast.update(toastId, { render: 'Transaction Successfully', type: 'success', autoClose: 4000 });
     setTimeout(() => {
       window.location.reload(true);

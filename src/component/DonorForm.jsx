@@ -8,6 +8,11 @@ import { toast , ToastContainer} from 'react-toastify';
 const Web3 = require('web3')
 
 const DonorForm = ({ account, setAccount , state ,setState}) => {
+
+    const {contract_nft} = state;
+    const {sign , nft , living} = state;
+    console.log(sign , nft , living);
+    console.log(contract_nft)
     
     const options = [
         { value: "kidney", label: "Kidney" },

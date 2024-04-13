@@ -4,6 +4,7 @@ import FormWizard from "react-form-wizard-component";
 import "react-form-wizard-component/dist/style.css";
 import MultiForm from "./MultiForm"
 import {toast , ToastContainer} from "react-toastify"
+
 function TimeLine({dhosp , rhosp , account , state , tdata}) {
 
 console.log(tdata)
@@ -267,8 +268,8 @@ const handleComplete = () => {
   async function transsur(event){
     try{
       event.preventDefault();
-      const {contract_nft} = state;
-      const transaction = await contract_nft.start_surgery(tdata.transplant_id);
+      const {contract_nft , sign} = state;
+      const transaction = await contract_nft.start_surgery(tdata.transplant_id , sign);
       const toastId = toast.info('Transaction in Progress', { autoClose: false });
       await transaction.wait();
       toast.update(toastId, { render: 'Transaction Successfully', type: 'success', autoClose: 4000 });
@@ -289,8 +290,9 @@ const handleComplete = () => {
     async function surend(event){
     try{
       event.preventDefault();
-      const {contract_nft} = state;
-      const transaction = await contract_nft.end_surgery(tdata.transplant_id , "0x28A8508855b055a7Bdb3bC9094320C12f5D282c6");
+      const {contract_nft , sign} = state;
+      console.log(sign);
+      const transaction = await contract_nft.end_surgery(tdata.transplant_id , sign);
       const toastId = toast.info('Transaction in Progress', { autoClose: false });
       await transaction.wait();
       toast.update(toastId, { render: 'Transaction Successfully', type: 'success', autoClose: 4000 });
@@ -299,11 +301,14 @@ const handleComplete = () => {
       console.log(response)  
       if(response.data.success == true){
         console.log("thirdStage");
-        window.location.reload(true);
+        setTimeout(() => {
+          window.location.reload(true);
+        },5000);
       }
       });
     }
     catch(error){
+      console.log(error);
       toast.error("Something went wrong");
     }
   }
@@ -315,10 +320,14 @@ const handleComplete = () => {
       const organ = tdata.organ;
       var nftId = tdata.donor_id.nftId[organ]
       console.log(nftId , tdata.donor_id.meta_address , tdata.reciever_id.meta_address)
-      const transaction = await contract_nft.transferNFT(tdata.donor_id.meta_address , tdata.reciever_id.meta_address , nftId );
+      const transaction = await contract_nft.transferNFT(tdata.donor_id.meta_address , tdata.reciever_id.meta_address , nftId ,{gasLimit : 5000000});
       const toastId = toast.info('Transaction in Progress', { autoClose: false });
       await transaction.wait();
       toast.update(toastId, { render: 'Transaction Successfully', type: 'success', autoClose: 4000 });
+      const trans = await contract_nft.transferedNFT(tdata.transplant_id);
+      const toastIds = toast.info('Transaction in Progress', { autoClose: false });
+      await trans.wait();
+      toast.update(toastIds, { render: 'Transaction Successfully', type: 'success', autoClose: 4000 });
       await axios.post(`http://localhost:8000/transNFT/${tdata.transplant_id}`).then((response) => {
       console.log(response)  
       if(response.data.success == true){
@@ -333,10 +342,48 @@ const handleComplete = () => {
     }
   }
 
-  return (
-    <>
-      <ToastContainer/>
-      <FormWizard
+  const failedTrans = async (req,res) => {
+    const {contract} = state;
+
+    const transaction = await contract.failedTrans(tdata.transplant_id)
+  }
+
+  const TimeLine = (req,res) => {
+    if(dhosp.meta_address == rhosp.meta_address){
+      return (
+        <FormWizard
+        shape="circle"
+        color="#5ec576"
+        onComplete={handleComplete}
+        onTabChange={tabChanged}
+        startIndex = {tdata.stage}
+      >
+        <FormWizard.TabContent title="Organ Matching And Searching" icon="ti-user">
+          {firstStage()}
+        </FormWizard.TabContent>
+        {/* <FormWizard.TabContent title="Start Transportation" icon="ti-settings">
+          {secondStage()}
+        </FormWizard.TabContent>
+        <FormWizard.TabContent title="End Transportation" icon="ti-check">
+          {thirdStage()}
+        </FormWizard.TabContent> */}
+        
+        <FormWizard.TabContent title="Start Transplant Surgery" icon="ti-check">
+          {fourthStage()}
+        </FormWizard.TabContent>
+        <FormWizard.TabContent title="Transplant Surgery Ended" icon="ti-check">
+          {fiftStage()}
+        </FormWizard.TabContent>
+        <FormWizard.TabContent title="Transfer NFT" icon="ti-check">
+          {sixthStage()}
+        </FormWizard.TabContent>
+          {seventhStage()}
+      </FormWizard>
+      )
+    }
+    else{
+      return (
+        <FormWizard
         shape="circle"
         color="#5ec576"
         onComplete={handleComplete}
@@ -352,6 +399,7 @@ const handleComplete = () => {
         <FormWizard.TabContent title="End Transportation" icon="ti-check">
           {thirdStage()}
         </FormWizard.TabContent>
+        
         <FormWizard.TabContent title="Start Transplant Surgery" icon="ti-check">
           {fourthStage()}
         </FormWizard.TabContent>
@@ -363,7 +411,15 @@ const handleComplete = () => {
         </FormWizard.TabContent>
           {seventhStage()}
       </FormWizard>
-    </>
+      )
+    }
+  }
+
+  return (
+    <div>
+      <ToastContainer/>
+      {TimeLine()}
+    </div>
   )
 }
  

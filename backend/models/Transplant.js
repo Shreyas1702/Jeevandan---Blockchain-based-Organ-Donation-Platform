@@ -55,8 +55,8 @@ const TransplantSchema = new Schema({
     default: Date.now(),
   },
   success: {
-    type: Boolean,
-    default: false,
+    type: String,
+    default: "Ongoing",
   },
   type_transport: {
     type: String,

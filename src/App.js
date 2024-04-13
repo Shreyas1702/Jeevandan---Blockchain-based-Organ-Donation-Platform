@@ -26,6 +26,7 @@ import DoctorPage from "./component/DoctorPage";
 import TransferNFT from "./component/TransferNFT";
 import LivingDonate from "./component/LivingDonate";
 import LivingTransplant from "./component/LivingTransplant";
+import FailedTrans from "./component/FailedTrans";
 function App() {
   const [state, setState] = useState({
     provider: null,
@@ -47,9 +48,11 @@ function App() {
 
       const contractAddress_living = process.env.REACT_APP_Living;
       const contractABI_living = abil.abi;
-      {
-        console.log(process.env.REACT_APP_NFTAddress);
-      }
+
+      const nft = process.env.REACT_APP_NFTAddress;
+      const living = process.env.REACT_APP_Living;
+      const sign = process.env.REACT_APP_SignAddress;
+
       try {
         const { ethereum } = window;
 
@@ -88,7 +91,16 @@ function App() {
 
         console.log(await signer.getAddress());
         console.log("contract");
-        setState({ provider, signer, contract, contract_nft, contract_living });
+        setState({
+          provider,
+          signer,
+          contract,
+          contract_nft,
+          contract_living,
+          sign,
+          nft,
+          living,
+        });
         console.log(contract);
         console.log(accounts[0]);
 
@@ -188,6 +200,19 @@ function App() {
             }
           ></Route>
           <Route
+            path="/dashboard"
+            element={
+              <Dashboard
+                account={account}
+                setAccount={setAccount}
+                state={state}
+                setState={setState}
+                loggedIn={loggedIn}
+                setLoggedIn={setLoggedIn}
+              />
+            }
+          ></Route>
+          <Route
             path="/signin"
             element={
               <SignIn
@@ -209,6 +234,8 @@ function App() {
                   setAccount={setAccount}
                   state={state}
                   setState={setState}
+                  loggedIn={loggedIn}
+                  setLoggedIn={setLoggedIn}
                 />
               }
             ></Route>
@@ -221,6 +248,8 @@ function App() {
                 setAccount={setAccount}
                 state={state}
                 setState={setState}
+                loggedIn={loggedIn}
+                setLoggedIn={setLoggedIn}
               />
             }
           ></Route>
@@ -232,6 +261,8 @@ function App() {
                 setAccount={setAccount}
                 state={state}
                 setState={setState}
+                loggedIn={loggedIn}
+                setLoggedIn={setLoggedIn}
               />
             }
           ></Route>
@@ -243,6 +274,8 @@ function App() {
                 setAccount={setAccount}
                 state={state}
                 setState={setState}
+                loggedIn={loggedIn}
+                setLoggedIn={setLoggedIn}
               />
             }
           ></Route>
@@ -254,6 +287,8 @@ function App() {
                 setAccount={setAccount}
                 state={state}
                 setState={setState}
+                loggedIn={loggedIn}
+                setLoggedIn={setLoggedIn}
               />
             }
           ></Route>
@@ -265,6 +300,8 @@ function App() {
                 setAccount={setAccount}
                 state={state}
                 setState={setState}
+                loggedIn={loggedIn}
+                setLoggedIn={setLoggedIn}
               />
             }
           ></Route>
@@ -276,6 +313,8 @@ function App() {
                 setAccount={setAccount}
                 state={state}
                 setState={setState}
+                loggedIn={loggedIn}
+                setLoggedIn={setLoggedIn}
               />
             }
           ></Route>
@@ -287,17 +326,8 @@ function App() {
                 setAccount={setAccount}
                 state={state}
                 setState={setState}
-              />
-            }
-          ></Route>
-          <Route
-            path="/dashboard"
-            element={
-              <Dashboard
-                account={account}
-                setAccount={setAccount}
-                state={state}
-                setState={setState}
+                loggedIn={loggedIn}
+                setLoggedIn={setLoggedIn}
               />
             }
           ></Route>
@@ -309,6 +339,8 @@ function App() {
                 setAccount={setAccount}
                 state={state}
                 setState={setState}
+                loggedIn={loggedIn}
+                setLoggedIn={setLoggedIn}
               />
             }
           ></Route>
@@ -320,6 +352,21 @@ function App() {
                 setAccount={setAccount}
                 state={state}
                 setState={setState}
+                loggedIn={loggedIn}
+                setLoggedIn={setLoggedIn}
+              />
+            }
+          ></Route>
+          <Route
+            path="/failed"
+            element={
+              <FailedTrans
+                account={account}
+                setAccount={setAccount}
+                state={state}
+                setState={setState}
+                loggedIn={loggedIn}
+                setLoggedIn={setLoggedIn}
               />
             }
           ></Route>
@@ -331,6 +378,8 @@ function App() {
                 setAccount={setAccount}
                 state={state}
                 setState={setState}
+                loggedIn={loggedIn}
+                setLoggedIn={setLoggedIn}
               />
             }
           ></Route>

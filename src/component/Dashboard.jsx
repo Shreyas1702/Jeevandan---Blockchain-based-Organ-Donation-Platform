@@ -29,6 +29,7 @@ const Dashboard = ({ account, setAccount , state ,setState}) => {
       console.log(process);
       console.log("Data :- " , data);
       // setloading(false);
+      console.log(state);
     } , 1000)
   },[account])
 
@@ -50,6 +51,7 @@ const Dashboard = ({ account, setAccount , state ,setState}) => {
   function getTableData(){
     console.log("getTableData")
     console.log("Process :-" , process)
+    // console.log(process.env.REACT_APP_NFTAddress);
     var num = 1;
     return process.map((data) => {
       const ids = data.transplant_id;  
@@ -266,7 +268,15 @@ const Dashboard = ({ account, setAccount , state ,setState}) => {
             <div>
               <span class="material-icons-sharp">done</span>
               <a href="/transferNFt">
-                <h3 >Completed Transfers</h3>
+                <h3 >Completed Transplants</h3>
+              </a>
+            </div>
+          </div>
+          <div class="item add-product">
+            <div>
+              <span class="material-icons-sharp">done</span>
+              <a href="/failed">
+                <h3 >Failed Transplants</h3>
               </a>
             </div>
           </div>

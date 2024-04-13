@@ -97,7 +97,7 @@ const SubmitForm = async (e) => {
 
   const {contract_living} = state;
   
-  const trans = await contract_living.LivingTransDetails(data.donor_id , data.reciever_id , data.organ , "0x28A8508855b055a7Bdb3bC9094320C12f5D282c6")
+  const trans = await contract_living.LivingTransDetails(data.donor_id , data.reciever_id , data.organ , "0xA5841871BBddd33c60aeE7CaBc1C2B12B5E300D2")
   
   const toastId = toast.info('Transaction in Progress', { autoClose: false });
   

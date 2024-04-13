@@ -286,7 +286,7 @@ const handleComplete = () => {
       event.preventDefault();
       const {contract_living} = state;
       console.log(tdata.trans_id)
-      const transaction = await contract_living.end_living_receiver_surgery(tdata.trans_id , "0x28A8508855b055a7Bdb3bC9094320C12f5D282c6");
+      const transaction = await contract_living.end_living_receiver_surgery(tdata.trans_id , "0xA5841871BBddd33c60aeE7CaBc1C2B12B5E300D2");
       console.log(contract_living);
       const toastId = toast.info('Transaction in Progress', { autoClose: false });
       await transaction.wait();
@@ -311,7 +311,7 @@ const handleComplete = () => {
       var nftId = full_data.data.donor_id.nftId[organ]
       console.log(nftId , organ , full_data.data.donor_id.meta_address , full_data.data.reciever_id.meta_address)
     //   console.log(nftId , tdata.donor_id.meta_address , tdata.reciever_id.meta_address)
-      const transaction = await contract_nft.transferNFT(full_data.data.donor_id.meta_address , full_data.data.reciever_id.meta_address , nftId  , {gasLimit : "30000000"});
+      const transaction = await contract_nft.transferNFT(full_data.data.donor_id.meta_address , full_data.data.reciever_id.meta_address , nftId , {gasLimit : 5000000});
       const toastId = toast.info('Transaction in Progress', { autoClose: false });
       await transaction.wait();
       toast.update(toastId, { render: 'Transaction Successfully', type: 'success', autoClose: 4000 });

@@ -19,18 +19,65 @@ const DoctorPage = ({account , state}) => {
             setDetail(val.data.data);
         }
 
+        function areObjectsEqual(obj1, obj2) {
+            return JSON.stringify(obj1) === JSON.stringify(obj2);
+        }
+
+        function filterUniqueObjects(arr) {
+            const uniqueArray = [];
+            arr.forEach((obj) => {
+                // Check if the object is unique
+                if (!uniqueArray.some((uniqueObj) => areObjectsEqual(uniqueObj, obj))) {
+                uniqueArray.push(obj);
+                }
+            });
+            return uniqueArray;
+        }
+
         async function PatList(){
             console.log(contract_nft)
             console.log(typeof detail.id)
-            const d = await contract_nft.DocPat(detail.id);
+            var das = await contract_nft.DocPat(detail.id);
+            var d = [];
+            for(var i = 0 ; i < das.length ; i++){
+                var zero = parseInt(das[i][0]);
+                var one = (das[i][1]);
+                var two = (das[i][2]);
+                var three = (das[i][3]);
+                var four = parseInt(das[i][4])
+                var five = parseInt(das[i][5])
+                var six = parseInt(das[i][6])
+                var seven = parseInt(das[i][7])
+                var eight = (das[i][8])
+                var nine = (das[i][9])
+                var ten = parseInt(das[i][10])
+
+                var json = {
+                    zero,
+                    one,
+                    two,
+                    three,
+                    four,
+                    five,
+                    six,
+                    seven,
+                    eight,
+                    nine,
+                    ten
+                }
+
+                d.push(json);
+            }
+
+            d = filterUniqueObjects(d);
             console.log(d);
             var list = [];
             for(var i = 0 ; i < d.length ; i++){
-                const donor_id = parseInt(d[i][0]);
-                const donor_hosp = d[i][1];
-                if(parseInt(d[i][5]) == detail.id){
-                    const doc_id = parseInt(d[i][5]);
-                    const sign = parseInt(d[i][7]);
+                const donor_id = parseInt(d[i].zero);
+                const donor_hosp = d[i].one;
+                if(parseInt(d[i].five) == detail.id){
+                    const doc_id = parseInt(d[i].five);
+                    const sign = parseInt(d[i].seven);
 
                     const data = await axios.post("http://localhost:8000/doctor/getPatient" , {donor_id , donor_hosp});
                     console.log(data);
@@ -62,8 +109,8 @@ const DoctorPage = ({account , state}) => {
                         
                 }
                 else{
-                    const doc_id = parseInt(d[i][4]);
-                    const sign = parseInt(d[i][6]);
+                    const doc_id = parseInt(d[i].four);
+                    const sign = parseInt(d[i].six);
 
                     const data = await axios.post("http://localhost:8000/doctor/getPatient" , {donor_id , donor_hosp});
                     console.log(data);
@@ -131,8 +178,8 @@ const DoctorPage = ({account , state}) => {
     }
 
     function getTableData(){
-    console.log("getTableData")
-    console.log("Process :-" , process)
+    // console.log("getTableData")
+    // console.log("Process :-" , process)
     var num = 1;
     return process.map((data) => {
         const ids = data.transplant_id;  

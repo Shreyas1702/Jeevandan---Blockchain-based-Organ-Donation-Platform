@@ -353,7 +353,7 @@ h4 {
   flex-direction: row;
   height: 8rem;
   width: 100%;
-  z-index: 5;
+  /* z-index: 5; */
 
   /* box-shadow: 0rem 0.2rem 0.2rem grey; */
   top: 0;
@@ -492,7 +492,6 @@ h4 {
   height: 60px;
   width: 60px;
   background-color: #5ec576;
-  z-index: 2;
   position: absolute;
   top: 30px;
   right: -30px;

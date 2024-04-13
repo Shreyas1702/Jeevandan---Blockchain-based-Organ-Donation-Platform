@@ -138,7 +138,8 @@ const DonorEntry = ({account , state}) => {
         const {contract_nft} = state;
         const toastId = toast.info('Transaction in Progress', { autoClose: false });
         // console.log(process.env.REACT_APP_NFTAddress);
-        const val = await contract_nft.brain_Dead(id , account , "0x28A8508855b055a7Bdb3bC9094320C12f5D282c6");
+        const val = await contract_nft.brain_Dead(id , account );
+        await val.wait()
         console.log(val)
         toast.update(toastId, { render: 'Transaction Successfully', type: 'success', autoClose: 4000 });
         setTimeout(() => {
