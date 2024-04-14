@@ -13,6 +13,7 @@ const path = require("path");
 const adminRoutes = require("./route/admin");
 const doctorRoutes = require("./route/doctor");
 const livingRoutes = require("./route/living");
+const driverRoutes = require("./route/drivers");
 const viewPath = path.resolve(__dirname, "./templates/views/");
 const engine = require("ejs-mate");
 
@@ -53,6 +54,10 @@ app.use((req, res, next) => {
   next();
 });
 
+app.get("/", (req, res) => {
+  res.send("Hello");
+});
+
 app.use("/", userRoutes);
 
 app.use("/admin", adminRoutes);
@@ -60,5 +65,7 @@ app.use("/admin", adminRoutes);
 app.use("/doctor", doctorRoutes);
 
 app.use("/living", livingRoutes);
+
+app.use("/driver", driverRoutes);
 
 module.exports = app;
