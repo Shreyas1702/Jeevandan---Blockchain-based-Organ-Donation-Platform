@@ -17,17 +17,21 @@ const Modal = ({setOpen , state , tdata}) => {
         await uploadToPinata(files[0])
     }
 
-    const failedTrans = async (req,res) => {
+    const failedTransRelist = async (req,res) => {
         const {contract , nft} = state;
         console.log(data);
         console.log(nft);
-        console.log(tdata.transplant_id);
+        console.log(tdata.reciever_id.id);
+        console.log(tdata.organ);
         const toastId = toast.info('Transaction in Progress', { autoClose: false });
-        // const transaction = await contract.failedTrans(tdata.transplant_id , data , nft)
-        // await transaction.wait();
+        const transaction = await contract.failedTrans(tdata.transplant_id , tdata.reciever_id.id , data , tdata.organ , nft)
+        await transaction.wait();
         const id = tdata.transplant_id;
         await axios.post("http://localhost:8000/failedTrans" , {id});
         toast.update(toastId, { render: 'Transaction Successfull', type: 'success', autoClose: 3000 });
+        setTimeout(() => {
+            handleClose();
+        },5000)
     }
 
     const uploadToPinata = async (file) => {
@@ -76,7 +80,9 @@ const Modal = ({setOpen , state , tdata}) => {
             </div>
             {pic && <p style={{fontSize : "15px" , textAlign : "center" , color : "#5ec576" , margin : "0px" , padding : "0px"}}>{data.slice(0,30) + "....." + data.slice(50,80)}</p>}
 
-            <button className="col-md-6" onClick={(event) => failedTrans(event)} type="submit" style={{padding : "15px" , backgroundColor : "#5ec567" , color : "white" , fontSize : "17px" , borderRadius : "5px" , margin : "20px 150px 20px 150px"}}>Submit</button>
+            <div style={{display : "flex" , flexDirection : "row" , justifyContent : "center" , marginTop : "40px"}}>
+                <button className="col-md-3" onClick={(event) => failedTransRelist(event)} type="submit" style={{padding : "15px" , backgroundColor : "#5ec567" , color : "white" , fontSize : "17px" , borderRadius : "5px" , marginLeft : "50px"}}>Submit</button>
+            </div>
        </div>
     );
 };

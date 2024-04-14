@@ -2,7 +2,7 @@ import React from 'react'
 import axios from 'axios'
 import {toast , ToastContainer} from 'react-toastify'
 
-const MultiForm = ({dhosp , rhosp , account , state , tdata}) => {
+const MultiForm = ({dhosp , rhosp , account , state , tdata , cData}) => {
 
     const [data , setData] = React.useState({
         name : "",
@@ -67,39 +67,60 @@ const MultiForm = ({dhosp , rhosp , account , state , tdata}) => {
     }
 
     function getData(){
-        const Date = tdata.trans_start;
+        console.log("CDATA :- " , cData);
+        if(cData != null){
+            const Date = cData.trans_start;
 
-        const {day , month , year , hours , minutes , seconds} = getTime(tdata.t_s_end);
-    return (
-      <div>
-        <p style={{color : "black" , marginTop : "10px"}}>Task completed at time: <span style={{color : "#5ec567"}}>{hours}:{minutes}:{seconds} </span></p>
-      </div>
-    )
+                const {day , month , year , hours , minutes , seconds} = getTime(Date);
+            return (
+            <div>
+                <p style={{color : "black" , marginTop : "10px"}}>Task completed at time: <span style={{color : "#5ec567"}}>{hours}:{minutes}:{seconds} </span></p>
+            </div>
+            )
+        }
     }
 
     
     const submitData = async (event) => {
-        const {contract_nft} = state;
-        console.log(tdata);
-        event.preventDefault();
-        const transaction = await contract_nft.start_transport(tdata.transplant_id , data.contact , data.name , data.plate_num);
-        console.log(transaction);
-        axios.post(`http://localhost:8000/airdetail/${tdata.transplant_id}` , data).then((response) => {
-            console.log(response);
-        });
+        try{
+            const {contract_nft , sign} = state;
+            console.log(tdata);
+            event.preventDefault();
+            const toastId = toast.info('Transaction in Progress', { autoClose: false });
+            const transaction = await contract_nft.start_transport(tdata.transplant_id , data.contact , data.name , data.plate_num , sign);
+            await transaction.wait();
+            console.log(transaction);
+            toast.update(toastId, { render: 'Transaction Successfully', type: 'success', autoClose: 4000 });
+            axios.post(`http://localhost:8000/airdetail/${tdata.transplant_id}` , data).then((response) => {
+                console.log(response);
+            });
+            setTimeout(() => {
+            window.location.reload(true);
+            },5000);
+        }
+        catch(error){
+            console.log(error);
+            toast.error("Something went wrong");
+        }
     }
 
     const submitDatas = async (event) => {
         try{
-            const {contract_nft} = state;
+            const {contract_nft , sign} = state;
             console.log(tdata);
             event.preventDefault();
-            const transaction = await contract_nft.start_transport(tdata.transplant_id , data.contact , data.name , data.plate_num);
+            const toastId = toast.info('Transaction in Progress', { autoClose: false });
+            const transaction = await contract_nft.start_transport(tdata.transplant_id , data.contact , data.name , data.plate_num , sign);
             await transaction.wait();
+            toast.update(toastId, { render: 'Transaction Successfully', type: 'success', autoClose: 4000 });
             axios.post(`http://localhost:8000/ambdetail/${tdata.transplant_id}` , data).then((response) => {
                 console.log(response);
                 window.location.reload(true);
             });
+            console.log("thirdStage");
+            setTimeout(() => {
+            window.location.reload(true);
+            },5000);
         }
         catch(error){
             toast.error("Something went wrong");
@@ -107,26 +128,30 @@ const MultiForm = ({dhosp , rhosp , account , state , tdata}) => {
     }
 
     function getTime(date){
-        const dateTimeString = date;
-        const dateTime = new Date(dateTimeString);
+        var milliseconds = date * 1000;
 
-        const year = dateTime.getUTCFullYear();
-        const month = dateTime.getUTCMonth() + 1; // Month is zero-based, so add 1
-        const day = dateTime.getUTCDate();
+    var date = new Date(milliseconds);
 
-        // Extract time components
-        const hours = dateTime.getUTCHours();
-        const minutes = dateTime.getUTCMinutes();
-        const seconds = dateTime.getUTCSeconds();
+    // Extracting date components
+    var year = date.getFullYear();
+    var month = ("0" + (date.getMonth() + 1)).slice(-2); // Adding 1 because January is 0
+    var day = ("0" + date.getDate()).slice(-2);
+    var hours = ("0" + date.getHours()).slice(-2);
+    var minutes = ("0" + date.getMinutes()).slice(-2);
+    var seconds = ("0" + date.getSeconds()).slice(-2);
 
-        return {
-            day,
-            month,
-            year,
-            hours,
-            minutes,
-            seconds
-        }
+    // Formatted date string
+    var formattedDate = year + "-" + month + "-" + day + " " + hours + ":" + minutes + ":" + seconds;
+
+
+    return {
+    day,
+    month,
+    year,
+    hours,
+    minutes,
+    seconds
+    }
     }
   return (
     <div>

@@ -5,35 +5,42 @@ import "react-form-wizard-component/dist/style.css";
 import MultiForm from "./MultiForm"
 import {toast , ToastContainer} from "react-toastify"
 
-function TimeLine({dhosp , rhosp , account , state , tdata}) {
+function TimeLine({dhosp , rhosp , account , state , tdata , cData}) {
 
 console.log(tdata)
 
 const firstStage = () => {
-  const {day , month , year , hours , minutes , seconds} = getTime(tdata.organ_match);
-    return (
-      <div>
-        <h1 style={{marginTop : "20px"}}>Organ Matching Started At :- </h1>
-        <p style={{marginTop : "50px"}}>Date: {day}-{month}-{year}</p>
-        <p>Task completed at time: {hours}:{minutes}:{seconds}</p>
-      </div>
+  if(cData != null){
+    const {day , month , year , hours , minutes , seconds} = getTime(cData.match);
+      return (
+        <div>
+          <h1 style={{marginTop : "20px"}}>Organ Matching Started At :- </h1>
+          <p style={{marginTop : "50px"}}>Date: {day}-{month}-{year}</p>
+          <p>Task completed at time: {hours}:{minutes}:{seconds}</p>
+        </div>
     )
+  }
 }
 
 const secondStage=()=>{
   console.log(account);
   console.log(tdata);
-  if(account==dhosp.meta_address)
+  if(account==dhosp.meta_address && tdata.success != "Failed")
   {
     return(
-    <MultiForm account={account} state={state} dhosp={dhosp} rhosp={rhosp} tdata={tdata}/>
+    <MultiForm account={account} state={state} dhosp={dhosp} rhosp={rhosp} tdata={tdata}  cData = {cData}/>
 
     )
   }
-  else if(tdata.stage == 1){
+  else if(tdata.stage == 1 && tdata.success != "Failed"){
     return (
       <p style={{marginTop : "40px" , color : "#5ec567"}}>The Process is Still Going on.</p>
   )
+  }
+  else if(tdata.success == "Failed" && tdata.stage <= 1){
+      return (
+        <p style={{marginTop : "40px" , color : "#5ec567"}}>Sorry the Process Has Failed</p>
+    ) 
   }
   else{
     return(
@@ -44,12 +51,12 @@ const secondStage=()=>{
 }
 const thirdStage = () => {
   console.log(tdata.stage)
-  if(tdata.stage < 2){
+  if(tdata.stage < 2 && tdata.success != "Failed"){
     console.log("First")
     return (
         <p style={{marginTop : "40px" , color : "#5ec567"}}>Please Complete the Previous Step</p>
     )
-  }else if(tdata.stage == 2){
+  }else if(tdata.stage == 2 && tdata.success != "Failed"){
     if(account==rhosp.meta_address)
     {
       return (
@@ -66,28 +73,35 @@ const thirdStage = () => {
     }
    
   }
+  else if(tdata.success == "Failed" && tdata.stage <= 2){
+      return (
+        <p style={{marginTop : "40px" , color : "#5ec567"}}>Sorry the Process Has Failed</p>
+    ) 
+  }
   else{
 
-    const {day , month , year , hours , minutes , seconds} = getTime(tdata.t_s_start);
+    if(cData != null){
+      const {day , month , year , hours , minutes , seconds} = getTime(cData.organ_rec);
 
-    return (
-      <div>
-        <h1 style={{marginTop : "20px"}}>Organ Recieved At :- </h1>
-        <p style={{marginTop : "50px"}}>Date: {day}-{month}-{year}</p>
-        <p>Task completed at time: {hours}:{minutes}:{seconds}</p>
-      </div>
-    )
+      return (
+        <div>
+          <h1 style={{marginTop : "20px"}}>Organ Recieved At :- </h1>
+          <p style={{marginTop : "50px"}}>Date: {day}-{month}-{year}</p>
+          <p>Task completed at time: {hours}:{minutes}:{seconds}</p>
+        </div>
+      )
+    }
   }
 }
 
 const fourthStage = () => {
 
-  if(tdata.stage < 3){
+  if(tdata.stage < 3 && tdata.success != "Failed"){
     console.log("First")
     return (
         <p style={{marginTop : "40px" , color : "#5ec567"}}>Please Complete the Previous Step</p>
     )    
-  }else if(tdata.stage == 3){
+  }else if(tdata.stage == 3 && tdata.success != "Failed"){
     if(account==rhosp.meta_address)
     {
       return(
@@ -104,28 +118,35 @@ const fourthStage = () => {
     }
  
   }
+    else if(tdata.success == "Failed" && tdata.stage <= 3){
+      return (
+        <p style={{marginTop : "40px" , color : "#5ec567"}}>Sorry the Process Has Failed</p>
+    ) 
+  }
   else {
     
-    const {day , month , year , hours , minutes , seconds} = getTime(tdata.t_s_start);
-    return (
-      <div>
-        <h1 style={{marginTop : "20px"}}>Transplant Surgery Started At :- </h1>
-        <p style={{marginTop : "50px"}}>Date: {day}-{month}-{year}</p>
-        <p>Task completed at time: {hours}:{minutes}:{seconds}</p>
-      </div>
-    )
+    if(cData != null){
+      const {day , month , year , hours , minutes , seconds} = getTime(cData.start_sur);
+      return (
+        <div>
+          <h1 style={{marginTop : "20px"}}>Transplant Surgery Started At :- </h1>
+          <p style={{marginTop : "50px"}}>Date: {day}-{month}-{year}</p>
+          <p>Task completed at time: {hours}:{minutes}:{seconds}</p>
+        </div>
+      )
+    }
 
   }
 }
 
 const fiftStage = () => {
 
-  if(tdata.stage < 4){
+  if(tdata.stage < 4 && tdata.success != "Failed"){
     console.log("First")
     return (
         <p style={{marginTop : "40px" , color : "#5ec567"}}>Please Complete the Previous Step</p>
     )    
-  }else if(tdata.stage == 4){
+  }else if(tdata.stage == 4 && tdata.success != "Failed"){
     if(account==rhosp.meta_address)
     {
       return(
@@ -142,26 +163,32 @@ const fiftStage = () => {
     }
    
   }
+    else if(tdata.success == "Failed" && tdata.stage <= 4){
+      return (
+        <p style={{marginTop : "40px" , color : "#5ec567"}}>Sorry the Process Has Failed</p>
+    ) 
+  }
   else {
-    
-    const {day , month , year , hours , minutes , seconds} = getTime(tdata.t_s_end);
-    return (
-      <div>
-        <h1 style={{marginTop : "20px"}}>Transplant Surgery Ended At :- </h1>
-        <p style={{marginTop : "50px"}}>Date: {day}-{month}-{year}</p>
-        <p>Task completed at time: {hours}:{minutes}:{seconds}</p>
-      </div>
-    )
+    if(cData != null){
+      const {day , month , year , hours , minutes , seconds} = getTime(cData.end_sur);
+      return (
+        <div>
+          <h1 style={{marginTop : "20px"}}>Transplant Surgery Ended At :- </h1>
+          <p style={{marginTop : "50px"}}>Date: {day}-{month}-{year}</p>
+          <p>Task completed at time: {hours}:{minutes}:{seconds}</p>
+        </div>
+      )
+    }
 
   }
 }
 
 function sixthStage(){
-    if(tdata.stage < 5){
+    if(tdata.stage < 5 && tdata.success != "Failed"){
       return (
           <p style={{marginTop : "40px" , color : "#5ec567"}}>Please Complete the Previous Step</p>
       )    
-    }else if(tdata.stage == 5){
+    }else if(tdata.stage == 5 && tdata.success != "Failed"){
       if(account==rhosp.meta_address)
       {
         return(
@@ -175,9 +202,13 @@ function sixthStage(){
         return (
           <p style={{marginTop : "40px" , color : "#5ec567"}}>The Process is Still Going on.</p>
       )
-      }
-      
+      }   
     }
+    else if(tdata.success == "Failed" && tdata.stage <= 5){
+      return (
+        <p style={{marginTop : "40px" , color : "#5ec567"}}>Sorry the Process Has Failed</p>
+    ) 
+  }
     else {      
       return (
         <div>
@@ -188,11 +219,17 @@ function sixthStage(){
   }
 
   function seventhStage(){
-    if(tdata.stage < 5){
+    if(tdata.stage < 5 && tdata.success != "Failed"){
       return (
           <p style={{marginTop : "40px" , color : "#5ec567"}}>Please Complete the Previous Step</p>
       )    
-    }else{
+    }
+    else if(tdata.success == "Failed" && tdata.stage <= 6){
+      return (
+        <p style={{marginTop : "40px" , color : "#5ec567"}}>Sorry the Process Has Failed</p>
+      ) 
+    }
+    else{
       return(
         <div>
           <h1 style={{marginTop : "20px" , marginLeft : "15px" , color : "#5ec567"}}>Successfully Completed The Entire Process</h1>
@@ -203,26 +240,30 @@ function sixthStage(){
 
 
 function getTime(date){
-  const dateTimeString = date;
-  const dateTime = new Date(dateTimeString);
+    var milliseconds = date * 1000;
 
-  const year = dateTime.getUTCFullYear();
-  const month = dateTime.getUTCMonth() + 1; // Month is zero-based, so add 1
-  const day = dateTime.getUTCDate();
+    var date = new Date(milliseconds);
 
-  // Extract time components
-  const hours = dateTime.getUTCHours();
-  const minutes = dateTime.getUTCMinutes();
-  const seconds = dateTime.getUTCSeconds();
+    // Extracting date components
+    var year = date.getFullYear();
+    var month = ("0" + (date.getMonth() + 1)).slice(-2); // Adding 1 because January is 0
+    var day = ("0" + date.getDate()).slice(-2);
+    var hours = ("0" + date.getHours()).slice(-2);
+    var minutes = ("0" + date.getMinutes()).slice(-2);
+    var seconds = ("0" + date.getSeconds()).slice(-2);
 
-  return {
+    // Formatted date string
+    var formattedDate = year + "-" + month + "-" + day + " " + hours + ":" + minutes + ":" + seconds;
+
+
+    return {
     day,
     month,
     year,
     hours,
     minutes,
     seconds
-  }
+    }
 }
 
 const handleComplete = () => {
@@ -246,8 +287,8 @@ const handleComplete = () => {
   async function orgrec(event){
     try{
       event.preventDefault();
-      const {contract_nft} = state;
-      const transaction = await contract_nft.end_transport(tdata.transplant_id);
+      const {contract_nft , sign} = state;
+      const transaction = await contract_nft.end_transport(tdata.transplant_id , sign);
       const toastId = toast.info('Transaction in Progress', { autoClose: false });
       await transaction.wait();
       toast.update(toastId, { render: 'Transaction Successfully', type: 'success', autoClose: 4000 });
@@ -256,7 +297,9 @@ const handleComplete = () => {
       console.log(response)  
       if(response.data.success == true){
         console.log("thirdStage");
-        window.location.reload(true);
+        setTimeout(() => {
+          window.location.reload(true);
+        },5000);
       }
       });
     }
@@ -278,7 +321,9 @@ const handleComplete = () => {
       console.log(response)  
       if(response.data.success == true){
         console.log("thirdStage");
-        window.location.reload(true);
+        setTimeout(() => {
+          window.location.reload(true);
+        },5000);
       }
       });
     }
@@ -331,7 +376,10 @@ const handleComplete = () => {
       await axios.post(`http://localhost:8000/transNFT/${tdata.transplant_id}`).then((response) => {
       console.log(response)  
       if(response.data.success == true){
-        console.log(response);
+        console.log("thirdStage");
+        setTimeout(() => {
+          window.location.reload(true);
+        },5000);
       }
       console.log(transaction)
       });

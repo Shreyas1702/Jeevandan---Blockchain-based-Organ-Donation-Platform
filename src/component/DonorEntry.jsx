@@ -18,13 +18,13 @@ const DonorEntry = ({account , state}) => {
     React.useEffect(() => {
         async function getBraindead(){
             
-            const {contract_nft} = state;
+            const {contract_nft , sign} = state;
 
             var datas;
             var result = [];
             console.log(contract_nft)
             if(account != '' && contract_nft != undefined){
-                datas = await contract_nft.getbrainDead(account , "0x28A8508855b055a7Bdb3bC9094320C12f5D282c6")
+                datas = await contract_nft.getbrainDead(account , sign)
             
                 for(var i = 0 ; i < datas.length ; i++){
                     // console.log(datas[i])

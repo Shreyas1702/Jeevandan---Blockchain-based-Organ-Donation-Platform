@@ -31,7 +31,7 @@ const Donor_Reciever_data = ({tranData , dhosp , rhosp}) => {
                             </div>
                             <div style={{display : "flex" , flexDirection : "row"}}>
                                 <p class="card-text">Organ :- </p>
-                                <p class="card-text">&nbsp;&nbsp;Kidney</p>
+                                <p class="card-text">&nbsp;&nbsp;{tranData.organ.charAt(0).toUpperCase() + tranData.organ.slice(1 , tranData.organ.length)}</p>
                             </div>
                         </div>
                     </div>
@@ -70,7 +70,7 @@ const Donor_Reciever_data = ({tranData , dhosp , rhosp}) => {
                             </div>
                             <div style={{display : "flex" , flexDirection : "row"}}>
                                 <p class="card-text">Organ :- </p>
-                                <p class="card-text">&nbsp;&nbsp;Kidney</p>
+                                <p class="card-text">&nbsp;&nbsp;{tranData.organ.charAt(0).toUpperCase() + tranData.organ.slice(1 , tranData.organ.length)}</p>
                             </div>
                         </div>
                     </div>

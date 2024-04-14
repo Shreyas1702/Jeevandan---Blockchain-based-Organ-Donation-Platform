@@ -24,6 +24,8 @@ const Transplant = ({account , state}) => {
     var [tranData , setTransData] = React.useState(null);
     var [dhosp , setdhosp] = React.useState(null);
     var [rhosp , setrhosp] = React.useState(null);
+    var [contarctData , setcontractData] = React.useState(null);
+    
     const [loading , setloading] = React.useState(true);
 
     const {contract , nft} = state;
@@ -34,7 +36,6 @@ const Transplant = ({account , state}) => {
         
         setTimeout(async () => {
             const res = await getData();
-            console.log(res);
             setTransData(res.d);
             setdhosp(res.DonorHosp)
             setrhosp(res.RecHosp)
@@ -47,9 +48,12 @@ const Transplant = ({account , state}) => {
             setTimeout(async () => {
                 const jsonData = await getContractData();
                 console.log(jsonData);
+                setcontractData(jsonData);
             },1000)
         }
     },[contract]);
+
+    console.log(contarctData);
 
     async function getContractData(){
         const tId = location.state.tId;
@@ -85,8 +89,8 @@ const Transplant = ({account , state}) => {
         for(var i = 0 ; i < transDet.length ; i++){
             const d_id = parseInt(transDet[0]);
             const r_id = parseInt(transDet[1]);
-            const stage = transDet[5];
-            const success = transDet[6];
+            const stage = parseInt(transDet[5]);
+            const success = parseInt(transDet[6]);
 
             var json1 = {
                 d_id,
@@ -172,7 +176,7 @@ const Transplant = ({account , state}) => {
         <Navbar/>
         <Donor_Reciever_data tranData={tranData} dhosp={dhosp} rhosp={rhosp} />
         <div>
-            <TimeLine account={account} state={state} dhosp={dhosp} rhosp={rhosp} tdata={tranData}/>
+            <TimeLine account={account} state={state} dhosp={dhosp} rhosp={rhosp} tdata={tranData} cData={contarctData}/>
         </div>
         <div style={{display : "flex" , justifyContent : "center"}}>
         <button type="submit" onClick={handleOpen} style={{padding : "15px 100px" , backgroundColor : "#5ec567"  , color : "white" , borderRadius : "5px" , fontSize : "20px"}}>Failed</button>
