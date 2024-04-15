@@ -29,6 +29,7 @@ const LivingTransplant = ({account , state}) => {
     var [dhosp , setdhosp] = React.useState(null);
     var [rhosp , setrhosp] = React.useState(null);
     var [datas , setdatas] = React.useState(null)
+    var [organ , setOrgan] = React.useState("");
     const [loading , setloading] = React.useState(true);
 
 
@@ -40,13 +41,13 @@ const LivingTransplant = ({account , state}) => {
         setTimeout(async () => {
             res = await getData();
             setloading(false);
-        }, 1000);
+        });
 
-        if(contract_living != undefined && tranData){
+        if(contract_living != undefined){
             getTimeLine();
         }
 
-    },[state , tranData]);
+    },[state]);
 
     if(loading){
         return <div></div>;
@@ -55,11 +56,13 @@ const LivingTransplant = ({account , state}) => {
     async function getTimeLine(){
         const {contract_living} = state;
 
-        const full_data = location.state.data;
+        const full_data = JSON.parse(location.state.data);
 
-        var stage = await contract_living.getlivingtransdetails(full_data.trans_id);
+        console.log(full_data.data)
 
-        var ddata = await contract_living.getlivingtranstimeline(full_data.trans_id);
+        var stage = await contract_living.getlivingtransdetails(full_data.data.trans_id);
+
+        var ddata = await contract_living.getlivingtranstimeline(full_data.data.trans_id);
         
         console.log(ddata);
 
@@ -76,8 +79,8 @@ const LivingTransplant = ({account , state}) => {
             success : parseInt(stage[5]),
         }
 
-        tranData["organ"] = stage[3];
-        tranData["transplant_id"] = json.trans_id;
+        setOrgan(full_data.data.organ);
+
         console.log(tranData);
         setdatas(json);
 
@@ -88,13 +91,23 @@ const LivingTransplant = ({account , state}) => {
 
             const tId = location.state.tId;
 
-            const full_data = location.state.data;
+            const full_data = JSON.parse(location.state.data);
 
-            setdhosp(full_data.data.hosp)
+            // const hosp = JSON.parse(location.state.hosp);
 
-            setrhosp(full_data.data.hosp)
+            // const d_id = JSON.parse(location.state.d_id);
+
+            // const r_id = JSON.parse(location.state.r_id);
+
+            console.log(full_data.data.data.hosp);
+
+            console.log(full_data.data)
+
+            setdhosp(full_data.data.data.hosp)
+
+            setrhosp(full_data.data.data.hosp)
             
-            setTransData(full_data.data);
+            setTransData(full_data.data.data);
         }
         catch(e){
             console.log(e);
@@ -123,7 +136,7 @@ function ModalFunc() {
   return (
     <div>
         <Navbar/>
-        {datas ? <Donor_Reciever_data tranData={tranData} dhosp={dhosp} rhosp={rhosp} /> : <></>}
+        {datas ? <Donor_Reciever_data tranData={tranData} organ = {organ} dhosp={dhosp} rhosp={rhosp} /> : <></>}
         <div>
             <LivingTimeLine account={account} state={state} dhosp={dhosp} rhosp={rhosp} tdata={datas} full_data={full_data} />
         </div>

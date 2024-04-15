@@ -1,8 +1,9 @@
 import React from 'react'
 
-const Donor_Reciever_data = ({tranData , dhosp , rhosp}) => {
+const Donor_Reciever_data = ({tranData , organ , dhosp , rhosp}) => {
     console.log(tranData);
-  return (
+    console.log(organ);
+    return (
       <div style={{display : "flex" , flexDirection : "row"  , justifyContent : "center" , marginTop : "40px"}}>
             <div class="card mb-5" style={{maxWidth: "800px" , boxShadow: "0 2rem 3rem var(--color-light)" , position : "relative"}}>
                 <div class="row g-0">
@@ -32,7 +33,7 @@ const Donor_Reciever_data = ({tranData , dhosp , rhosp}) => {
                             </div>
                             <div style={{display : "flex" , flexDirection : "row"}}>
                                 <p class="card-text">Organ :- </p>
-                                <p class="card-text">&nbsp;&nbsp;{tranData.organ.charAt(0).toUpperCase() + tranData.organ.slice(1 , tranData.organ.length)}</p>
+                                <p class="card-text">&nbsp;&nbsp;{organ.charAt(0).toUpperCase() + organ.slice(1 , organ.length)}</p>
                             </div>
                         </div>
                     </div>
@@ -71,7 +72,7 @@ const Donor_Reciever_data = ({tranData , dhosp , rhosp}) => {
                             </div>
                             <div style={{display : "flex" , flexDirection : "row"}}>
                                 <p class="card-text">Organ :- </p>
-                                <p class="card-text">&nbsp;&nbsp;{tranData.organ.charAt(0).toUpperCase() + tranData.organ.slice(1 , tranData.organ.length)}</p>
+                                <p class="card-text">&nbsp;&nbsp;{organ.charAt(0).toUpperCase() + organ.slice(1 , organ.length)}</p>
                             </div>
                         </div>
                     </div>

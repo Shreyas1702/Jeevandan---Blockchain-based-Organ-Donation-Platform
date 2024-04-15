@@ -96,28 +96,6 @@ const DashAdmin = ({ account, setAccount , state ,setState}) => {
 
           list.push(json);
         }
-        else{
-          const id = parseInt(datas[i][0]);
-          const donor_hosp = datas[i][1];
-          const doc1 = datas[i][2];
-          const doc2 = datas[i][3];
-          const d = {id , donor_hosp , doc1 , doc2};
-          const data = await axios.post("http://localhost:8000/admin/getEntiredDatas" , d);
-          console.log(data);
-          const name = data.data.donor[0].name;
-          const doc_1 = data.data.doc_1.name;
-          const doc_2 = data.data.doc_2.name;
-
-          const json = {
-            name : name,
-            id : id,
-            doc_1 : doc_1,
-            doc_2 : doc_2,
-            success : true,
-          }
-
-          list.push(json);
-        }
         prevVal = i;
 
       }

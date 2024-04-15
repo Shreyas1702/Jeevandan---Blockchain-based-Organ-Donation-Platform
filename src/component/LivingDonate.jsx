@@ -44,11 +44,6 @@ React.useEffect(() => {
 
                 console.log(data);
 
-                if(status == 2){
-                    const failed = await contract_living.getFailed(trans_id);
-                    data.failed = failed;
-                }
-
                 var json = {
                     trans_id,
                     donor_id,
@@ -60,6 +55,8 @@ React.useEffect(() => {
                 }
 
                 list.push(json);
+
+                console.log(json)
             }
             
             setProcess(list);
@@ -76,6 +73,12 @@ React.useEffect(() => {
         return process.map((data) => {
 
         const ids = data.trans_id;  
+        const hosp = data.data.hosp;
+        const d_id = data.data.donor_id;
+        const r_id = data.data.reciever_id;
+        console.log(d_id);
+        console.log(hosp);
+        console.log(r_id);
         // console.log( data.trans_id)
         return (
             <tr style={{ fontSize : "1.5rem"}}>
@@ -84,7 +87,7 @@ React.useEffect(() => {
                 <td style={{paddingBottom : "15px" , paddingTop : "1.5rem" }}>{data.data.donor_id.name}</td>
                 <td style={{paddingBottom : "15px" , paddingTop : "1.5rem" }}>{data.data.reciever_id.name}</td>
                 {data.status == 0 ? <td style={{paddingBottom : "15px" , paddingTop : "1.5rem" }}>Ongoing</td> : data.status == 1 ? <td style={{paddingBottom : "15px" , paddingTop : "1.5rem" }}>Completed</td> : <td style={{paddingBottom : "15px" , paddingTop : "1.5rem" }}>Failed</td> }
-                <td style={{paddingBottom : "15px" , paddingTop : "1.5rem" }}>{<Link style={{margin : "0"}} to="/dashbaord/living/TransplantPage" state = {{ tId : ids , data : data}}>View </Link>}</td>
+                <td style={{paddingBottom : "15px" , paddingTop : "1.5rem" }}>{<Link style={{margin : "0"}} to="/dashbaord/living/TransplantPage" state = {{ tId : ids , data : JSON.stringify({data})  , dhosp : JSON.stringify({hosp}) , d_id : JSON.stringify({d_id}) , r_id : JSON.stringify({r_id}) }}>View </Link>}</td>
             </tr>
             )
         })

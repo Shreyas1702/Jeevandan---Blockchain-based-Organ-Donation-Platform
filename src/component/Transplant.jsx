@@ -25,7 +25,7 @@ const Transplant = ({account , state}) => {
     var [dhosp , setdhosp] = React.useState(null);
     var [rhosp , setrhosp] = React.useState(null);
     var [contarctData , setcontractData] = React.useState(null);
-    
+    var [organ , setOrgan] = React.useState("");
     const [loading , setloading] = React.useState(true);
 
     const {contract , nft} = state;
@@ -143,6 +143,8 @@ const Transplant = ({account , state}) => {
 
             console.log(ddata);
 
+            setOrgan(ddata.d.organ);
+
             return ddata
         }
         catch(e){
@@ -174,7 +176,7 @@ const Transplant = ({account , state}) => {
   return (
     <div>
         <Navbar/>
-        <Donor_Reciever_data tranData={tranData} dhosp={dhosp} rhosp={rhosp} />
+        <Donor_Reciever_data tranData={tranData} organ={organ} dhosp={dhosp} rhosp={rhosp} />
         <div>
             <TimeLine account={account} state={state} dhosp={dhosp} rhosp={rhosp} tdata={tranData} cData={contarctData}/>
         </div>
