@@ -212,7 +212,7 @@ function sixthStage(){
     else {      
       return (
         <div>
-          <h1 style={{marginTop : "20px" , color : "#5ec567"}}>NFT has been Successfully Transfered</h1>
+          <h1 style={{marginTop : "20px" , color : "#5ec567"}}>Successfully Completed The Entire Process</h1>
         </div>
       )
     }
@@ -425,7 +425,6 @@ const handleComplete = () => {
         <FormWizard.TabContent title="Transfer NFT" icon="ti-check">
           {sixthStage()}
         </FormWizard.TabContent>
-          {seventhStage()}
       </FormWizard>
       )
     }
@@ -457,7 +456,6 @@ const handleComplete = () => {
         <FormWizard.TabContent title="Transfer NFT" icon="ti-check">
           {sixthStage()}
         </FormWizard.TabContent>
-          {seventhStage()}
       </FormWizard>
       )
     }

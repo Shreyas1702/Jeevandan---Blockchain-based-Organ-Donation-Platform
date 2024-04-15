@@ -6,8 +6,6 @@ import MultiForm from "./MultiForm"
 import {toast , ToastContainer} from "react-toastify"
 function LivingTimeLine({dhosp , rhosp , account , state , tdata , full_data}) {
 
-console.log(tdata)
-
 if(tdata == null){
     return (
         <div>Loading</div>
@@ -22,6 +20,11 @@ const firstStage = () => {
           <h1 style={{marginTop : "20px" , marginLeft : "15px"}}>Donor Transplant Surgery Started :- &nbsp;</h1>
           <button type="submit" className="orgrecbtn" onClick={(event) => start_donor_trans_sur(event)}>Donor Transplant Surgery</button>
         </div>    )    
+  }
+  else if(tdata.success == 2 && tdata.stage < 1){
+    return (
+        <p style={{marginTop : "40px" , color : "#5ec567"}}>Sorry the Process Has Failed</p>
+      ) 
   }
   else {
     const {day , month , year , hours , minutes , seconds} = getTime(tdata.first);
@@ -42,7 +45,7 @@ const secondStage=()=>{
     return (
         <p style={{marginTop : "40px" , color : "#5ec567"}}>Please Complete the Previous Step</p>
     )
-  }else if(tdata.stage == 1){
+  }else if(tdata.stage == 1 && tdata.success != 2){
     console.log("First")
     return (
         <div>
@@ -50,6 +53,11 @@ const secondStage=()=>{
           <button type="submit" className="orgrecbtn" onClick={(event) => end_donor_trans_sur(event)}>Donor Transplant Surgery</button>
         </div>    
     )    
+  }
+  else if(tdata.success == 2 && tdata.stage <= 1){
+    return (
+        <p style={{marginTop : "40px" , color : "#5ec567"}}>Sorry the Process Has Failed</p>
+      ) 
   }
   else {
     const {day , month , year , hours , minutes , seconds} = getTime(tdata.second);
@@ -70,7 +78,7 @@ const thirdStage = () => {
     return (
         <p style={{marginTop : "40px" , color : "#5ec567"}}>Please Complete the Previous Step</p>
     )
-  }else if(tdata.stage == 2){
+  }else if(tdata.stage == 2 && tdata.success != 2){
     console.log("First")
     return (
         <div>
@@ -78,6 +86,11 @@ const thirdStage = () => {
           <button type="submit" className="orgrecbtn" onClick={(event) => start_reciever_trans_sur(event)}>Reciever Transplant Surgery</button>
         </div>    
     )    
+  }
+  else if(tdata.success == 2 && tdata.stage <= 2){
+    return (
+        <p style={{marginTop : "40px" , color : "#5ec567"}}>Sorry the Process Has Failed</p>
+      ) 
   }
   else {
     const {day , month , year , hours , minutes , seconds} = getTime(tdata.third);
@@ -99,7 +112,7 @@ const fourthStage = () => {
     return (
         <p style={{marginTop : "40px" , color : "#5ec567"}}>Please Complete the Previous Step</p>
     )    
-  }else if(tdata.stage == 3){
+  }else if(tdata.stage == 3 && tdata.success != 2){
     console.log("First")
     return (
         <div>
@@ -107,6 +120,11 @@ const fourthStage = () => {
           <button type="submit" className="orgrecbtn" onClick={(event) => end_reciever_trans_sur(event)}>Donor Transplant Surgery</button>
         </div>    
     )    
+  }
+  else if(tdata.success == 2 && tdata.stage <= 3){
+    return (
+        <p style={{marginTop : "40px" , color : "#5ec567"}}>Sorry the Process Has Failed</p>
+      ) 
   }
   else {
     const {day , month , year , hours , minutes , seconds} = getTime(tdata.fourth);
@@ -122,12 +140,12 @@ const fourthStage = () => {
 }
 
 function sixthStage(){
-    console.log(full_data)
+    console.log(tdata)
     if(tdata.stage < 4){
       return (
           <p style={{marginTop : "40px" , color : "#5ec567"}}>Please Complete the Previous Step</p>
       )    
-    }else if(tdata.stage == 4){
+    }else if(tdata.stage == 4 && tdata.success != 2){
       if(account==rhosp.meta_address)
       {
         return(
@@ -142,30 +160,34 @@ function sixthStage(){
           <p style={{marginTop : "40px" , color : "#5ec567"}}>The Process is Still Going on.</p>
       )
       }
-      
+    }
+    else if(tdata.success == 2 && tdata.stage <= 4){
+        return (
+            <p style={{marginTop : "40px" , color : "#5ec567"}}>Sorry the Process Has Failed</p>
+          ) 
     }
     else {      
       return (
         <div>
-          <h1 style={{marginTop : "20px" , color : "#5ec567"}}>NFT has been Successfully Transfered</h1>
+          <h1 style={{marginTop : "20px" , color : "#5ec567"}}>Successfully Completed The Entire Process</h1>
         </div>
       )
     }
   }
 
-  function seventhStage(){
-    if(tdata.stage < 5){
-      return (
-          <p style={{marginTop : "40px" , color : "#5ec567"}}>Please Complete the Previous Step</p>
-      )    
-    }else{
-      return(
-        <div>
-          <h1 style={{marginTop : "20px" , marginLeft : "15px" , color : "#5ec567"}}>Successfully Completed The Entire Process</h1>
-        </div>
-      )
-    }
-  }
+  // function seventhStage(){
+  //   if(tdata.stage < 5){
+  //     return (
+  //         <p style={{marginTop : "40px" , color : "#5ec567"}}>Please Complete the Previous Step</p>
+  //     )    
+  //   }else{
+  //     return(
+  //       <div>
+  //         <h1 style={{marginTop : "20px" , marginLeft : "15px" , color : "#5ec567"}}>Successfully Completed The Entire Process</h1>
+  //       </div>
+  //     )
+  //   }
+  // }
 
 
 function getTime(date){
@@ -284,9 +306,9 @@ const handleComplete = () => {
     try{
       console.log("Hello");
       event.preventDefault();
-      const {contract_living} = state;
+      const {contract_living , sign} = state;
       console.log(tdata.trans_id)
-      const transaction = await contract_living.end_living_receiver_surgery(tdata.trans_id , "0xA5841871BBddd33c60aeE7CaBc1C2B12B5E300D2");
+      const transaction = await contract_living.end_living_receiver_surgery(tdata.trans_id , sign);
       console.log(contract_living);
       const toastId = toast.info('Transaction in Progress', { autoClose: false });
       await transaction.wait();
