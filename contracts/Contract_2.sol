@@ -189,7 +189,7 @@ contract NFT is ERC721URIStorage {
     struct DriverDetails {
         string name;
         string plate_num;
-        uint256 contact;
+        uint256 id;
     }
 
     struct TransplantDetail {

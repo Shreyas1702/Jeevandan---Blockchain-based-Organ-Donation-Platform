@@ -10,8 +10,18 @@ module.exports.driverlogin = async (req, res, next) => {
   console.log(user.length);
   if (user.length != 0) {
     if (user[0].password == password) {
+      const id = user[0].id;
+      const name = user[0].name;
+      const city = user[0].city;
+      const gender = user[0].gender;
+      const contact_number = user[0].contact_number;
+
       res.status(200).json({
-        data: user[0],
+        id,
+        name,
+        city,
+        gender,
+        contact_number,
         success: true,
       });
     } else {
@@ -26,4 +36,20 @@ module.exports.driverlogin = async (req, res, next) => {
       success: false,
     });
   }
+};
+
+module.exports.getDriver = async (req, res, next) => {
+  const { id } = req.body;
+
+  const filter = {
+    "ambulance_dd.contact": id,
+  };
+
+  const data = await Transplant.find(filter);
+
+  console.log(data);
+
+  res.status(200).json({
+    data,
+  });
 };

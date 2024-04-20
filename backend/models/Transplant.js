@@ -22,9 +22,9 @@ const TransplantSchema = new Schema({
     type: Number,
     default: 1,
   },
-  t_vehicle: {
-    type: Number,
-    default: -1,
+  tran_end: {
+    type: Boolean,
+    default: false,
   },
   reciever_id: {
     type: Schema.Types.ObjectId,
@@ -84,6 +84,12 @@ const TransplantSchema = new Schema({
     tail_number: {
       type: String,
     },
+  },
+  lat: {
+    type: "Number",
+  },
+  lngt: {
+    type: "Number",
   },
 });
 

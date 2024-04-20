@@ -133,7 +133,6 @@ const tbody = () => {
         <td style={{textAlign : "center" , paddingRight : "30px" , paddingTop : "10px" , paddingBottom : "10px" , paddingLeft : "10px"}}>{num++}</td>
         <td style={{textAlign : "center" , paddingRight : "30px" , paddingTop : "10px" , paddingBottom : "10px" , paddingLeft : "30px"}}>{data.name}</td>
         <td style={{textAlign : "center" , paddingRight : "30px" , paddingTop : "10px" , paddingBottom : "10px" , paddingLeft : "30px"}}>{data.address.username}</td>
-        <td style={{textAlign : "center" , paddingRight : "30px" , paddingTop : "10px" , paddingBottom : "10px" , paddingLeft : "30px"}}>{data.address.email}</td>
         <td style={{textAlign : "center" , paddingRight : "30px" , paddingTop : "10px" , paddingBottom : "10px" , paddingLeft : "30px"}}>{data.address.id}</td>
         <td style={{textAlign : "center" , paddingRight : "30px" , paddingTop : "10px" , paddingBottom : "10px" , paddingLeft : "30px"}}>
           <ul style={{display : "flex" , flexDirection : "row"}}>
@@ -197,8 +196,7 @@ const tbody = () => {
             <tr style={{borderBottom : "1px solid black"}}>
               <th style={{textAlign : "center" , paddingRight : "30px" , paddingLeft : "10px"}}>Sr No.</th>
               <th style={{textAlign : "center" , paddingRight : "30px" , paddingLeft : "30px"}}>Name</th>
-              <th style={{textAlign : "center" , paddingRight : "30px" , paddingLeft : "30px"}}>Hsopital Name</th>
-              <th style={{textAlign : "center" , paddingRight : "30px" , paddingLeft : "30px"}}>Mail</th>
+              <th style={{textAlign : "center" , paddingRight : "30px" , paddingLeft : "30px"}}>Hospital Name</th>
               <th style={{textAlign : "center" , paddingRight : "30px" , paddingLeft : "30px"}}>Hospital Id</th>
               <th style={{textAlign : "center" , paddingRight : "30px" , paddingLeft : "30px"}}></th>
             </tr>

@@ -59,7 +59,7 @@ module.exports.donor_reg = async (req, res, next) => {
     var mailOptions = {
       from: "crce.9380.aids@gmail.com",
       to: email,
-      subject: "Sending Email using Node.js",
+      subject: "Donor Registration Successfull",
       template: `index`,
       context: dynamicData,
     };
@@ -132,7 +132,7 @@ module.exports.reciever_reg = async (req, res, next) => {
     var mailOptions = {
       from: "crce.9380.aids@gmail.com",
       to: email,
-      subject: "Sending Email using Node.js",
+      subject: "Reciever Registration Successfull",
       template: `reciever`,
       context: dynamicData,
     };
@@ -220,9 +220,19 @@ module.exports.matching = async (req, res, next) => {
 
     console.log("Distance is being maintained : -");
     for (var i = 0; i < arrObject.length; i++) {
-      // console.log(arrObject[i].distance);
-      console.log(arrObject[i].name);
-      console.log(arrObject[i].seriouness);
+      var dynamicData = {
+        position: i + 1,
+        name: arrObject[i].name,
+      };
+      var mailOptions = {
+        from: "crce.9380.aids@gmail.com",
+        to: arrObject[i].email,
+        subject: "Organ Matching Process Completed - Your Position in the List",
+        template: `matching`,
+        context: dynamicData,
+      };
+
+      await sendMail(mailOptions);
     }
 
     res.status(200).json({
@@ -268,7 +278,23 @@ module.exports.transplantIn = async (req, res, next) => {
     const dd_hosp = await User.find({ meta_address: d_hosp.toLowerCase() });
     console.log("Donor Hosp :- ", dd_hosp);
     const donor_hosp = dd_hosp[0]._id;
+    const lat = dd_hosp[0].ltd;
+    const lngt = dd_hosp[0].lngt;
     const reciever_hosp = r.address;
+
+    var dynamicData = {
+      name: r.name,
+    };
+    var mailOptions = {
+      from: "crce.9380.aids@gmail.com",
+      to: r.email,
+      subject:
+        "Successful Organ Matching and Commencement of Transplant Process",
+      template: `transplant`,
+      context: dynamicData,
+    };
+
+    await sendMail(mailOptions);
 
     const transplant = await new Transplant({
       reciever_id: id,
@@ -280,6 +306,8 @@ module.exports.transplantIn = async (req, res, next) => {
       ambulance_dd,
       airlift_dd,
       stage,
+      lat,
+      lngt,
     });
 
     transplant.save();
@@ -309,7 +337,7 @@ module.exports.ambdetail = async (req, res, next) => {
       trans_start: Date.now(),
       ambulance_dd: {
         name: req.body.name,
-        contact: req.body.contact,
+        contact: req.body.id,
         number_plate: req.body.plate_num,
       },
     };
@@ -371,6 +399,7 @@ module.exports.org_rec = async (req, res, next) => {
     const update = {
       stage: 3,
       trans_end: Date.now(),
+      tran_end: true,
     };
 
     await Transplant.findOneAndUpdate(filter, update, {

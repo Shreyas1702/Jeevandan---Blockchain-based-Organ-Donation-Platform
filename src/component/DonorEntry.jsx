@@ -234,7 +234,7 @@ const DonorEntry = ({account , state}) => {
                 <thead>
                 <tr>
                     <th>Sr No.</th>
-                    <th>Transplant Id</th>
+                    <th>Donor Id</th>
                     <th>Donor Name</th>
                     <th>Dcotor 1</th>
                     <th>Doctor 2</th>

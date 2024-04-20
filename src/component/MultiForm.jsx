@@ -18,18 +18,18 @@ const MultiForm = ({dhosp , rhosp , account , state , tdata , cData}) => {
 
     const [vehicle , setvehicle] = React.useState({
         name : "",
-        contact : Number,
+        id : Number,
         plate_num : "",
     });
 
     if(tdata.stage >= 2){
         if(tdata.type_transport == "Airlift"){
             vehicle.name = tdata.airlift_dd.name;
-            vehicle.contact = tdata.airlift_dd.contact;
+            vehicle.id = tdata.airlift_dd.id;
             vehicle.plate_num = tdata.airlift_dd.tail_number
         }else{
             vehicle.name = tdata.ambulance_dd.name;
-            vehicle.contact = tdata.ambulance_dd.contact;
+            vehicle.id = tdata.ambulance_dd.id;
             vehicle.plate_num = tdata.ambulance_dd.number_plate
         }
     }
@@ -39,7 +39,7 @@ const MultiForm = ({dhosp , rhosp , account , state , tdata , cData}) => {
         setAir(false);
         setData({
             name : "",
-            contact : Number,
+            id : Number,
             plate_num : "",
         });
     }
@@ -87,7 +87,7 @@ const MultiForm = ({dhosp , rhosp , account , state , tdata , cData}) => {
             console.log(tdata);
             event.preventDefault();
             const toastId = toast.info('Transaction in Progress', { autoClose: false });
-            const transaction = await contract_nft.start_transport(tdata.transplant_id , data.contact , data.name , data.plate_num , sign);
+            const transaction = await contract_nft.start_transport(tdata.transplant_id , data.id , data.name , data.plate_num , sign);
             await transaction.wait();
             console.log(transaction);
             toast.update(toastId, { render: 'Transaction Successfully', type: 'success', autoClose: 4000 });
@@ -110,7 +110,7 @@ const MultiForm = ({dhosp , rhosp , account , state , tdata , cData}) => {
             console.log(tdata);
             event.preventDefault();
             const toastId = toast.info('Transaction in Progress', { autoClose: false });
-            const transaction = await contract_nft.start_transport(tdata.transplant_id , data.contact , data.name , data.plate_num , sign);
+            const transaction = await contract_nft.start_transport(tdata.transplant_id , data.id , data.name , data.plate_num , sign);
             await transaction.wait();
             toast.update(toastId, { render: 'Transaction Successfully', type: 'success', autoClose: 4000 });
             axios.post(`http://localhost:8000/ambdetail/${tdata.transplant_id}` , data).then((response) => {
@@ -168,16 +168,16 @@ const MultiForm = ({dhosp , rhosp , account , state , tdata , cData}) => {
                 <h1>Ambulance Details</h1>
                 <form method="post">
                     <div className="col-md-12" style={{marginTop : "25px",marginLeft : "10px" , display : "flex" , flexDirection : "row"}}>
-                        <label for="validationCustom01" className="form-label col-md-6" style={{fontSize : "23px", color : "#5ec576" , marginRight : "23px"}}>Driver Name</label>
-                        <input name='name' type="text" value={data.name} className="form-control"onChange={(event) => handleChange(event)} style={{height: "35px" , fontSize : "18px"}} id="validationCustom01" required/>
+                        <label for="validationCustom01" className="form-label col-md-6" style={{fontSize : "23px", color : "#5ec576"}}>Id</label>
+                        <input name='id' type="number" value={data.id} className="form-control" onChange={(event) => handleChange(event)} style={{height: "35px" , fontSize : "18px"}} id="validationCustom01" required/>
                         <div className="valid-feedback">
                         Looks good!
                         </div>
                     </div>
-
+                    
                     <div className="col-md-12" style={{marginTop : "25px",marginLeft : "10px" , display : "flex" , flexDirection : "row"}}>
-                        <label for="validationCustom01" className="form-label col-md-6" style={{fontSize : "23px", color : "#5ec576"}}>Contact Number</label>
-                        <input name='contact' type="number" value={data.contact} className="form-control" onChange={(event) => handleChange(event)} style={{height: "35px" , fontSize : "18px"}} id="validationCustom01" required/>
+                        <label for="validationCustom01" className="form-label col-md-6" style={{fontSize : "23px", color : "#5ec576" , marginRight : "23px"}}>Driver Name</label>
+                        <input name='name' type="text" value={data.name} className="form-control"onChange={(event) => handleChange(event)} style={{height: "35px" , fontSize : "18px"}} id="validationCustom01" required/>
                         <div className="valid-feedback">
                         Looks good!
                         </div>
@@ -210,8 +210,8 @@ const MultiForm = ({dhosp , rhosp , account , state , tdata , cData}) => {
                     </div>
 
                     <div className="col-md-12" style={{marginTop : "25px",marginLeft : "10px" , display : "flex" , flexDirection : "row"}}>
-                        <label for="validationCustom01" className="form-label col-md-6" style={{fontSize : "23px", color : "#5ec576"}}>Contact Number</label>
-                        <input name='contact' type="number" value={data.contact} className="form-control" onChange={(event) => handleChange(event)} style={{height: "35px" , fontSize : "18px"}} id="validationCustom01" required/>
+                        <label for="validationCustom01" className="form-label col-md-6" style={{fontSize : "23px", color : "#5ec576"}}>Id</label>
+                        <input name='contact' type="number" value={data.id} className="form-control" onChange={(event) => handleChange(event)} style={{height: "35px" , fontSize : "18px"}} id="validationCustom01" required/>
                         <div className="valid-feedback">
                         Looks good!
                         </div>

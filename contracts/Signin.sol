@@ -568,7 +568,7 @@ contract register {
     )
         public
         view
-        returns (string memory name, string memory plate_num, uint256 contact)
+        returns (string memory name, string memory plate_num, uint256 id)
     {
         NFT ContractB = NFT(ContractB_Address);
 
