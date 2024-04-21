@@ -55,12 +55,18 @@ useEffect(() => {
             const istOffsetMinutes = 30;
 
             // Construct the IST time components
-            const istHours = (utcHours + istOffsetHours + 24) % 24;
-            const istMinutes = utcMinutes + istOffsetMinutes;
+            let istHours = (utcHours + istOffsetHours + 24) % 24;
+            let istMinutes = utcMinutes + istOffsetMinutes;
+
+            if (istMinutes >= 60) {
+            istHours = (istHours + 1) % 24;
+            istMinutes = istMinutes - 60;
+            }
 
             // Construct the IST time string
             const istTime = `${String(istHours).padStart(2, '0')}:${String(istMinutes).padStart(2, '0')}:${String(utcSeconds).padStart(2, '0')}`;
 
+            console.log('UTC Time:', utcTimeString);
             console.log('IST Time:', istTime);
 
 
