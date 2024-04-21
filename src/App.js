@@ -27,6 +27,7 @@ import TransferNFT from "./component/TransferNFT";
 import LivingDonate from "./component/LivingDonate";
 import LivingTransplant from "./component/LivingTransplant";
 import FailedTrans from "./component/FailedTrans";
+import LiveTracking from "./component/LiveTracking";
 function App() {
   const [state, setState] = useState({
     provider: null,
@@ -374,6 +375,19 @@ function App() {
             path="/dashbaord/living/TransplantPage"
             element={
               <LivingTransplant
+                account={account}
+                setAccount={setAccount}
+                state={state}
+                setState={setState}
+                loggedIn={loggedIn}
+                setLoggedIn={setLoggedIn}
+              />
+            }
+          ></Route>
+          <Route
+            path="/dashbaord/live_tracking"
+            element={
+              <LiveTracking
                 account={account}
                 setAccount={setAccount}
                 state={state}

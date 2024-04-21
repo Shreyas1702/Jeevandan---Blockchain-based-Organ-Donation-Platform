@@ -1,6 +1,7 @@
 import React from 'react'
 import axios from 'axios'
 import {toast , ToastContainer} from 'react-toastify'
+import { Link } from 'react-router-dom'
 
 const MultiForm = ({dhosp , rhosp , account , state , tdata , cData}) => {
 
@@ -25,11 +26,11 @@ const MultiForm = ({dhosp , rhosp , account , state , tdata , cData}) => {
     if(tdata.stage >= 2){
         if(tdata.type_transport == "Airlift"){
             vehicle.name = tdata.airlift_dd.name;
-            vehicle.id = tdata.airlift_dd.id;
+            vehicle.id = tdata.airlift_dd.contact;
             vehicle.plate_num = tdata.airlift_dd.tail_number
         }else{
             vehicle.name = tdata.ambulance_dd.name;
-            vehicle.id = tdata.ambulance_dd.id;
+            vehicle.id = tdata.ambulance_dd.contact;
             vehicle.plate_num = tdata.ambulance_dd.number_plate
         }
     }
@@ -130,29 +131,30 @@ const MultiForm = ({dhosp , rhosp , account , state , tdata , cData}) => {
     function getTime(date){
         var milliseconds = date * 1000;
 
-    var date = new Date(milliseconds);
+        var date = new Date(milliseconds);
 
-    // Extracting date components
-    var year = date.getFullYear();
-    var month = ("0" + (date.getMonth() + 1)).slice(-2); // Adding 1 because January is 0
-    var day = ("0" + date.getDate()).slice(-2);
-    var hours = ("0" + date.getHours()).slice(-2);
-    var minutes = ("0" + date.getMinutes()).slice(-2);
-    var seconds = ("0" + date.getSeconds()).slice(-2);
+        // Extracting date components
+        var year = date.getFullYear();
+        var month = ("0" + (date.getMonth() + 1)).slice(-2); // Adding 1 because January is 0
+        var day = ("0" + date.getDate()).slice(-2);
+        var hours = ("0" + date.getHours()).slice(-2);
+        var minutes = ("0" + date.getMinutes()).slice(-2);
+        var seconds = ("0" + date.getSeconds()).slice(-2);
 
-    // Formatted date string
-    var formattedDate = year + "-" + month + "-" + day + " " + hours + ":" + minutes + ":" + seconds;
+        // Formatted date string
+        var formattedDate = year + "-" + month + "-" + day + " " + hours + ":" + minutes + ":" + seconds;
 
 
-    return {
-    day,
-    month,
-    year,
-    hours,
-    minutes,
-    seconds
+        return {
+        day,
+        month,
+        year,
+        hours,
+        minutes,
+        seconds
+        }
     }
-    }
+
   return (
     <div>
         <ToastContainer/>
@@ -237,16 +239,19 @@ const MultiForm = ({dhosp , rhosp , account , state , tdata , cData}) => {
             <h1 style={{fontSize : "30px"}}> <span style={{color : "#5ec576"}}>Driver</span> Details</h1>
             {getData()}
             <div style={{display : "flex" , flexDirection : "row" , justifyContent : "center" , marginTop : "25px"}}>
+                <label style={{fontSize : "22px"}}>Id : - &nbsp;&nbsp;</label>
+                <h2 style={{marginTop : "2px" , color : "#5ec576", fontSize : "21px"}}>{vehicle.id}</h2>
+            </div>
+            <div style={{display : "flex" , flexDirection : "row" , justifyContent : "center" , marginTop : "25px"}}>
                 <label style={{fontSize : "22px"}}>Name : - &nbsp;&nbsp;</label>
                 <h2 style={{marginTop : "2px" , color : "#5ec576" , fontSize : "21px"}}>{vehicle.name}</h2>
             </div>
             <div style={{display : "flex" , flexDirection : "row" , justifyContent : "center" , marginTop : "25px"}}>
-                <label style={{fontSize : "22px"}}>Contact : - &nbsp;&nbsp;</label>
-                <h2 style={{marginTop : "2px" , color : "#5ec576", fontSize : "21px"}}>{vehicle.contact}</h2>
-            </div>
-            <div style={{display : "flex" , flexDirection : "row" , justifyContent : "center" , marginTop : "25px"}}>
                 <label style={{fontSize : "22px"}}>Vehicle Number : - &nbsp;&nbsp;</label>
                 <h2 style={{marginTop : "2px" , color : "#5ec576", fontSize : "21px"}}>{vehicle.plate_num}</h2>
+            </div>
+            <div style={{marginTop : "70px"}}>
+                <Link style={{padding : "20px" , backgroundColor : "#5ec567" , color : "white" , fontSize : "18px" , borderRadius : "10px"}} to="/dashbaord/live_tracking" state = {{ tId : tdata.transplant_id}}>Live Tracking </Link>
             </div>
         </div>
     </div>

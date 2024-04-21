@@ -38,4 +38,6 @@ router.route("/failedTrans").post(users.failedTrans);
 
 router.route("/getFailedTrans").post(users.getFailedTrans);
 
+router.route("/get_location").post(users.getLoc);
+
 module.exports = router;

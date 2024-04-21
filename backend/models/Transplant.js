@@ -54,6 +54,10 @@ const TransplantSchema = new Schema({
     type: Date,
     default: Date.now(),
   },
+  last_update: {
+    type: Date,
+    default: Date.now(),
+  },
   success: {
     type: String,
     default: "Ongoing",

@@ -789,3 +789,49 @@ module.exports.failedTrans = async (req, res, next) => {
     success: true,
   });
 };
+
+module.exports.getLoc = async (req, res, next) => {
+  const { tId } = req.body;
+
+  console.log(tId);
+
+  const transplant = await Transplant.find({ transplant_id: tId });
+
+  console.log(transplant);
+
+  const last_upd = transplant[0].last_update;
+  const lat = transplant[0].lat;
+  const lngt = transplant[0].lngt;
+
+  console.log(lat);
+  console.log(lngt);
+
+  const utcDate = new Date("2024-04-20T10:24:40.869Z");
+
+  // Convert UTC time to Indian Standard Time (IST)
+  const istOffset = 5.5 * 60 * 60 * 1000; // Offset for IST in milliseconds (5.5 hours)
+  const istDate = new Date(utcDate.getTime() + istOffset);
+
+  console.log(istDate);
+
+  // Format the IST date as a string
+  const options = {
+    year: "numeric",
+    month: "short",
+    day: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+    second: "2-digit",
+    timeZoneName: "short",
+  };
+  const istDateString = istDate.toLocaleString("en-IN", options);
+
+  console.log("UTC Time:", utcDate.toISOString());
+  console.log("Indian Standard Time (IST):", istDateString);
+
+  res.status(200).json({
+    lat,
+    lngt,
+    last_upd,
+  });
+};

@@ -698,3 +698,42 @@ h4 {
 .modal {
   background-color: var(--color-light);
 }
+
+.mapboxgl-popup {
+  max-width: 200px;
+}
+
+.mapboxgl-popup-content {
+  text-align: center;
+  font-family: "Open Sans", sans-serif;
+}
+
+.marker {
+  background-image: url("https://docs.mapbox.com/help/demos/custom-markers-gl-js/mapbox-icon.png");
+  background-size: cover;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.custom-popup {
+  width: 200px;
+  padding: 10px;
+  border-radius: 5px;
+}
+
+.custom-popup h4 {
+  margin-top: 3px;
+  margin-bottom: 10px;
+}
+
+.custom-popup p {
+  color: black;
+}
+
+.mapboxgl-popup-close-button {
+  margin-right: 6px;
+  margin-top: 7px;
+  font-size: 22px;
+}
