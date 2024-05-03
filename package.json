@@ -11,7 +11,7 @@
     "axios": "^1.6.5",
     "bootstrap": "^4.6.0",
     "dotenv": "^16.4.5",
-    "ethers": "^6.8.1",
+    "ethers": "github:ethers-io/ethers.js",
     "haversine-distance": "^1.2.1",
     "mapbox-gl": "^3.3.0",
     "react": "^18.2.0",

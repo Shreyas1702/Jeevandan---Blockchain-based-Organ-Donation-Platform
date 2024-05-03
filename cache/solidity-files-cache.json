@@ -721,8 +721,8 @@
       ]
     },
     "C:\\Users\\AAA\\Desktop\\be_project_frontend\\Jeevandan---Blockchain-based-Organ-Donation-Platform\\contracts\\Living.sol": {
-      "lastModificationDate": 1713005798644,
-      "contentHash": "25a042d3a5abbb60a07961868736e35b",
+      "lastModificationDate": 1713763173811,
+      "contentHash": "74afddcd7809e8e80060ae507a17aa9a",
       "sourceName": "contracts/Living.sol",
       "solcConfig": {
         "version": "0.8.20",

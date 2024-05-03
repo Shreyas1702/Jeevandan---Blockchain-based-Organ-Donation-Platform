@@ -22,7 +22,7 @@ const LivingTransplant = ({account , state}) => {
 
     const location = useLocation();
 
-    const full_data = location.state.data;
+    const full_data = JSON.parse(location.state.data);
 
 
     var [tranData , setTransData] = React.useState(null);
@@ -75,7 +75,7 @@ const LivingTransplant = ({account , state}) => {
             third : parseInt(ddata[2]),
             fourth : parseInt(ddata[3]),
             stage : parseInt(stage[4]),
-            trans_id : parseInt(full_data.trans_id),
+            trans_id : parseInt(full_data.data.trans_id),
             success : parseInt(stage[5]),
         }
 

@@ -124,6 +124,7 @@ const MultiForm = ({dhosp , rhosp , account , state , tdata , cData}) => {
             },5000);
         }
         catch(error){
+            console.log(error);
             toast.error("Something went wrong");
         }
     }

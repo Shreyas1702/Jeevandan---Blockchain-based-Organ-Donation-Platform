@@ -21,8 +21,8 @@ const SubmitForm = async (e) => {
   try{
     const {contract}  = state;
     console.log(contract)
-    const transaction = await contract.passbloodgrpid(data.bloodgrp , data.id , data.organ , process.env.REACT_APP_NFTAddress);
     const toastId = toast.info('Organ Matching in Progress', { autoClose: false });
+    const transaction = await contract.passbloodgrpid(data.bloodgrp , data.id , data.organ , process.env.REACT_APP_NFTAddress);
     const rc = await transaction.wait();
 
     var datas = await contract.getMatchedArray();
@@ -85,7 +85,7 @@ const startProcess = async (id , r_id , r_add) => {
     console.log(r_id);
     console.log(r_add);
 
-    const toastId = toast.success('Reciever Confirmed', { autoClose: 5000 });
+    const toastId = toast.success('Transaction in Progress', { autoClose: 5000 });
     console.log(data);
     const {contract_nft} = state;
 
@@ -114,6 +114,8 @@ const startProcess = async (id , r_id , r_add) => {
     });
     console.log(Id , r_id , d_hosp , r_add , t_id , organ , sign);
     await contract_nft.TransDetails(Id , r_id  , d_hosp , r_add , t_id , organ, stage , sign)
+    toast.update(toastId, { render: 'Transaction Successful', type: 'success', autoClose: 5000 });
+
     
     setTimeout(() => {
       window.location.href = "http://localhost:3000/dashboard"

@@ -189,7 +189,7 @@ function sixthStage(){
           <p style={{marginTop : "40px" , color : "#5ec567"}}>Please Complete the Previous Step</p>
       )    
     }else if(tdata.stage == 5 && tdata.success != "Failed"){
-      if(account==rhosp.meta_address)
+      if(account)
       {
         return(
           <div>
@@ -288,8 +288,8 @@ const handleComplete = () => {
     try{
       event.preventDefault();
       const {contract_nft , sign} = state;
-      const transaction = await contract_nft.end_transport(tdata.transplant_id , sign);
       const toastId = toast.info('Transaction in Progress', { autoClose: false });
+      const transaction = await contract_nft.end_transport(tdata.transplant_id , sign);
       await transaction.wait();
       toast.update(toastId, { render: 'Transaction Successfully', type: 'success', autoClose: 4000 });
       console.log(transaction)
@@ -312,8 +312,8 @@ const handleComplete = () => {
     try{
       event.preventDefault();
       const {contract_nft , sign} = state;
-      const transaction = await contract_nft.start_surgery(tdata.transplant_id , sign);
       const toastId = toast.info('Transaction in Progress', { autoClose: false });
+      const transaction = await contract_nft.start_surgery(tdata.transplant_id , sign);
       await transaction.wait();
       toast.update(toastId, { render: 'Transaction Successfully', type: 'success', autoClose: 4000 });
       console.log(transaction)
@@ -337,8 +337,8 @@ const handleComplete = () => {
       event.preventDefault();
       const {contract_nft , sign} = state;
       console.log(sign);
-      const transaction = await contract_nft.end_surgery(tdata.transplant_id , sign);
       const toastId = toast.info('Transaction in Progress', { autoClose: false });
+      const transaction = await contract_nft.end_surgery(tdata.transplant_id , sign);
       await transaction.wait();
       toast.update(toastId, { render: 'Transaction Successfully', type: 'success', autoClose: 4000 });
       console.log(transaction)
@@ -361,16 +361,20 @@ const handleComplete = () => {
     async function tranNFT(event){
     try{
       event.preventDefault();
-      const {contract_nft} = state;
+      const {contract_nft , provider} = state;
       const organ = tdata.organ;
       var nftId = tdata.donor_id.nftId[organ]
       console.log(nftId , tdata.donor_id.meta_address , tdata.reciever_id.meta_address)
-      const transaction = await contract_nft.transferNFT(tdata.donor_id.meta_address , tdata.reciever_id.meta_address , nftId ,{gasLimit : 5000000});
+      const gasPrice = await provider.getFeeData()
+      console.log(gasPrice.gasPrice)
+      const gasPriceInWei = parseInt(gasPrice.gasPrice);
+      console.log(gasPriceInWei)
       const toastId = toast.info('Transaction in Progress', { autoClose: false });
+      const transaction = await contract_nft.transferNFT(tdata.donor_id.meta_address , tdata.reciever_id.meta_address , nftId);
       await transaction.wait();
       toast.update(toastId, { render: 'Transaction Successfully', type: 'success', autoClose: 4000 });
-      const trans = await contract_nft.transferedNFT(tdata.transplant_id);
       const toastIds = toast.info('Transaction in Progress', { autoClose: false });
+      const trans = await contract_nft.transferedNFT(tdata.transplant_id);
       await trans.wait();
       toast.update(toastIds, { render: 'Transaction Successfully', type: 'success', autoClose: 4000 });
       await axios.post(`http://localhost:8000/transNFT/${tdata.transplant_id}`).then((response) => {

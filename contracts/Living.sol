@@ -92,6 +92,10 @@ contract LivingDonor {
 
         living_trans_Detail[id] = living_transplant;
 
+        ContractA.remove_receiver_organ(reciever_id, organ);
+
+        ContractA.remove_organ(donor_id, organ);
+
         return id;
     }
 
@@ -218,15 +222,6 @@ contract LivingDonor {
 
         living_trans_timeline[transplant_id][3] = block.timestamp;
         living_trans_Detail[transplant_id].stage = 4;
-        ContractA.remove_organ(
-            living_trans_Detail[transplant_id].donor_id,
-            living_trans_Detail[transplant_id].organ
-        );
-
-        ContractA.remove_receiver_organ(
-            living_trans_Detail[transplant_id].reciever_id,
-            living_trans_Detail[transplant_id].organ
-        );
     }
 
     function TransNFT(uint256 trans_id) public {
@@ -234,11 +229,22 @@ contract LivingDonor {
         living_trans_Detail[trans_id].status = 1;
     }
 
-    function failedTrans(uint256 transplant_id, string memory link) public {
+    function failedTrans(
+        uint256 transplant_id,
+        string memory link,
+        address ContractA_Address
+    ) public {
+        register ContractA = register(ContractA_Address);
+
         Failed memory f = Failed(true, link);
 
         failed[transplant_id] = f;
 
         living_trans_Detail[transplant_id].status = 2;
+
+        ContractA.add_receiver_organ(
+            living_trans_Detail[transplant_id].reciever_id,
+            living_trans_Detail[transplant_id].organ
+        );
     }
 }

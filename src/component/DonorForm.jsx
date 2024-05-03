@@ -56,17 +56,8 @@ const DonorForm = ({ account, setAccount , state ,setState}) => {
         e.preventDefault()
         const humanData = {
             "name" : data.name,
-            "weight" : data.weight,
-            "height" : data.height,
-            "hla" : data.hla,
-            "email" : data.email,
-            "link" : data.link,
             "organ" : "",
             "image" : "",
-            "age" : data.age,
-            "kincontact" : data.kincontact,
-            "bloodgroup" : data.bloodgroup,
-            "address" : account,
         }
         for(let i = 0 ; i < skills.length ; i++){
             data.organs.push(skills[i].value);
@@ -113,8 +104,8 @@ const DonorForm = ({ account, setAccount , state ,setState}) => {
             console.log(contract)
             console.log(data);
             data.address = account
-            const transaction = await contract.registerDonor(data.address ,  data.hla  , data.bloodgroup  , data.organs , data.flag);
             const toastId = toast.info('Transaction in Progress', { autoClose: false });
+            const transaction = await contract.registerDonor(data.address ,  data.hla  , data.bloodgroup  , data.organs , data.flag);
             const rc = await transaction.wait();
 
             var Id = await contract.getDonorId();

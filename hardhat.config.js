@@ -14,7 +14,7 @@ module.exports = {
     },
   },
   networks: {
-    sepolia: {
+    amoy: {
       url: SEPOLIA_URL,
       accounts: [PRIVATE_KEY],
       blockGasLimit: 3000000,

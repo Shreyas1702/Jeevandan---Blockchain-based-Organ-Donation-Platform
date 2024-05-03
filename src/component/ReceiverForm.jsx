@@ -95,8 +95,8 @@ const ReceiverForm = ({ account, setAccount , state ,setState}) => {
         console.log(contract)
         console.log(data);
         data.address = account
-        const transaction = await contract.registerReceive(data.address ,  data.hla  , data.bloodgroup  , data.organs , data.flag);
         const toastId = toast.info('Transaction in Progress', { autoClose: false });
+        const transaction = await contract.registerReceive(data.address ,  data.hla  , data.bloodgroup  , data.organs , data.flag);
         const rc = await transaction.wait();
         console.log("Transaction Done");
         console.log(account);

@@ -4,6 +4,7 @@ import FormWizard from "react-form-wizard-component";
 import "react-form-wizard-component/dist/style.css";
 import MultiForm from "./MultiForm"
 import {toast , ToastContainer} from "react-toastify"
+import { ethers } from "ethers";
 function LivingTimeLine({dhosp , rhosp , account , state , tdata , full_data}) {
 
 if(tdata == null){
@@ -238,6 +239,7 @@ const handleComplete = () => {
       console.log("Hello");
       event.preventDefault();
       const {contract_living} = state;
+      console.log(tdata);
       console.log(tdata.trans_id)
       const transaction = await contract_living.start_living_donor_surgery(tdata.trans_id);
       console.log(contract_living);
@@ -328,14 +330,40 @@ const handleComplete = () => {
     async function tranNFT(event){
     try{
       event.preventDefault();
-      const {contract_nft} = state;
-      const organ = full_data.organ;
-      var nftId = full_data.data.donor_id.nftId[organ]
-      console.log(nftId , organ , full_data.data.donor_id.meta_address , full_data.data.reciever_id.meta_address)
+      const {account} = state;
+      // var full_data = JSON.parse(full_data);
+      console.log(full_data.data)
+      const {contract_nft , provider} = state;
+      const organ = full_data.data.organ;
+      var nftId = full_data.data.data.donor_id.nftId[organ]
+      console.log(nftId , organ , full_data.data.data.donor_id.meta_address , full_data.data.data.reciever_id.meta_address)
     //   console.log(nftId , tdata.donor_id.meta_address , tdata.reciever_id.meta_address)
-      const transaction = await contract_nft.transferNFT(full_data.data.donor_id.meta_address , full_data.data.reciever_id.meta_address , nftId , {gasLimit : 5000000});
+    console.log(contract_nft);  
+    //  const gasEstimate = await contract_nft.estimateGas.transferNFT(
+    //   full_data.data.data.donor_id.meta_address,
+    //   full_data.data.data.reciever_id.meta_address,
+    //   nftId
+    // ).catch((err) => {
+    //   console.error("Error estimating gas:", err);
+    //   throw err;
+    // });
+
+    // // Add a buffer to the estimated gas value
+    // const gasLimit = gasEstimate.mul(12).div(10);
+    // console.log("Gas limit:", gasLimit.toString());
+    const gasPrice = await provider.getFeeData()
+// { BigNumber: "23238878592" }
+      console.log(gasPrice.gasPrice)
+      const gasPriceInWei = parseInt(gasPrice.gasPrice);
+      console.log(gasPriceInWei)
+// ...often this gas price is easier to understand or
+// display to the user in gwei
+    // utils.formatUnits(gasPrice, "gwei")
+      const transaction = await contract_nft.transferNFT(full_data.data.data.donor_id.meta_address , full_data.data.data.reciever_id.meta_address , nftId , {gasLimit : 30000000});
       const toastId = toast.info('Transaction in Progress', { autoClose: false });
       await transaction.wait();
+      const trans = await contract_nft.TransNFT(tdata.trans_id);
+      await trans.wait();
       toast.update(toastId, { render: 'Transaction Successfully', type: 'success', autoClose: 4000 });
       setTimeout(() => {
         console.log("secondStage");
