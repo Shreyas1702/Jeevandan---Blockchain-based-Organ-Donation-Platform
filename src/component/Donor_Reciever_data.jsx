@@ -12,7 +12,7 @@ const Donor_Reciever_data = ({tranData , organ , dhosp , rhosp}) => {
                     </div>
                     <div class="col-md-7 circle">
                         <div class="ag-courses-item_bg"></div>
-                        <div class="card-body" style={{marginTop : "30px"}}>
+                        <div class="card-body" style={{padding:"1rem 0rem",marginTop : "30px"}}>
                             <div style={{display : "flex" , flexDirection : "row" , marginBottom : "0"}}>
                                 <h2 class="card-title">Donor</h2>
                             </div>
@@ -40,7 +40,7 @@ const Donor_Reciever_data = ({tranData , organ , dhosp , rhosp}) => {
                 </div>
             </div>
 
-            <div style={{width : "200px" , marginTop : "150px" , paddingLeft : "70px"}}>
+            <div style={{width : "70px" , marginTop : "150px" , paddingLeft : "8px"}}>
                 <i class="fa-solid fa-arrow-right-long fa-5x" style={{color: "#5ec576"}}></i>
             </div>
 

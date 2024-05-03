@@ -241,9 +241,9 @@ const handleComplete = () => {
       const {contract_living} = state;
       console.log(tdata);
       console.log(tdata.trans_id)
+      const toastId = toast.info('Transaction in Progress', { autoClose: false });
       const transaction = await contract_living.start_living_donor_surgery(tdata.trans_id);
       console.log(contract_living);
-      const toastId = toast.info('Transaction in Progress', { autoClose: false });
       await transaction.wait();
       toast.update(toastId, { render: 'Transaction Successfully', type: 'success', autoClose: 4000 });
     
@@ -264,9 +264,9 @@ const handleComplete = () => {
       event.preventDefault();
       const {contract_living} = state;
       console.log(tdata.trans_id)
+      const toastId = toast.info('Transaction in Progress', { autoClose: false });
       const transaction = await contract_living.end_living_donor__surgery(tdata.trans_id);
       console.log(contract_living);
-      const toastId = toast.info('Transaction in Progress', { autoClose: false });
       await transaction.wait();
       toast.update(toastId, { render: 'Transaction Successfully', type: 'success', autoClose: 4000 });
     
@@ -287,9 +287,9 @@ const handleComplete = () => {
       event.preventDefault();
       const {contract_living} = state;
       console.log(tdata.trans_id)
+      const toastId = toast.info('Transaction in Progress', { autoClose: false });
       const transaction = await contract_living.start_living_receiver_surgery(tdata.trans_id);
       console.log(contract_living);
-      const toastId = toast.info('Transaction in Progress', { autoClose: false });
       await transaction.wait();
       toast.update(toastId, { render: 'Transaction Successfully', type: 'success', autoClose: 4000 });
     
@@ -310,9 +310,9 @@ const handleComplete = () => {
       event.preventDefault();
       const {contract_living , sign} = state;
       console.log(tdata.trans_id)
+      const toastId = toast.info('Transaction in Progress', { autoClose: false });
       const transaction = await contract_living.end_living_receiver_surgery(tdata.trans_id , sign);
       console.log(contract_living);
-      const toastId = toast.info('Transaction in Progress', { autoClose: false });
       await transaction.wait();
       toast.update(toastId, { render: 'Transaction Successfully', type: 'success', autoClose: 4000 });
     
@@ -333,7 +333,7 @@ const handleComplete = () => {
       const {account} = state;
       // var full_data = JSON.parse(full_data);
       console.log(full_data.data)
-      const {contract_nft , provider} = state;
+      const {contract_living,contract_nft , provider} = state;
       const organ = full_data.data.organ;
       var nftId = full_data.data.data.donor_id.nftId[organ]
       console.log(nftId , organ , full_data.data.data.donor_id.meta_address , full_data.data.data.reciever_id.meta_address)
@@ -359,10 +359,10 @@ const handleComplete = () => {
 // ...often this gas price is easier to understand or
 // display to the user in gwei
     // utils.formatUnits(gasPrice, "gwei")
-      const transaction = await contract_nft.transferNFT(full_data.data.data.donor_id.meta_address , full_data.data.data.reciever_id.meta_address , nftId , {gasLimit : 30000000});
+      const transaction = await contract_nft.transferNFT(full_data.data.data.donor_id.meta_address , full_data.data.data.reciever_id.meta_address , nftId );
       const toastId = toast.info('Transaction in Progress', { autoClose: false });
       await transaction.wait();
-      const trans = await contract_nft.TransNFT(tdata.trans_id);
+      const trans = await contract_living.TransNFT(tdata.trans_id);
       await trans.wait();
       toast.update(toastId, { render: 'Transaction Successfully', type: 'success', autoClose: 4000 });
       setTimeout(() => {

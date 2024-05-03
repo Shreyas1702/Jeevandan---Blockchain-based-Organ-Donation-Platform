@@ -1,7 +1,7 @@
 import React from "react";
 import axios from "axios";
 import {toast} from "react-toastify"
-const Modals = ({setOpen , state , tdata}) => {
+const Modals = ({setOpen , state , tdata,datas}) => {
 
     const [pic , setPic] = React.useState(false)
 
@@ -18,11 +18,14 @@ const Modals = ({setOpen , state , tdata}) => {
     }
 
     const failedTransRelist = async (req,res) => {
-        const {contract_living} = state;
+        const {contract_living,sign} = state;
         const toastId = toast.info('Transaction in Progress', { autoClose: false });
         console.log(contract_living);
-        console.log(tdata);
-        const transaction = await contract_living.failedTrans(tdata.transplant_id , data)
+        console.log(datas.trans_id);
+        console.log(sign);
+        console.log(data);
+        
+        const transaction = await contract_living.failedTrans(datas.trans_id , data,sign)
         await transaction.wait();
         toast.update(toastId, { render: 'Transaction Successfull', type: 'success', autoClose: 3000 });
         setTimeout(() => {

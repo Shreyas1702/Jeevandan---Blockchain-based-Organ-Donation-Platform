@@ -117,7 +117,7 @@ const LivingTransplant = ({account , state}) => {
 function ModalFunc() {
         if(open){
         return (
-            <Modal setOpen={setOpen} state={state} tdata={tranData}/>
+            <Modal setOpen={setOpen} state={state} tdata={tranData} datas={datas}/>
         )
         }
     }
